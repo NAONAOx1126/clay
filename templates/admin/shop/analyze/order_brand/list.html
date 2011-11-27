@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta name="loadmodule" content="Base.Administrator.Login" error="admin/index.html" />
+<meta name="loadmodule" content="Shop.Summery.RepeaterOrderDetail" title="parent_name,:CASE WHEN :order_repeat: > 1 THEN 1 ELSE 0 END:order_repeat:" summery="quantity,price" result="orders" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>ブランド分析結果 - Sweetberry 管理画面</title>
+<!--{include file="common/site_header.phtml"}-->
+<!-- 棒グラフ用のプラグイン -->
+<script type="text/javascript" src="/js/plugins/jqplot.barRenderer.min.js"></script>
+<script type="text/javascript" src="/js/plugins/jqplot.categoryAxisRenderer.min.js"></script>
+<script type="text/javascript" src="/js/plugins/jqplot.pointLabels.min.js"></script>
+</head>
+<body>
+<!--{include file="common/header.phtml"}-->
+
+<div id="result">
+<!--{assign var="total" value="0"}-->
+<!--{foreach from=$ATTRIBUTES.orders item="order"}-->
+<!--{assign var="totalCount" value=$totalCount+$order->quantity}-->
+<!--{assign var="totalPrice" value=$totalPrice+$order->price}-->
+<!--{assign var="average" value=$order->price/$order->quantity}-->
+<!--{assign var="totalAverage" value=$totalAverage+$average}-->
+<!--{/foreach}-->
+<table id="result_table">
+<thead>
+<tr><th>ブランド名</th><th>注文種別</th><th>販売数量</th><th>販売数量比率</th><th>販売金額合計</th><th>販売金額比率</th><th>販売単価合計</th><th>販売単価比率</th></tr>
+</thead>
+<tbody>
+<!--{foreach from=$ATTRIBUTES.orders item="order"}-->
+<tr>
+<th><!--{$order->parent_name}--></th>
+<th><!--{if $order->order_repeat > 0}-->リピート<!--{else}-->新規購入<!--{/if}--></th>
+<td><!--{$order->quantity|number_format}--></td>
+<td><!--{$order->quantity/$totalCount*100|number_format}-->%</td>
+<td><!--{$order->price|number_format}--></td>
+<td><!--{$order->price/$totalPrice*100|number_format}-->%</td>
+<!--{assign var="average" value=$order->price/$order->quantity}-->
+<td><!--{$average|number_format}--></td>
+<td><!--{$average/$totalAverage*100|number_format}-->%</td>
+</tr>
+<!--{/foreach}-->
+</tbody>
+</table>
+</div>
+
+<!--{include file="common/footer.phtml"}-->
+</body>
+</html>

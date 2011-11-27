@@ -1,0 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta name="loadmodule" content="Base.Administrator.Login" error="admin/index.html" />
+<meta name="loadmodule" content="File.Csv.Upload" key="orders" skip="1" />
+<meta name="loadmodule" content="Base.Forms.SplitColumns" key="orders" target="product_name" regex="【(.+)】(.+)" result="product_fullname,parent_name,product_name" />
+<meta name="loadmodule" content="Base.Forms.MergeColumns" key="orders" target="order_date,order_time" delimiter=" " result="order_time" />
+<meta name="loadmodule" content="Base.Forms.DateTimeConvert" key="orders" target="order_birthday" src_suffix="年,月,日生" dest_suffix="-,-," result="order_birthday" />
+<meta name="loadmodule" content="Base.Forms.EmailType" key="orders" target="order_email" result="order_type" />
+<meta name="loadmodule" content="Shop.Order.Import" key="orders" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>受注データインポート - Sweetberry 管理画面</title>
+<!--{include file="admin/common/site_header.phtml"}-->
+</head>
+<body>
+<!--{include file="admin/common/header.phtml"}-->
+<!--{assign var="site" value=$ATTRIBUTES.site}-->
+<div id="result">受注データのインポートが完了しました。</div>
+<!--{include file="admin/common/footer.phtml"}-->
+</body>
+</html>

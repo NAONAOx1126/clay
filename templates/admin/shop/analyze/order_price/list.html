@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta name="loadmodule" content="Base.Administrator.Login" error="admin/index.html" />
+<meta name="loadmodule" content="Shop.Summery.RepeaterOrder" title=":CASE WHEN :order_repeat: > 1 THEN 1 ELSE 0 END:order_repeat:" summery="subtotal,total" result="orders" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>購入平均額分析結果 - Sweetberry 管理画面</title>
+<!--{include file="common/site_header.phtml"}-->
+<!-- 棒グラフ用のプラグイン -->
+<script type="text/javascript" src="/js/plugins/jqplot.barRenderer.min.js"></script>
+<script type="text/javascript" src="/js/plugins/jqplot.categoryAxisRenderer.min.js"></script>
+<script type="text/javascript" src="/js/plugins/jqplot.pointLabels.min.js"></script>
+</head>
+<body>
+<!--{include file="common/header.phtml"}-->
+
+<!--{assign var="total" value=$ATTRIBUTES.total.0}-->
+
+<div id="result">
+<table id="result_table">
+<thead>
+<tr><th>注文種別</th><th>購入平均額</th></tr>
+</thead>
+<tbody>
+<!--{foreach from=$ATTRIBUTES.orders item="order"}-->
+<tr>
+<th><!--{if $order->order_repeat > 0}-->リピート<!--{else}-->新規購入<!--{/if}--></th>
+<td><!--{$order->subtotal/$order->count|number_format}-->円</td>
+</tr>
+<!--{/foreach}-->
+</tbody>
+</table>
+</div>
+
+<!--{include file="common/footer.phtml"}-->
+</body>
+</html>

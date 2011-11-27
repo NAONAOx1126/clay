@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta name="loadmodule" content="Base.Administrator.Login" error="admin/index.html" />
+<meta name="loadmodule" content="Shop.Summery.RepeaterOrderTime" result="orders" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>購入時間帯分析結果 - Sweetberry 管理画面</title>
+<!--{include file="common/site_header.phtml"}-->
+<!-- 棒グラフ用のプラグイン -->
+<script type="text/javascript" src="/js/plugins/jqplot.barRenderer.min.js"></script>
+<script type="text/javascript" src="/js/plugins/jqplot.categoryAxisRenderer.min.js"></script>
+<script type="text/javascript" src="/js/plugins/jqplot.pointLabels.min.js"></script>
+</head>
+<body>
+<!--{include file="common/header.phtml"}-->
+
+<div id="result">
+<!--{assign var="total" value="0"}-->
+<!--{foreach from=$ATTRIBUTES.orders item="order"}-->
+<!--{assign var="totalCount" value=$totalCount+$order.0->count+$order.1->count}-->
+<!--{assign var="totalPrice" value=$totalPrice+$order.0->subtotal+$order.1->subtotal}-->
+<!--{if $order.0->count > 0}--><!--{assign var="average" value=$order.0->subtotal/$order.0->count}--><!--{/if}-->
+<!--{if $order.1->count > 0}--><!--{assign var="average" value=$average+$order.1->subtotal/$order.1->count}--><!--{/if}-->
+<!--{assign var="totalAverage" value=$totalAverage+$average}-->
+<!--{/foreach}-->
+<table id="result_table">
+<thead>
+<tr><th>時間帯</th><th>注文区分</th><th>販売数量</th><th>販売数量比率</th><th>販売金額合計</th><th>販売金額比率</th><th>販売単価合計</th><th>販売単価比率</th></tr>
+</thead>
+<tbody>
+<!--{foreach from=$ATTRIBUTES.orders item="order"}-->
+<tr>
+<th><!--{$order.0->order_time_text}--></th>
+<th><!--{if $order.0->order_repeat > 0}-->リピート<!--{else}-->新規購入<!--{/if}--></th>
+<td><!--{$order.0->count|number_format}--></td>
+<td><!--{$order.0->count/$totalCount*100|number_format}-->%</td>
+<td><!--{$order.0->subtotal|number_format}--></td>
+<td><!--{$order.0->subtotal/$totalPrice*100|number_format}-->%</td>
+<!--{if $order.0->count > 0}--><!--{assign var="average" value=$order.0->subtotal/$order.0->count}--><!--{/if}-->
+<td><!--{$average|number_format}--></td>
+<td><!--{$average/$totalAverage*100|number_format}-->%</td>
+</tr>
+<tr>
+<th><!--{$order.1->order_time_text}--></th>
+<th><!--{if $order.1->order_repeat > 0}-->リピート<!--{else}-->新規購入<!--{/if}--></th>
+<td><!--{$order.1->count|number_format}--></td>
+<td><!--{$order.1->count/$totalCount*100|number_format}-->%</td>
+<td><!--{$order.1->subtotal|number_format}--></td>
+<td><!--{$order.1->subtotal/$totalPrice*100|number_format}-->%</td>
+<!--{if $order.1->count > 0}--><!--{assign var="average" value=$order.1->subtotal/$order.1->count}--><!--{/if}-->
+<td><!--{$average|number_format}--></td>
+<td><!--{$average/$totalAverage*100|number_format}-->%</td>
+</tr>
+<!--{/foreach}-->
+</tbody>
+</table>
+</div>
+
+<!--{include file="common/footer.phtml"}-->
+</body>
+</html>

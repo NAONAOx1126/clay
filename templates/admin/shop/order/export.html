@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta name="loadmodule" content="Base.Administrator.Login" error="admin/index.html" />
+<meta name="loadmodule" content="Base.Pages.ClearInput" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>受注データエクスポート - Sweetberry 管理画面</title>
+<!--{include file="admin/common/site_header.phtml"}-->
+</head>
+<body>
+<!--{include file="admin/common/header.phtml"}-->
+<!--{assign var="site" value=$ATTRIBUTES.site}-->
+<form action="exported.html" method="POST">
+<div id="order_date_term">
+<input type="text" name="ge_order_time" size="12" maxlegth="10" />〜<input type="text" name="le_order_time" size="12" maxlegth="10" />
+</div>
+<div id="sort_key">
+<select name="sort_key">
+<option value="order_type">端末種類別</option>
+<option value="order_pref">都道府県別</option>
+<option value="order_birthday">年齢別</option>
+</select>
+<div id="buttons"><input type="submit" name="download" value="CSVダウンロード" /></div>
+</form>
+<!--{include file="admin/common/footer.phtml"}-->
+</body>
+</html>

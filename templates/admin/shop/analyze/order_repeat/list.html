@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta name="loadmodule" content="Base.Administrator.Login" error="admin/index.html" />
+<meta name="loadmodule" content="Shop.Summery.OrderRepeat" result="orders" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>リピート分析結果 - Sweetberry 管理画面</title>
+<!--{include file="common/site_header.phtml"}-->
+<!-- 棒グラフ用のプラグイン -->
+<script type="text/javascript" src="/js/plugins/jqplot.barRenderer.min.js"></script>
+<script type="text/javascript" src="/js/plugins/jqplot.categoryAxisRenderer.min.js"></script>
+<script type="text/javascript" src="/js/plugins/jqplot.pointLabels.min.js"></script>
+</head>
+<body>
+<!--{include file="common/header.phtml"}-->
+
+<div id="result">
+<!--{assign var="total" value="0"}-->
+<!--{foreach from=$ATTRIBUTES.orders item="order"}-->
+<!--{assign var="totalCount" value=$totalCount+$order->count}-->
+<!--{assign var="totalPrice" value=$totalPrice+$order->subtotal}-->
+<!--{assign var="average" value=$order->subtotal/$order->count}-->
+<!--{assign var="totalAverage" value=$totalAverage+$average}-->
+<!--{/foreach}-->
+<table id="result_table">
+<thead>
+<tr><th>リピート回数</th><th>販売数量</th><th>販売数量比率</th><th>販売金額合計</th><th>販売金額比率</th><th>販売単価合計</th><th>販売単価比率</th></tr>
+</thead>
+<tbody>
+<!--{foreach from=$ATTRIBUTES.orders item="order"}-->
+<tr>
+<th><!--{$order->order_count_text}--></th>
+<td><!--{$order->count|number_format}--></td>
+<td><!--{$order->count/$totalCount*100|number_format}-->%</td>
+<td><!--{$order->subtotal|number_format}--></td>
+<td><!--{$order->subtotal/$totalPrice*100|number_format}-->%</td>
+<!--{assign var="average" value=$order->subtotal/$order->count}-->
+<td><!--{$average|number_format}--></td>
+<td><!--{$average/$totalAverage*100|number_format}-->%</td>
+</tr>
+<!--{/foreach}-->
+</tbody>
+</table>
+</div>
+
+<!--{assign var="count" value=$ATTRIBUTES.orders|count}-->
+<div id="order_count" style="width: <!--{$count*100+150}-->px"></div>
+<div id="order_total" style="width: <!--{$count*100+150}-->px"></div>
+<div id="order_average" style="width: <!--{$count*100+150}-->px"></div>
+
+<script type="text/javascript">
+barChart(
+	"order_count", 
+	"販売数量分析", 
+	[{label:"販売件数"}], 
+	[<!--{foreach from=$ATTRIBUTES.orders key="index" item="order"}-->
+		<!--{if $index > 0}-->,<!--{/if}-->
+		"<!--{$order->order_count_text}-->"
+	<!--{/foreach}-->], 
+	"%d件", 
+	[[<!--{foreach from=$ATTRIBUTES.orders key="index" item="order"}-->
+		<!--{if $index > 0}-->,<!--{/if}-->
+		<!--{$order->count}-->
+	<!--{/foreach}-->]]
+);
+barChart(
+	"order_total", 
+	"販売金額分析", 
+	[{label:"販売金額"}], 
+	[<!--{foreach from=$ATTRIBUTES.orders key="index" item="order"}-->
+		<!--{if $index > 0}-->,<!--{/if}-->
+		"<!--{$order->order_count_text}-->"
+	<!--{/foreach}-->], 
+	"%d円", 
+	[[<!--{foreach from=$ATTRIBUTES.orders key="index" item="order"}-->
+		<!--{if $index > 0}-->,<!--{/if}-->
+		<!--{$order->subtotal}-->
+	<!--{/foreach}-->]]
+);
+barChart(
+	"order_average", 
+	"販売単価分析", 
+	[{label:"販売単価"}], 
+	[<!--{foreach from=$ATTRIBUTES.orders key="index" item="order"}-->
+		<!--{if $index > 0}-->,<!--{/if}-->
+		"<!--{$order->order_count_text}-->"
+	<!--{/foreach}-->], 
+	"%d円", 
+	[[<!--{foreach from=$ATTRIBUTES.orders key="index" item="order"}-->
+		<!--{if $index > 0}-->,<!--{/if}-->
+		<!--{$order->subtotal/$order->count}-->
+	<!--{/foreach}-->]]
+);
+</script>
+
+<!--{include file="common/footer.phtml"}-->
+</body>
+</html>

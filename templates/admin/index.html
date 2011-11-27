@@ -1,0 +1,20 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta name="loadmodule" content="Base.Administrator.Logout" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>ログイン - Sweetberry 管理画面</title>
+<!--{include file="admin/common/site_header.phtml"}-->
+</head>
+<body>
+<!--{include file="admin/common/header.phtml"}-->
+<form action="/<!--{$CONFIGURE->ADMIN_TOOLS}-->/main.html" method="POST">
+<div id="login">
+<div id="login_id">ログインID：<input type="text" id="login_id_input" name="login_id" /></div>
+<div id="password">パスワード：<input type="password" id="password_input" name="password" /></div>
+<div id="login_button"><input type="submit" id="login_button_input" name="login" value="ログイン" /></div>
+</div>
+</form>
+<!--{include file="admin/common/footer.phtml"}-->
+</body>
+</html>

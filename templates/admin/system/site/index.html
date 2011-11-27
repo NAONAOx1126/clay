@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta name="loadmodule" content="Base.Administrator.Login" error="admin/index.html" />
+<meta name="loadmodule" content="Base.Site.List" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>サイト一覧 - Sweetberry 管理画面</title>
+<!--{include file="admin/common/site_header.phtml"}-->
+</head>
+<body>
+<!--{include file="admin/common/header.phtml"}-->
+<table id="site_list">
+<!--{foreach from=$ATTRIBUTES.sites key="index" item="site"}-->
+<tr id="site_data_<!--{$index}-->" class="site_data_<!--{if $index % 2 == 0}-->a<!--{else}-->b<!--{/if}-->">
+<td id="site_id_<!--{$index}-->" class="site_id"><!--{$site->site_id}--></td>
+<td id="site_code_<!--{$index}-->" class="site_code"><!--{$site->site_code}--></td>
+<td id="site_password_<!--{$index}-->" class="site_password"><!--{$site->site_password}--></td>
+<td id="site_name_<!--{$index}-->" class="site_name"><!--{$site->site_name}--></td>
+<td id="domain_name_<!--{$index}-->" class="domain_name"><!--{$site->domain_name}--></td>
+<td id="site_home_<!--{$index}-->" class="site_home"><!--{$site->site_home}--></td>
+<td id="edit_<!--{$index}-->" class="edit"><a href="edit.html?site_id=<!--{$site->site_id}-->">編集</a></td>
+<td id="delete_<!--{$index}-->" class="delete"><a href="delete.html?site_id=<!--{$site->site_id}-->" onclick="return confirm('削除します。よろしいですか？')">削除</a></td>
+</tr>
+<!--{/foreach}-->
+</table>
+<div id="new_site"><a href="edit.html?site_id=">サイト新規登録</a></div>
+<!--{include file="admin/common/footer.phtml"}-->
+</body>
+</html>
