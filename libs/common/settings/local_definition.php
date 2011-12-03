@@ -60,13 +60,6 @@ if(isset($_SERVER["HTTP_USER_AGENT"])){
 $_SERVER["FRAMEWORK_TEMPLATE_HOME"] = FRAMEWORK_SITE_HOME.$_SERVER["USER_TEMPLATE"];
 define("FRAMEWORK_TEMPLATE_HOME", $_SERVER["FRAMEWORK_TEMPLATE_HOME"]);	
 
-// 管理画面のディレクトリを補正する。
-if(substr($_SERVER["TEMPLATE_NAME"], 0, strlen($_SERVER["CONFIGURE"]->get("ADMIN_TOOLS")) + 2) == "/".$_SERVER["CONFIGURE"]->get("ADMIN_TOOLS")."/"){
-	$_SERVER["TEMPLATE_NAME"] = str_replace("/".$_SERVER["CONFIGURE"]->get("ADMIN_TOOLS")."/", "/admin/", $_SERVER["TEMPLATE_NAME"]);
-}elseif(substr($_SERVER["TEMPLATE_NAME"], 0, 7) == "/admin/"){
-	$_SERVER["TEMPLATE_NAME"] = str_replace("/admin/", "/".$_SERVER["CONFIGURE"]->get("ADMIN_TOOLS")."/", $_SERVER["TEMPLATE_NAME"]);
-}
-
 // テンプレートがディレクトリかどうか調べ、ディレクトリの場合はファイル名に落とす。
 // 呼び出し先がディレクトリで最後がスラッシュでない場合は最後にスラッシュを補完
 if(is_dir(FRAMEWORK_TEMPLATE_HOME.$_SERVER["TEMPLATE_NAME"])){

@@ -5,7 +5,7 @@ class Members_Address extends FrameworkModule{
 	function execute($param){
 		$mode = $param->get("zip", "zip");
 		$zip1 = $param->get("zip1", "zip1");
-		$zip1 = $param->get("zip1", "zip2");
+		$zip2 = $param->get("zip1", "zip2");
 		$pref = $param->get("pref", "pref");
 		$address1 = $param->get("address1", "address1");
 		

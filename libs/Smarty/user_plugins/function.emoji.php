@@ -43,8 +43,6 @@ function smarty_function_emoji($params, $smarty, $template)
 				// au
 				if (preg_match("/[^0-9]/", $emoji_array[$code][2])) {
 					echo $emoji_array[$code][2];
-				} elseif ($ie > 0) {
-					echo $emoji_array[$code][1]; // Display such the icons that ezserver transformed as docomo i-emoji.
 				} else {
 					echo "<img localsrc=\"".$emoji_array[$code][2]."\" />";
 				}

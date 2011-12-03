@@ -2,9 +2,6 @@
 // この機能で使用するモデルクラス
 LoadModel("Setting", "Members");
 
-// twitterOAuth を読み込む
-require_once('TwitterOAuth.php');
-
 /**
  * Twitterでログインしたセッションをクローズするためのモジュールです。
  *

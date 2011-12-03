@@ -8,9 +8,6 @@ $_SERVER["CONFIGURE"]->TIMEZONE = "Asia/Tokyo";
 // デフォルトロケール
 $_SERVER["CONFIGURE"]->LOCALE = "ja_JP.UTF-8";
 
-// 管理画面のURL
-$_SERVER["CONFIGURE"]->ADMIN_TOOLS = "_admin";
-
 // バイナリ実行ファイルに使用するOS
 $_SERVER["CONFIGURE"]->OS = "mac";
 

@@ -3,9 +3,6 @@
 LoadModel("Setting", "Members");
 LoadModel("TypeModel", "Members");
 
-// twitterOAuth を読み込む
-require_once('TwitterOAuth.php');
-
 class Members_Twitter_Auth extends FrameworkModule{
 	function execute($params){
 		if($params->check("key") && $params->check("secret")){

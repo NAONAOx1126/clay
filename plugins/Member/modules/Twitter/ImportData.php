@@ -2,9 +2,6 @@
 // この機能で使用するモデルクラス
 LoadModel("Setting", "Members");
 
-// twitterOAuth を読み込む
-require_once('TwitterOAuth.php');
-
 class Members_Twitter_ImportData extends FrameworkModule{
 	function execute($params){
 		if(!empty($_SESSION[TWITTER_SESSION_KEY]) && $params->check("from")){
