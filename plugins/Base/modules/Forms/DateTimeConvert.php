@@ -18,32 +18,22 @@
  */
 class Base_Forms_DateTimeConvert extends FrameworkModule{
 	function execute($params){
-		if(isset($_SERVER["ATTRIBUTES"][$params->get("key")])){
-			$srcSuffix = explode(",", $params->get("src_suffix"));
-			$destSuffix = explode(",", $params->get("dest_suffix"));
-			$regex = "";
-			foreach($srcSuffix as $suffix){
-				$regex .= "([0-9]+)".$suffix;
-			}
-			if(is_array($_SERVER["ATTRIBUTES"][$params->get("key")])){
-				foreach($_SERVER["ATTRIBUTES"][$params->get("key")] as $index => $data){
-					if(preg_match("/".$regex."/", $data[$params->get("target")], $p) > 0){
-						$result = "";
-						foreach($destSuffix as $i => $suffix){
-							$result .= $p[$i + 1].$suffix;
-						}
-						$_SERVER["ATTRIBUTES"][$params->get("key")][$index][$params->get("result")] = $result;
-					}
+		if(isset($_SERVER["ATTRIBUTES"][$params->get("key")]) && is_array($_SERVER["ATTRIBUTES"][$params->get("key")])){
+			foreach($_SERVER["ATTRIBUTES"][$params->get("key")] as $index => $data){
+				$srcSuffix = explode(",", $params->get("src_suffix"));
+				$destSuffix = explode(",", $params->get("dest_suffix"));
+				$regex = "";
+				foreach($srcSuffix as $suffix){
+					$regex .= "([0-9]+)".$suffix;
 				}
-			}else{
-				$data = $_SERVER["ATTRIBUTES"][$params->get("key")];
 				if(preg_match("/".$regex."/", $data[$params->get("target")], $p) > 0){
 					$result = "";
+					array_shift($p);
 					foreach($p as $i => $value){
 						if(count($destSuffix) <= $i) break;
 						$result .= $value.$destSuffix[$i];
 					}
-					$_SERVER["ATTRIBUTES"][$params->get("key")][$params->get("result")] = $result;
+					$_SERVER["ATTRIBUTES"][$params->get("key")][$index][$params->get("result")] = $result;
 				}
 			}
 		}

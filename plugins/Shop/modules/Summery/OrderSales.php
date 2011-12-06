@@ -8,9 +8,6 @@
  */
 class Shop_Summery_OrderSales extends FrameworkModule{
 	function execute($params){
-		// データ一括取得のため、処理期限を無効化
-		ini_set("max_execution_time", 0);
-		
 		// ローダーを初期化
 		$loader = new PluginLoader("Shop");
 		

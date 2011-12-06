@@ -2,33 +2,41 @@
 /**
  * ### Base.Operator.Login
  * 管理画面のログイン処理を実行する。
+ * 
+ * @category  Module
+ * @package   Operator
+ * @author    Naohisa Minagawa <info@sweetberry.jp>
+ * @copyright 2010-2012 Naohisa Minagawa
+ * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache License, Version 2.0
+ * @since PHP 5.3
+ * @version   1.0.0
  */
 class Base_Operator_Login extends FrameworkModule{
 	function execute($params){
+		$loader = new PluginLoader();
 		if(empty($_SESSION["OPERATOR"])){
-			// ログインIDのサイトコードを照合する。
-			if($_SERVER["CONFIGURE"]->site_code != $_POST["login_id"]){
+			// 管理者モデルを取得する。
+			$companyOperator = $loader->loadModel("CompanyOperatorModel");
+	
+			// 渡されたログインIDでレコードを取得する。
+			$companyOperator->findByLoginId($_POST["login_id"]);
+			
+			// ログインIDに該当するアカウントが無い場合
+			if(!($companyOperator->operator_id > 0)){
 				throw new InvalidException(array("ログイン情報が正しくありません。"));
 			}
 			
 			// 保存されたパスワードと一致するか調べる。
-			if($_SERVER["CONFIGURE"]->site_password != $_POST["password"]){
+			if($companyOperator->password != sha1($companyOperator->login_id.":".$_POST["password"])){
 				throw new InvalidException(array("ログイン情報が正しくありません。"));
 			}
 			
 			// ログインに成功した場合には管理者情報をセッションに格納する。
-			$_SESSION["OPERATOR"] = $_SERVER["CONFIGURE"];
-		}else{
-			// ログインIDのサイトコードを照合する。
-			if($_SERVER["CONFIGURE"]->site_code != $_SESSION["OPERATOR"]->site_code){
-				throw new InvalidException(array("ログイン情報が正しくありません。"));
-			}
-			
-			// 保存されたパスワードと一致するか調べる。
-			if($_SERVER["CONFIGURE"]->site_password != $_SESSION["OPERATOR"]->site_password){
-				throw new InvalidException(array("ログイン情報が正しくありません。"));
-			}
+			$_SESSION["OPERATOR"] = $companyOperator->toArray();
 		}
+		// 管理者モデルを復元する。
+		$companyOperator = $loader->loadModel("CompanyOperatorModel", $_SESSION["OPERATOR"]);
+		$_SERVER["ATTRIBUTES"]["OPERATOR"] = $companyOperator;
 	}
 }
 ?>

@@ -17,25 +17,8 @@
  */
 class Base_Forms_EmailType extends FrameworkModule{
 	function execute($params){
-		if(isset($_SERVER["ATTRIBUTES"][$params->get("key")])){
-			if(is_array($_SERVER["ATTRIBUTES"][$params->get("key")])){
-				foreach($_SERVER["ATTRIBUTES"][$params->get("key")] as $index => $data){
-					if(preg_match("/@(.+)$/", $data[$params->get("target")], $p)){
-						// メールアドレスのドメインを取得する。
-						$domain = $p[1];
-						$loader = new PluginLoader();
-						$mobileDomain = $loader->loadModel("MobileDomainModel");
-						$mobileDomain->findByMobileDomain($domain);
-						if($mobileDomain->mobile_domain_id > 0){
-							$type = $mobileDomain->mobile_type;
-						}else{
-							$type = "PC";
-						}
-						$_SERVER["ATTRIBUTES"][$params->get("key")][$index][$params->get("result")] = $type;
-					}
-				}
-			}else{
-				$data = $_SERVER["ATTRIBUTES"][$params->get("key")];
+		if(isset($_SERVER["ATTRIBUTES"][$params->get("key")]) && is_array($_SERVER["ATTRIBUTES"][$params->get("key")])){
+			foreach($_SERVER["ATTRIBUTES"][$params->get("key")] as $index => $data){
 				if(preg_match("/@(.+)$/", $data[$params->get("target")], $p)){
 					// メールアドレスのドメインを取得する。
 					$domain = $p[1];
@@ -47,7 +30,7 @@ class Base_Forms_EmailType extends FrameworkModule{
 					}else{
 						$type = "PC";
 					}
-					$_SERVER["ATTRIBUTES"][$params->get("key")][$params->get("result")] = $type;
+					$_SERVER["ATTRIBUTES"][$params->get("key")][$index][$params->get("result")] = $type;
 				}
 			}
 		}

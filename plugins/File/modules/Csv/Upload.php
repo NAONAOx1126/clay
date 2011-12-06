@@ -17,6 +17,9 @@
  */
 class File_Csv_Upload extends FrameworkModule{
 	function execute($params){
+		// 実行時間制限を解除
+		ini_set("max_execution_time", 0);
+		
 		// ローダーを初期化
 		$loader = new PluginLoader("File");
 
@@ -47,7 +50,12 @@ class File_Csv_Upload extends FrameworkModule{
 						}
 						
 						// CSVデータを読み込む
-						while(($data = fgetcsv($fp)) !== FALSE){
+						$_SERVER["FILE_CSV_UPLOAD"]["FP"] = $fp;
+						$_SERVER["FILE_CSV_UPLOAD"]["CSV"] = $csv;
+						$_SERVER["FILE_CSV_UPLOAD"]["CSV_CONTENTS"] = $csvContents;
+						$i = 0;
+						$_SERVER["ATTRIBUTES"][$csv->list_key] = null;
+						while($i < $params->get("unit", 1) && ($data = fgetcsv($fp)) !== FALSE){
 							$saveData = array();
 							foreach($csvContents as $content){
 								$saveData[$content->content_key] = $data[$content->order - 1];
@@ -56,6 +64,7 @@ class File_Csv_Upload extends FrameworkModule{
 								$_SERVER["ATTRIBUTES"][$csv->list_key] = array();
 							}
 							$_SERVER["ATTRIBUTES"][$csv->list_key][] = $saveData;
+							$i ++;
 						}
 					}
 				}

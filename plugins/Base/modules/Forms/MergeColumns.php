@@ -18,21 +18,8 @@
  */
 class Base_Forms_MergeColumns extends FrameworkModule{
 	function execute($params){
-		if(isset($_SERVER["ATTRIBUTES"][$params->get("key")])){
-			if(is_array($_SERVER["ATTRIBUTES"][$params->get("key")])){
-				foreach($_SERVER["ATTRIBUTES"][$params->get("key")] as $index => $data){
-					$columns = explode(",", $params->get("target"));
-					$value = "";
-					foreach($columns as $i => $column){
-						if($i > 0){
-							$value .= $params->get("delimiter");
-						}
-						$value .= $data[$column];
-					}
-					$_SERVER["ATTRIBUTES"][$params->get("key")][$index][$params->get("result")] = $value;
-				}
-			}else{
-				$data = $_SERVER["ATTRIBUTES"][$params->get("key")];
+		if(isset($_SERVER["ATTRIBUTES"][$params->get("key")]) && is_array($_SERVER["ATTRIBUTES"][$params->get("key")])){
+			foreach($_SERVER["ATTRIBUTES"][$params->get("key")] as $index => $data){
 				$columns = explode(",", $params->get("target"));
 				$value = "";
 				foreach($columns as $i => $column){
@@ -41,7 +28,7 @@ class Base_Forms_MergeColumns extends FrameworkModule{
 					}
 					$value .= $data[$column];
 				}
-				$_SERVER["ATTRIBUTES"][$params->get("key")][$params->get("result")] = $value;
+				$_SERVER["ATTRIBUTES"][$params->get("key")][$index][$params->get("result")] = $value;
 			}
 		}
 	}

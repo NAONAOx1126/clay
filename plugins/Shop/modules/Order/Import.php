@@ -16,14 +16,14 @@
 class Shop_Order_Import extends FrameworkModule{
 	function execute($params){
 		if($params->check("key") && is_array($_SERVER["ATTRIBUTES"][$params->get("key")])){
-			foreach($_SERVER["ATTRIBUTES"][$params->get("key")] as $data){
-				try{
-					// トランザクションデータベースの取得
-					$db = DBFactory::getConnection();
-					
-					// トランザクションの開始
-					$db->beginTransaction();
-					
+			try{
+				// トランザクションデータベースの取得
+				$db = DBFactory::getConnection();
+				
+				// トランザクションの開始
+				$db->beginTransaction();
+				
+				foreach($_SERVER["ATTRIBUTES"][$params->get("key")] as $data){
 					// ローダーを初期化
 					$loader = new PluginLoader("Shop");
 					
@@ -54,16 +54,14 @@ class Shop_Order_Import extends FrameworkModule{
 						$data["payment_id"] = $payment->payment_id;
 					}
 					
-					// 注文データが存在しなければ追加
+					// 注文データを上書き
 					if(!empty($data["order_code"])){
 						$order = $loader->loadModel("OrderModel");
 						$order->findByCode($data["order_code"]);
-						if($order->order_id == ""){
-							foreach($data as $key => $value){
-								$order->$key = $value;
-							}
-							$order->save($db);
+						foreach($data as $key => $value){
+							$order->$key = $value;
 						}
+						$order->save($db);
 						$data["order_id"] = $order->order_id;
 					}
 					
@@ -78,36 +76,31 @@ class Shop_Order_Import extends FrameworkModule{
 							$orderPayment->save($db);
 						}
 						$data["order_payment_id"] = $orderPayment->order_payment_id;
-
+	
 						// 注文セットデータが存在しなければ追加
 						$orderPackage = $loader->loadModel("OrderPackageModel");
 						$orderPackage->findBy(array("order_id" => $data["order_id"]));
-						if($orderPackage->order_package_id == ""){
-							foreach($data as $key => $value){
-								$orderPackage->$key = $value;
-							}
-							$orderPackage->save($db);
+						foreach($data as $key => $value){
+							$orderPackage->$key = $value;
 						}
+						$orderPackage->save($db);
 						$data["order_package_id"] = $orderPackage->order_package_id;
-
+	
 						if(!empty($data["order_package_id"])){
 							// 注文セットデータが存在しなければ追加
 							$orderDetail = $loader->loadModel("OrderDetailModel");
 							$orderDetail->findBy(array("order_package_id" => $data["order_package_id"], "product_code" => $data["product_code"]));
-							if($orderDetail->order_detail_id == ""){
-								foreach($data as $key => $value){
-									$orderDetail->$key = $value;
-								}
-								$orderDetail->save($db);
+							foreach($data as $key => $value){
+								$orderDetail->$key = $value;
 							}
+							$orderDetail->save($db);
 							$data["order_detail_id"] = $orderDetail->order_detail_id;
 						}
 					}
-					
-					$db->commit();
-				}catch(Exception $e){
-					$db->rollback();
 				}
+				$db->commit();
+			}catch(Exception $e){
+				$db->rollback();
 			}
 		}
 	}

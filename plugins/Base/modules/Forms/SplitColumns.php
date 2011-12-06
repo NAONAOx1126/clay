@@ -18,22 +18,12 @@
  */
 class Base_Forms_SplitColumns extends FrameworkModule{
 	function execute($params){
-		if(isset($_SERVER["ATTRIBUTES"][$params->get("key")])){
-			if(is_array($_SERVER["ATTRIBUTES"][$params->get("key")])){
-				foreach($_SERVER["ATTRIBUTES"][$params->get("key")] as $index => $data){
-					if(preg_match("/".$params->get("regex")."/", $data[$params->get("target")], $p)){
-						$columns = explode(",", $params->get("result"));
-						foreach($p as $i => $param){
-							$_SERVER["ATTRIBUTES"][$params->get("key")][$index][$columns[$i]] = $param;
-						}
-					}
-				}
-			}else{
-				$data = $_SERVER["ATTRIBUTES"][$params->get("key")];
+		if(isset($_SERVER["ATTRIBUTES"][$params->get("key")]) && is_array($_SERVER["ATTRIBUTES"][$params->get("key")])){
+			foreach($_SERVER["ATTRIBUTES"][$params->get("key")] as $index => $data){
 				if(preg_match("/".$params->get("regex")."/", $data[$params->get("target")], $p)){
 					$columns = explode(",", $params->get("result"));
 					foreach($p as $i => $param){
-						$_SERVER["ATTRIBUTES"][$params->get("key")][$columns[$i]] = $param;
+						$_SERVER["ATTRIBUTES"][$params->get("key")][$index][$columns[$i]] = $param;
 					}
 				}
 			}
