@@ -9,9 +9,6 @@
  */
 class Shop_Order_Export extends FrameworkModule{
 	function execute($params){
-		// データ一括取得のため、処理期限を無効化
-		ini_set("max_execution_time", 0);
-		
 		// ローダーを初期化
 		$loader = new PluginLoader("Shop");
 		
@@ -30,41 +27,39 @@ class Shop_Order_Export extends FrameworkModule{
 		// 取得する件数の上限をページャのオプションに追加
 		$totalOrders = $order->countBy($conditions);
 		
-		// 1000件ずつデータを取得する。
+		// 取得する件数を絞り込み
 		$list = array();
-		for($i = 0; $i < $totalOrders; $i += 1000){
-			// 取得する件数を絞り込み
-			$order->limit(1000, $i);
-			$orders = $order->findAllBy($conditions, $sortKey);
-			foreach($orders as $order){
-				$item = array();
-				$orderPayments = $order->payments();
-				$payment = $orderPayments[0]->payment();
-				foreach($payment->toArray() as $key => $value){
+		$order->limit($_SERVER["FILE_CSV_DOWNLOAD"]["LIMIT"], $_SERVER["FILE_CSV_DOWNLOAD"]["OFFSET"]);
+		$orders = $order->findAllBy($conditions, $sortKey);
+		$_SERVER["FILE_CSV_DOWNLOAD"]["OFFSET"] += $_SERVER["FILE_CSV_DOWNLOAD"]["LIMIT"];
+		foreach($orders as $order){
+			$item = array();
+			$orderPayments = $order->payments();
+			$payment = $orderPayments[0]->payment();
+			foreach($payment->toArray() as $key => $value){
+				$item[$key] = $value;
+			}
+			foreach($orderPayments[0]->toArray() as $key => $value){
+				$item[$key] = $value;
+			}
+			$orderPackages = $order->packages();
+			foreach($orderPackages as $orderPackage){
+				$delivery = $orderPackage->delivery();
+				foreach($delivery->toArray() as $key => $value){
 					$item[$key] = $value;
 				}
-				foreach($orderPayments[0]->toArray() as $key => $value){
-					$item[$key] = $value;
-				}
-				$orderPackages = $order->packages();
-				foreach($orderPackages as $orderPackage){
-					$delivery = $orderPackage->delivery();
-					foreach($delivery->toArray() as $key => $value){
+				$details = $orderPackage->details();
+				foreach($details as $detail){
+					foreach($detail->toArray() as $key => $value){
 						$item[$key] = $value;
 					}
-					$details = $orderPackage->details();
-					foreach($details as $detail){
-						foreach($detail->toArray() as $key => $value){
-							$item[$key] = $value;
-						}
-						foreach($orderPackage->toArray() as $key => $value){
-							$item[$key] = $value;
-						}
-						foreach($order->toArray() as $key => $value){
-							$item[$key] = $value;
-						}
-						$list[] = $item;
+					foreach($orderPackage->toArray() as $key => $value){
+						$item[$key] = $value;
 					}
+					foreach($order->toArray() as $key => $value){
+						$item[$key] = $value;
+					}
+					$list[] = $item;
 				}
 			}
 		}

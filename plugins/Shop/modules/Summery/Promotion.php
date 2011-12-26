@@ -20,7 +20,7 @@ class Shop_Summery_Promotion extends FrameworkModule{
 		$promoOrderDetail->setAlias("promo_order_details");
 		$order = $loader->loadTable("OrdersTable");
 		$orderPackage = $loader->loadTable("OrderPackagesTable");
-		$orderDetail = $loader->loadTable("OrderDetailsTable");
+		$orderDetail = $loader->loadTable("RepeaterOrderDetailsTable");
 		$promotion = $loader->loadTable("ProductPromotionsTable");
 		
 		// SELECT文を構築する。

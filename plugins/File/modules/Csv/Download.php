@@ -15,6 +15,9 @@
  */
 class File_Csv_Download extends FrameworkModule{
 	function execute($params){
+		// データ一括取得のため、処理期限を無効化
+		ini_set("max_execution_time", 0);
+		
 		// ローダーを初期化
 		$loader = new PluginLoader("File");
 
@@ -31,35 +34,21 @@ class File_Csv_Download extends FrameworkModule{
 				// ダウンロードの際は、よけいなバッファリングをクリア
 				ob_end_clean();
 				
+				$_SERVER["FILE_CSV_DOWNLOAD"]["OFFSET"] = 0;
+				$_SERVER["FILE_CSV_DOWNLOAD"]["LIMIT"] = $params->get("unit", PHP_INT_MAX);
+				$_SERVER["FILE_CSV_DOWNLOAD"]["CSV"] = $csv;
+				$_SERVER["FILE_CSV_DOWNLOAD"]["CSV_CONTENTS"] = $csvContents;
+				
 				header("Content-Type: application/csv");
 				header("Content-Disposition: attachment; filename=\"".$csv->csv_code.date("YmdHis").".csv\"");
 
-				// リストコンテンツを取得
-				$list = $_SERVER["ATTRIBUTES"][$csv->list_key];
-				
 				// リストコンテンツをループさせる。
-				$row = array();
+				$_SERVER["ATTRIBUTES"][$csv->list_key] = array();
 				foreach($csvContents as $csvContent){
-					$row[] = $csvContent->column_name;
+					$_SERVER["ATTRIBUTES"][$csv->list_key][] = $csvContent->column_name;
 				}
-				echo mb_convert_encoding("\"".implode("\",\"", $row)."\"\r\n", "Shift_JIS", "UTF-8");						
-				foreach($list as $item){
-					$row = array();
-					foreach($csvContents as $csvContent){
-						$contentKeys = explode(".", $csvContent->content_key);
-						$text = $item;
-						foreach($contentKeys as $key){
-							if(is_array($text)){
-								$text = $text[$key];
-							}elseif(is_object($text)){
-								$text = $text->$key;
-							}
-						}
-						$row[] = $text;
-					}
-					echo mb_convert_encoding("\"".implode("\",\"", $row)."\"\r\n", "Shift_JIS", "UTF-8");						
-				}
-				exit;
+				echo mb_convert_encoding("\"".implode("\",\"", $_SERVER["ATTRIBUTES"][$csv->list_key])."\"\r\n", "Shift_JIS", "UTF-8");
+				ob_start();
 			}
 		}
 	}

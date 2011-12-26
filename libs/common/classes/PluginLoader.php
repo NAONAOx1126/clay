@@ -39,7 +39,7 @@ class PluginLoader{
 		if(!empty($this->namespace)){
 			$name = $this->namespace.".".$name;
 		}
-		Logger::writeDebug($name);
+		Logger::writeDebug($name." ==> ".number_format(memory_get_usage()));
 		$names = explode(".", $name);
 		$path = implode("/", $names);
 		$class = implode("_", $names);

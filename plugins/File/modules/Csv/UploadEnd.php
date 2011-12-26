@@ -27,7 +27,7 @@ class File_Csv_UploadEnd extends FrameworkModule{
 
 			$i = 0;
 			$_SERVER["ATTRIBUTES"][$csv->list_key] = null;
-			while($i < $params->get("unit", 1) && ($data = fgetcsv($fp)) !== FALSE){
+			while($i < $_SERVER["FILE_CSV_UPLOAD"]["LIMIT"] && ($data = fgetcsv($fp)) !== FALSE){
 				$saveData = array();
 				foreach($csvContents as $content){
 					$saveData[$content->content_key] = $data[$content->order - 1];
@@ -37,6 +37,10 @@ class File_Csv_UploadEnd extends FrameworkModule{
 				}
 				$_SERVER["ATTRIBUTES"][$csv->list_key][] = $saveData;
 				$i ++;
+			}
+			if($_SERVER["ATTRIBUTES"][$csv->list_key] == null){
+				fclose($fp);
+				unset($_SERVER["FILE_CSV_UPLOAD"]);
 			}
 		}
 	}

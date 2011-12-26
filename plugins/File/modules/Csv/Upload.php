@@ -51,6 +51,7 @@ class File_Csv_Upload extends FrameworkModule{
 						
 						// CSVデータを読み込む
 						$_SERVER["FILE_CSV_UPLOAD"]["FP"] = $fp;
+						$_SERVER["FILE_CSV_UPLOAD"]["LIMIT"] = $params->get("unit", 1);
 						$_SERVER["FILE_CSV_UPLOAD"]["CSV"] = $csv;
 						$_SERVER["FILE_CSV_UPLOAD"]["CSV_CONTENTS"] = $csvContents;
 						$i = 0;

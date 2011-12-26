@@ -200,13 +200,31 @@ class DatabaseModel{
 			$select->addColumn("COUNT(*)", "count");
 		}
 		foreach($targets as $target){
-			$select->addColumn("SUM(".$this->access->$target.")", $target);
+			if(!empty($target)){
+				if(substr($target, 0, 1) == ":" && substr($target, -1) == ":"){
+					$target = str_replace(";",",", $target);
+					$arrTarget = explode(":", substr($target, 1, -1));
+					$target_name = array_pop($arrTarget);
+					$target = "";
+					for($i = 0; $i < count($arrTarget); $i ++){
+						if($i % 2 == 0){
+							$target .= $arrTarget[$i];
+						}else{
+							$name = $arrTarget[$i];
+							$target .= $this->access->$name;
+						}
+					}
+					$select->addColumn("SUM(".$target.")", $target_name);
+				}else{
+					$select->addColumn("SUM(".$this->access->$target.")", $target);
+				}
+			}
 		}
 		foreach($values as $key => $value){
 			$select = $this->appendWhere($select, $key, $value);
 		}
 		if(!empty($order)){
-			$select->addOrder($order);
+			$select->addOrder($order, true);
 		}else{
 			$select->addOrder("count", true);
 		}

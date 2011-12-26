@@ -34,6 +34,10 @@ class DBFactory{
 	 */
 	public static function initialize($configures){
 		DBFactory::$configures = $configures;
+		DBFactory::refresh();
+	}
+	
+	public static function refresh(){
 		DBFactory::$connections = array();
 	}
 	

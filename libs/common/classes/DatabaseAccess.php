@@ -93,6 +93,7 @@ class DatabaseTable{
 				$keys[] = $key["column_name"];
 			}
 			$prepare->closeCursor();
+			$connection = null;
 
 			$tableConfigure->import(array("options" => $options, "keys" => $keys));
 		}
@@ -168,6 +169,7 @@ class DatabaseTable{
 		$prepare->execute();
 		$result = $prepare->rowCount();
 		$prepare->closeCursor();
+		$connection = null;
 
 		return $result;
 	}
@@ -448,6 +450,7 @@ class DatabaseSelect{
 
 		// 結果オブジェクトを解放
 		$result->close();
+		$result = null;
 
 		// クエリの実行結果を返す。
 		return $data;
@@ -931,6 +934,7 @@ class DatabaseTruncate{
 			$prepare->execute(array());
 			$result = $prepare->rowCount();
 			$prepare->closeCursor();
+			$prepare = null;
 		}catch(Exception $e){
 			Logger::writeError($sql, $e);
 			throw new DatabaseException($e);

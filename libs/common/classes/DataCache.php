@@ -127,6 +127,7 @@ class FileDataCache extends DataCache{
 				fwrite($fp, '$this->values["'.$key.'"] = '.var_export($value, TRUE).";\r\n");
 			}
 			fwrite($fp, "?".">\r\n");
+			fclose($fp);
 		}
 	}
 	

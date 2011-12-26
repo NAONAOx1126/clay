@@ -38,6 +38,7 @@ class Shop_Order_Import extends FrameworkModule{
 							$delivery->save($db);
 						}
 						$data["delivery_id"] = $delivery->delivery_id;
+						unset($delivery);
 					}
 					
 					// 決済方法のテーブルが存在しなければ追加
@@ -52,6 +53,7 @@ class Shop_Order_Import extends FrameworkModule{
 							$payment->save($db);
 						}
 						$data["payment_id"] = $payment->payment_id;
+						unset($payment);
 					}
 					
 					// 注文データを上書き
@@ -63,6 +65,7 @@ class Shop_Order_Import extends FrameworkModule{
 						}
 						$order->save($db);
 						$data["order_id"] = $order->order_id;
+						unset($order);
 					}
 					
 					if(!empty($data["order_id"])){
@@ -85,6 +88,7 @@ class Shop_Order_Import extends FrameworkModule{
 						}
 						$orderPackage->save($db);
 						$data["order_package_id"] = $orderPackage->order_package_id;
+						unset($orderPackage);
 	
 						if(!empty($data["order_package_id"])){
 							// 注文セットデータが存在しなければ追加
@@ -95,6 +99,7 @@ class Shop_Order_Import extends FrameworkModule{
 							}
 							$orderDetail->save($db);
 							$data["order_detail_id"] = $orderDetail->order_detail_id;
+							unset($orderDetail);
 						}
 					}
 				}
