@@ -11,15 +11,24 @@
  * @version   1.0.0
  */
 class Base_SiteConfigureModel extends DatabaseModel{
+	/**
+	 * コンストラクタ
+	 */
 	function __construct($values = array()){
 		$loader = new PluginLoader();
 		parent::__construct($loader->loadTable("SiteConfiguresTable"), $values);
 	}
 	
+	/**
+	 * 主キーで検索する。
+	 */
 	function findByPrimaryKey($site_id, $name){
 		$this->findBy(array("site_id" => $site_id, "name" => $name));
 	}
 	
+	/**
+	 * サイトIDで検索する。
+	 */
 	function findAllBySiteId($site_id){
 		return $this->findAllBy(array("site_id" => $site_id));
 	}

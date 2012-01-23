@@ -11,23 +11,38 @@
  * @version   1.0.0
  */
 class Base_CompanyOperatorModel extends DatabaseModel{
+	/**
+	 * コンストラクタ
+	 */
 	public function __construct($values = array()){
 		$loader = new PluginLoader();
 		parent::__construct($loader->loadTable("CompanyOperatorsTable"), $values);
 	}
 	
+	/**
+	 * 主キーでオペレータを検索する。
+	 */
 	public function findByPrimaryKey($operator_id){
 		$this->findBy(array("operator_id" => $operator_id));
 	}
 
+	/**
+	 * オペレータのログインIDでデータを検索する。
+	 */
 	public function findByLoginId($login_id){
 		$this->findBy(array("login_id" => $login_id));
 	}
 	
+	/**
+	 * 組織のIDでオペレータのデータを検索する。
+	 */
 	public function findAllByCompanyId($company_id){
 		return $this->findAllBy(array("company_id" => $company_id));
 	}
 	
+	/**
+	 * オペレータの管理対象となっているサイトを検索する。
+	 */
 	public function sites(){
 		$loader = new PluginLoader();
 		$site = $loader->loadModel("SiteModel");
@@ -40,10 +55,16 @@ class Base_CompanyOperatorModel extends DatabaseModel{
 		return $sites;
 	}
 	
+	/**
+	 * 特権オペレータかどうかを調べる。
+	 */
 	public function isSuper(){
 		return $this->super_flg;
 	}
 	
+	/**
+	 * オペレータの所属する組織のデータを取得する。
+	 */
 	public function company(){
 		$loader = new PluginLoader();
 		$company = $loader->loadModel("CompanyModel");

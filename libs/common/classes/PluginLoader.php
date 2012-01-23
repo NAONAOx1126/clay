@@ -77,8 +77,8 @@ class PluginLoader{
 	 *
 	 * @params string $name モデル呼び出し名
 	 */
-	function loadModel($name){
-		return $this->load("models", $name);
+	function loadModel($name, $params = array()){
+		return $this->load("models", $name, $params);
 	}
 	
 	/**

@@ -10,16 +10,25 @@
  * @since PHP 5.3
  * @version   1.0.0
  */
-class PrefModel extends DatabaseModel{
+class Base_PrefModel extends DatabaseModel{
+	/**
+	 * コンストラクタ
+	 */
 	function __construct($values = array()){
 		$loader = new PluginLoader();
 		parent::__construct($loader->loadTable("PrefsTable"), $values);
 	}
 	
+	/**
+	 * 主キーでデータを検索する。
+	 */
 	function findByPrimaryKey($pref_id){
 		$this->findBy(array("id" => $pref_id));
 	}
 	
+	/**
+	 * モデル自体を都道府県の名前文字列として扱えるようにする。
+	 */
 	function __toString(){
 		return $this->name;
 	}

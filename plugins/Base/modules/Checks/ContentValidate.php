@@ -14,6 +14,9 @@
  * @param message エラーメッセージ
  */
 class Default_Checks_ContentValidate extends FrameworkModule{
+	/**
+	 * モジュールのエンドポイント
+	 */
 	function execute($params){
 		if($params->check("key")){
 			if(!is_array($_SERVER["ERRORS"])){

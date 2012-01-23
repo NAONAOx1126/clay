@@ -17,17 +17,37 @@ class Shop_Summery_RepeaterOrderDetail extends FrameworkModule{
 		$sortKey = $_POST[$params->get("order", "order")];
 		unset($_POST[$params->get("order", "order")]);
 		$conditions = array();
+		$conditions_new = array("order_repeat" => "0");
+		$conditions_repeat = array("gt:order_repeat" => "0");
 		foreach($_POST as $key => $value){
 			if(!empty($value)){
 				$conditions[$key] = $value;
+				$conditions_new[$key] = $value;
+				$conditions_repeat[$key] = $value;
 			}
 		}
 		
 		// 取得する件数の上限をページャのオプションに追加
 		$groups = explode(",", $params->get("title"));
 		$targets = explode(",", $params->get("summery"));
-		$summerys = $orderDetail->summeryBy($groups, $targets, $conditions, $sortKey);
+		$summerys = $orderDetail->summeryByArray($groups, $targets, $conditions, $sortKey);
+		foreach($summerys as $index => $summery){
+			$summerys[$index]["count"] = $summery["quantity"];
+			$summerys[$index]["subtotal"] = $summery["price"];
+		}
 		$_SERVER["ATTRIBUTES"][$params->get("result", "orders")] = $summerys;
+		$summerys = $orderDetail->summeryByArray($groups, $targets, $conditions_new, $sortKey);
+		foreach($summerys as $index => $summery){
+			$summerys[$index]["count"] = $summery["quantity"];
+			$summerys[$index]["subtotal"] = $summery["price"];
+		}
+		$_SERVER["ATTRIBUTES"][$params->get("result", "orders")."_new"] = $summerys;
+		$summerys = $orderDetail->summeryByArray($groups, $targets, $conditions_repeat, $sortKey);
+		foreach($summerys as $index => $summery){
+			$summerys[$index]["count"] = $summery["quantity"];
+			$summerys[$index]["subtotal"] = $summery["price"];
+		}
+		$_SERVER["ATTRIBUTES"][$params->get("result", "orders")."_repeat"] = $summerys;
 	}
 }
 ?>

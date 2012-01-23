@@ -28,19 +28,43 @@ class File_Csv_Upload extends FrameworkModule{
 			$csv = $loader->loadModel("CsvModel");
 			$csv->findByCsvCode($params->get("key"));
 			
-			if(!empty($csv->csv_id)){			
+			if($csv->csv_id > 0){			
 				// CSVコンテンツ設定を取得
 				$csvContent = $loader->loadModel("CsvContentModel");
 				$csvContents = $csvContent->getCotentArrayByCsv($csv->csv_id);
 				
 				// アップロードファイルが正常にアップされた場合
 				if($_FILES[$params->get("key")]["error"] == 0){
+					// アップロードログを書き込み
+					try{
+						// トランザクションデータベースの取得
+						$db = DBFactory::getConnection();
+						
+						// トランザクションの開始
+						$db->beginTransaction();
+						
+						// アップロードログを生成
+						$uploadLog = $loader->loadModel("UploadLogModel");
+						$uploadLog->upload_time = date("Y-m-d H:i:s");
+						$uploadLog->upload_filename = $_FILES[$params->get("key")]["name"];
+						$uploadLog->upload_size = $_FILES[$params->get("key")]["size"];
+						$uploadLog->save($db);
+
+						$db->commit();
+					}catch(Exception $e){
+						$db->rollback();
+					}
+					
 					// アップロードファイルを開く
 					if(($orgFp = fopen($_FILES[$params->get("key")]["tmp_name"], "r")) !== FALSE){
 						// SJISのCSVファイルをUTF8に変換
 						$fp = tmpfile();
+						$i = 0;
 						while (($buffer = fgets($orgFp)) !== false){
-							fwrite($fp, mb_convert_encoding($buffer, "UTF-8", "Shift_JIS"));
+							$buffer = mb_convert_encoding($buffer, "UTF-8", "Shift_JIS");
+							$buffer = str_replace("\r", "\n", str_replace("\r\n", "\n", $buffer));
+							$buffer = str_replace("\n", "\r\n", $buffer);
+							fwrite($fp, $buffer);
 						}
 						rewind($fp);
 						

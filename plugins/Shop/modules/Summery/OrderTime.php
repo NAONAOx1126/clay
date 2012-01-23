@@ -27,7 +27,11 @@ class Shop_Summery_OrderTime extends FrameworkModule{
 		$targets = explode(",", $params->get("summery"));
 		$summerys = $order->summeryBy(array(":HOUR(:order_time:):order_time:"), array("subtotal", "total"), $conditions, "order_time");
 		$result = array();
+		if(!isset($_POST["time"]) || !is_array($_POST["time"]) || empty($_POST["time"])){
+			$_POST["time"] = array("6", "9", "12", "15", "18", "21");
+		}
 		$_POST["time"][] = "24";
+		print_r($_POST);
 		foreach($summerys as $summery){
 			if(in_array($summery->order_time, $_POST["time"])){
 				foreach($_POST["time"] as $i => $time){
@@ -52,6 +56,7 @@ class Shop_Summery_OrderTime extends FrameworkModule{
 				}
 			}
 		}
+		$_SERVER["ATTRIBUTES"]["times"] = $_POST["time"];
 		$_SERVER["ATTRIBUTES"][$params->get("result", "orders")] = $result;
 	}
 }

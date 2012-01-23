@@ -11,23 +11,38 @@
  * @version   1.0.0
  */
 class Base_SiteModel extends DatabaseModel{
+	/**
+	 * コンストラクタ
+	 */
 	public function __construct($values = array()){
 		$loader = new PluginLoader();
 		parent::__construct($loader->loadTable("SitesTable"), $values);
 	}
 	
+	/**
+	 * 主キーで検索する。
+	 */
 	public function findByPrimaryKey($site_id){
 		$this->findBy(array("site_id" => $site_id));
 	}
 	
+	/**
+	 * サイトコードで検索する。
+	 */
 	public function findBySiteCode($site_code){
 		$this->findBy(array("site_code" => $site_code));
 	}
 	
+	/**
+	 * ドメイン名で検索する。
+	 */
 	public function findByDomainName($domain_name){
 		$this->findBy(array("domain_name" => $domain_name));
 	}
 	
+	/**
+	 * アクセス元ホストで検索する。
+	 */
 	public function findByHostName(){
 		$select = new DatabaseSelect($this->access);
 		$select->addColumn($this->access->_W);
@@ -42,12 +57,18 @@ class Base_SiteModel extends DatabaseModel{
 		return false;
 	}
 	
+	/**
+	 * サイトのコネクションリストを取得する。
+	 */
 	public function connections(){
 		$loader = new PluginLoader();
 		$model = $loader->loadModel("SiteConnectionModel");
 		return $model->findAllBySiteId($this->site_id);
 	}
 	
+	/**
+	 * サイトの個別設定リストを取得する。
+	 */
 	public function configures(){
 		$loader = new PluginLoader();
 		$model = $loader->loadModel("SiteConfigureModel");

@@ -10,12 +10,18 @@
  * @since PHP 5.3
  * @version   1.0.0
  */
-class MailTemplateModel extends DatabaseModel{
+class Base_MailTemplateModel extends DatabaseModel{
+	/**
+	 * コンストラクタ
+	 */
 	function __construct($values = array()){
 		$loader = new PluginLoader();
 		parent::__construct($loader->loadTable("MailTemplatesTable"), $values);
 	}
 	
+	/**
+	 * 主キーで検索する。
+	 */
 	function findByPrimaryKey($template_code){
 		$this->findBy(array("template_code" => $template_code));
 	}

@@ -1,17 +1,13 @@
+php_value memory_limit 256M
+php_value upload_max_filesize 20M
+php_value post_max_size 20M
+
 # Rewriteの有効化
 RewriteEngine on
 
 # htmlの場合はindex.phpを呼び出す。
 RewriteRule ^([0-9A-Za-z/._-]+)/$ index.php [L]
 RewriteRule ^([0-9A-Za-z/._-]+)\.(html?|xml)$  index.php [L]
-
-# URLがスラッシュなしのディレクトリの場合、最後のスラッシュを補完
-# RewriteCond %{REQUEST_FILENAME} !-f
-# RewriteCond %{REQUEST_FILENAME} !-d
-# RewriteCond %{REQUEST_FILENAME} !".*/index.html$"
-# RewriteCond ./contents/%{SERVER_NAME}/templates%{REQUEST_URI}/index.html -f [OR]
-# RewriteCond ./contents/%{SERVER_NAME}/mobile%{REQUEST_URI}/index.html -f
-# RewriteRule ^(.+)$ /$1/ [R,L]
 
 # 携帯の場合はコンテンツ系のファイルを携帯の方に設定
 RewriteCond %{HTTP_USER_AGENT} "DoCoMo" [NC,OR]

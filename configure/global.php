@@ -2,7 +2,7 @@
 // デバッグフラグ
 $_SERVER["CONFIGURE"]->DEBUG = true;
 
-// デバッグフラグ
+// タイムゾーン
 $_SERVER["CONFIGURE"]->TIMEZONE = "Asia/Tokyo";
 
 // デフォルトロケール

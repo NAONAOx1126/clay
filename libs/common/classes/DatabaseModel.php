@@ -131,14 +131,14 @@ class DatabaseModel{
 	/**
 	 * レコードを特定のキーで検索する。
 	 */
-	public function findAllBy($values, $order = ""){
+	public function findAllBy($values, $order = "", $reverse = false){
 		$select = new DatabaseSelect($this->access);
 		$select->addColumn($this->access->_W);
 		foreach($values as $key => $value){
 			$select = $this->appendWhere($select, $key, $value);
 		}
 		if(!empty($order)){
-			$select->addOrder($order);
+			$select->addOrder($order, $reverse);
 		}
 		$result = $select->execute($this->limit, $this->offset);
 		
@@ -168,7 +168,7 @@ class DatabaseModel{
 		}
 	}
 	
-	public function summeryBy($groups, $targets, $values = array(), $order = ""){
+	public function summeryByArray($groups, $targets, $values = array(), $order = ""){
 		$select = new DatabaseSelect($this->access);
 		foreach($groups as $group){
 			if(!empty($group)){
@@ -224,11 +224,21 @@ class DatabaseModel{
 			$select = $this->appendWhere($select, $key, $value);
 		}
 		if(!empty($order)){
-			$select->addOrder($order, true);
+			if(preg_match("/^rev@/", $order) > 0){
+				$select->addOrder(substr($order, 4), true);
+			}else{
+				$select->addOrder($order, false);			
+			}
 		}else{
 			$select->addOrder("count", true);
 		}
 		$result = $select->execute($this->limit, $this->offset);
+		
+		return $result;
+	}
+	
+	public function summeryBy($groups, $targets, $values = array(), $order = ""){
+		$result = $this->summeryByArray($groups, $targets, $values, $order);
 		
 		$thisClass = get_class($this);
 		foreach($result as $i => $data){

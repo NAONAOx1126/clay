@@ -11,7 +11,7 @@ class Shop_Summery_OrderSales extends FrameworkModule{
 		// ローダーを初期化
 		$loader = new PluginLoader("Shop");
 		
-		$order = $loader->loadModel("OrderModel");
+		$order = $loader->loadModel("RepeaterOrderModel");
 		
 		// パラメータのsortを並び順変更のキーとして利用
 		$sortKey = $_POST[$params->get("order", "order")];
@@ -26,11 +26,11 @@ class Shop_Summery_OrderSales extends FrameworkModule{
 		// 取得する件数の上限をページャのオプションに追加
 		$groups = explode(",", $params->get("title"));
 		$targets = array("subtotal", "total");
-		$summerys = $order->summeryBy($groups, $targets, $conditions);
+		$summerys = $order->summeryByArray($groups, $targets, $conditions);
 		
 		$result = array();
 		foreach($summerys as $summery){
-			if(($summery->subtotal >= (isset($_POST["subtotal_min"])?$_POST["subtotal_min"]:"0") && ($summery->total >= (isset($_POST["total_min"])?$_POST["total_min"]:"0")))){
+			if(($summery["subtotal"] >= (isset($_POST["subtotal_min"])?$_POST["subtotal_min"]:"0") && ($summery["total"] >= (isset($_POST["total_min"])?$_POST["total_min"]:"0")))){
 				$result[] = $summery;
 			}
 		}

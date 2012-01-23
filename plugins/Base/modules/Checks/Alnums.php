@@ -14,7 +14,10 @@
  * @param value チェック対象の名称
  * @param suffix エラーメッセージのサフィックス
  */
-class Default_Checks_Alnums extends FrameworkModule{
+class Base_Checks_Alnums extends FrameworkModule{
+	/**
+	 * モジュールのエンドポイント
+	 */
 	function execute($params){
 		if(!is_array($_SERVER["ERRORS"])){
 			$_SERVER["ERRORS"] = array();

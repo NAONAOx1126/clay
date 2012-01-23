@@ -15,6 +15,9 @@
  * @param suffix エラーメッセージのサフィックス
  */
 class Default_Checks_Numbers extends FrameworkModule{
+	/**
+	 * モジュールのエンドポイント
+	 */
 	function execute($params){
 		if(!is_array($_SERVER["ERRORS"])){
 			$_SERVER["ERRORS"] = array();

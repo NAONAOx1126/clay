@@ -17,9 +17,13 @@ class Shop_Summery_RepeaterOrder extends FrameworkModule{
 		$sortKey = $_POST[$params->get("order", "order")];
 		unset($_POST[$params->get("order", "order")]);
 		$conditions = array();
+		$conditions_new = array("order_repeat" => "0");
+		$conditions_repeat = array("gt:order_repeat" => "0");
 		foreach($_POST as $key => $value){
 			if(!empty($value)){
 				$conditions[$key] = $value;
+				$conditions_new[$key] = $value;
+				$conditions_repeat[$key] = $value;
 			}
 		}
 		
@@ -28,6 +32,10 @@ class Shop_Summery_RepeaterOrder extends FrameworkModule{
 		$targets = explode(",", $params->get("summery"));
 		$summerys = $order->summeryBy($groups, $targets, $conditions, $sortKey);
 		$_SERVER["ATTRIBUTES"][$params->get("result", "orders")] = $summerys;
+		$summerys = $order->summeryBy($groups, $targets, $conditions_new, $sortKey);
+		$_SERVER["ATTRIBUTES"][$params->get("result", "orders")."_new"] = $summerys;
+		$summerys = $order->summeryBy($groups, $targets, $conditions_repeat, $sortKey);
+		$_SERVER["ATTRIBUTES"][$params->get("result", "orders")."_repeat"] = $summerys;
 	}
 }
 ?>

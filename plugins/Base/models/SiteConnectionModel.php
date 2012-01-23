@@ -11,15 +11,24 @@
  * @version   1.0.0
  */
 class Base_SiteConnectionModel extends DatabaseModel{
+	/**
+	 * コンストラクタ
+	 */
 	function __construct($values = array()){
 		$loader = new PluginLoader();
 		parent::__construct($loader->loadTable("SiteConnectionsTable"), $values);
 	}
 	
+	/**
+	 * 主キーで検索する。
+	 */
 	function findByPrimaryKey($site_id, $connection_code){
 		$this->findBy(array("site_id" => $site_id, "connection_code" => $connection_code));
 	}
 	
+	/**
+	 * サイトIDで検索する。
+	 */
 	function findAllBySiteId($site_id){
 		return $this->findAllBy(array("site_id" => $site_id));
 	}

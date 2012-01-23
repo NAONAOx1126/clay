@@ -911,14 +911,17 @@ class DatabaseTruncate{
 
 	private $tables;
 
-	public function __construct($table){
-		$this->db = DBFactory::getConnection($table->getModuleName());
+	public function __construct($table, $db = null){
+		if($db == null){
+			$db = DBFactory::getConnection($table->getModuleName());
+		}
+		$this->db = $db;
 		$this->tables = $table->_T;
 	}
 
 	public function buildQuery(){
 		// クエリのビルド
-		$sql = "DELETE FROM ".$this->tables;
+		$sql = "TRUNCATE ".$this->tables;
 
 		return $sql;
 	}

@@ -11,15 +11,24 @@
  * @version   1.0.0
  */
 class Base_MobileDomainModel extends DatabaseModel{
+	/**
+	 * コンストラクタ
+	 */
 	public function __construct($values = array()){
 		$loader = new PluginLoader();
 		parent::__construct($loader->loadTable("MobileDomainsTable"), $values);
 	}
 	
+	/**
+	 * 主キーでデータを取得する。
+	 */
 	public function findByPrimaryKey($mobile_domain_id){
 		$this->findBy(array("mobile_domain_id" => $mobile_domain_id));
 	}
 	
+	/**
+	 * モバイルドメインでデータを取得する。
+	 */
 	public function findByMobileDomain($mobile_domain){
 		$this->findBy(array("mobile_domain" => $mobile_domain));
 	}
