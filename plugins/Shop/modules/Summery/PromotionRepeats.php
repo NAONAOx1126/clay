@@ -44,7 +44,6 @@ class Shop_Summery_PromotionRepeats extends FrameworkModule{
 		$select->addGroupBy($promoOrderDetail->parent_name)->addGroupBy($promoOrderDetail->product_name);
 		$select->addGroupBy($promoOrder->order_email);
 		$select->addOrder($promoOrder->order_code);
-		echo $select->showQuery();
 		$result = $select->execute();
 		foreach($result as $data){
 			if(!isset($summery[$data["promotion_product_code"]])){
