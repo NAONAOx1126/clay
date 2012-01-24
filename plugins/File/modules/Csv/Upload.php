@@ -38,7 +38,7 @@ class File_Csv_Upload extends FrameworkModule{
 					// アップロードログを書き込み
 					try{
 						// トランザクションデータベースの取得
-						$db = DBFactory::getConnection();
+						$db = DBFactory::getConnection("file");
 						
 						// トランザクションの開始
 						$db->beginTransaction();

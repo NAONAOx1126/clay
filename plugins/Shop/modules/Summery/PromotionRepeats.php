@@ -18,8 +18,6 @@ class Shop_Summery_PromotionRepeats extends FrameworkModule{
 		$promoOrderPackage->setAlias("promo_order_packages");
 		$promoOrderDetail = $loader->loadTable("OrderDetailsTable");
 		$promoOrderDetail->setAlias("promo_order_details");
-		$order = $loader->loadTable("OrdersTable");
-		$orderPackage = $loader->loadTable("OrderPackagesTable");
 		$orderDetail = $loader->loadTable("RepeaterOrderDetailsTable");
 		$promotion = $loader->loadTable("ProductPromotionsTable");
 		
@@ -38,16 +36,15 @@ class Shop_Summery_PromotionRepeats extends FrameworkModule{
 		$select->joinInner($promoOrderPackage, array($promoOrderDetail->order_package_id." = ".$promoOrderPackage->order_package_id));
 		$select->joinInner($promoOrder, array($promoOrderPackage->order_id." = ".$promoOrder->order_id));
 		$select->joinInner($promotion, array($promoOrderDetail->product_code." = ".$promotion->promotion_product_code));
-		$select->joinLeft($orderDetail, array($orderDetail->product_code." = ".$promotion->product_code));
-		$select->joinLeft($orderPackage, array($orderDetail->order_package_id." = ".$orderPackage->order_package_id));
-		$select->joinLeft($order, array($orderPackage->order_id." = ".$order->order_id, $promoOrder->order_email." = ".$order->order_email, $order->order_time." < '".$_POST["next_target"]."-01 00:00:00'"));
-		$select->addColumn("SUM(CASE WHEN ".$order->order_id." IS NOT NULL THEN 1 ELSE 0 END)", "product_repeats");
-		$select->addColumn("SUM(".$orderDetail->quantity.")", "quantity");
-		$select->addColumn("SUM(".$orderDetail->price.")", "price");
+		$select->joinLeft($orderDetail, array($orderDetail->product_code." = ".$promotion->product_code, $promoOrder->order_email." = ".$orderDetail->order_email, $promoOrder->order_time." < ".$orderDetail->order_time));
+		$select->addColumn("SUM(CASE WHEN ".$orderDetail->order_id." IS NOT NULL THEN 1 ELSE 0 END)", "product_repeats");
+		$select->addColumn("SUM(".$orderDetail->quantity.") + ".$promoOrderDetail->quantity, "quantity");
+		$select->addColumn("SUM(".$orderDetail->price.") + ".$promoOrderDetail->price, "price");
 		$select->addWhere($promoOrder->order_time." < ?", array($_POST["next_target"]."-01 00:00:00"));
 		$select->addGroupBy($promoOrderDetail->parent_name)->addGroupBy($promoOrderDetail->product_name);
 		$select->addGroupBy($promoOrder->order_email);
 		$select->addOrder($promoOrder->order_code);
+		echo $select->showQuery();
 		$result = $select->execute();
 		foreach($result as $data){
 			if(!isset($summery[$data["promotion_product_code"]])){
@@ -70,12 +67,10 @@ class Shop_Summery_PromotionRepeats extends FrameworkModule{
 		$select->joinInner($promoOrderPackage, array($promoOrderDetail->order_package_id." = ".$promoOrderPackage->order_package_id));
 		$select->joinInner($promoOrder, array($promoOrderPackage->order_id." = ".$promoOrder->order_id));
 		$select->joinInner($promotion, array($promoOrderDetail->product_code." = ".$promotion->promotion_product_code));
-		$select->joinLeft($orderDetail, array($orderDetail->product_code." = ".$promotion->product_code));
-		$select->joinLeft($orderPackage, array($orderDetail->order_package_id." = ".$orderPackage->order_package_id));
-		$select->joinLeft($order, array($orderPackage->order_id." = ".$order->order_id, $promoOrder->order_email." = ".$order->order_email, $order->order_time." < '".$_POST["target"]."-01 00:00:00'"));
-		$select->addColumn("SUM(CASE WHEN ".$order->order_id." IS NOT NULL THEN 1 ELSE 0 END)", "product_repeats");
-		$select->addColumn("SUM(".$orderDetail->quantity.")", "quantity");
-		$select->addColumn("SUM(".$orderDetail->price.")", "price");
+		$select->joinLeft($orderDetail, array($orderDetail->product_code." = ".$promotion->product_code, $promoOrder->order_email." = ".$orderDetail->order_email, $promoOrder->order_time." < ".$orderDetail->order_time));
+		$select->addColumn("SUM(CASE WHEN ".$orderDetail->order_id." IS NOT NULL THEN 1 ELSE 0 END)", "product_repeats");
+		$select->addColumn("SUM(".$orderDetail->quantity.") + ".$promoOrderDetail->quantity, "quantity");
+		$select->addColumn("SUM(".$orderDetail->price.") + ".$promoOrderDetail->price, "price");
 		$select->addWhere($promoOrder->order_time." < ?", array($_POST["target"]."-01 00:00:00"));
 		$select->addGroupBy($promoOrderDetail->parent_name)->addGroupBy($promoOrderDetail->product_name);
 		$select->addGroupBy($promoOrder->order_email);

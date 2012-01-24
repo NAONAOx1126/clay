@@ -18,7 +18,7 @@ class Shop_Order_Import extends FrameworkModule{
 		if($params->check("key") && is_array($_SERVER["ATTRIBUTES"][$params->get("key")])){
 			try{
 				// トランザクションデータベースの取得
-				$db = DBFactory::getConnection();
+				$db = DBFactory::getConnection("shop");
 				
 				// トランザクションの開始
 				$db->beginTransaction();

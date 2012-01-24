@@ -19,7 +19,7 @@ class Shop_RepeaterOrderModel extends DatabaseModel{
 	
 	public function reconstruct(){
 		// データを再構築する。
-		$connection = DBFactory::getConnection("Shop");
+		$connection = DBFactory::getConnection("shop");
 		$connection->beginTransaction();
 		$prepare = $connection->prepare("TRUNCATE `shop_repeater_orders`");
 		$prepare->execute();
