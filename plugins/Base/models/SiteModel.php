@@ -56,6 +56,17 @@ class Base_SiteModel extends DatabaseModel{
 		}
 		return false;
 	}
+
+	public function companys(){
+		$loader = new PluginLoader();
+		$siteCompany = $loader->loadModel("SiteCompanyModel");
+		$siteCompanys = $siteCompany->findAllByCompany($this->company_id);
+		$result = array();
+		foreach($siteCompanys as $siteCompany){
+			$result[] = $siteCompany->company();
+		}
+		return $result;		
+	}
 	
 	/**
 	 * サイトのコネクションリストを取得する。

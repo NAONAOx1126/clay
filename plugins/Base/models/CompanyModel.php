@@ -10,7 +10,7 @@
  * @since PHP 5.3
  * @version   1.0.0
  */
-class Base_CompanyOperatorModel extends DatabaseModel{
+class Base_CompanyModel extends DatabaseModel{
 	/**
 	 * コンストラクタ
 	 * @param $values モデルに初期設定する値
@@ -37,6 +37,24 @@ class Base_CompanyOperatorModel extends DatabaseModel{
 		$companyOperator = $loader->loadModel("CompanyOperatorModel");
 		$companyOperators = $companyOperator->findAllByCompanyId($this->company_id);
 		return $companyOperator;		
+	}
+	
+	public function site($site_id){
+		$loader = new PluginLoader();
+		$siteCompany = $loader->loadModel("SiteCompanyModel");
+		$siteCompany->findBySiteCompany($site_id, $this->company_id);
+		return  $siteCompany->site();
+	}
+	
+	public function sites(){
+		$loader = new PluginLoader();
+		$siteCompany = $loader->loadModel("SiteCompanyModel");
+		$siteCompanys = $siteCompany->findAllByCompany($this->company_id);
+		$result = array();
+		foreach($siteCompanys as $siteCompany){
+			$result[] = $siteCompany->site();
+		}
+		return $result;		
 	}
 }
 ?>

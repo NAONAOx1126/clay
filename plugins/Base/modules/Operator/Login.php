@@ -31,6 +31,13 @@ class Base_Operator_Login extends FrameworkModule{
 				throw new InvalidException(array("ログイン情報が正しくありません。"));
 			}
 			
+			// アクセス権限のあるサイトか調べる
+			$company = $companyOperator->company();
+			$site = $company->site($_SERVER["CONFIGURE"]->site_id);
+			if($site->site_id != $_SERVER["CONFIGURE"]->site_id){
+				throw new InvalidException(array("ログイン情報が正しくありません。"));
+			}
+			
 			// ログインに成功した場合には管理者情報をセッションに格納する。
 			$_SESSION["OPERATOR"] = $companyOperator->toArray();
 		}
