@@ -1,3 +1,7 @@
+# アップロードのサイズを拡張
+php_value upload_max_filesize 15M
+php_value post_max_size 20M
+
 # Rewriteの有効化
 RewriteEngine on
 

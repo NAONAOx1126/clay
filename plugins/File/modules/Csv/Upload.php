@@ -92,6 +92,8 @@ class File_Csv_Upload extends FrameworkModule{
 							$i ++;
 						}
 					}
+				}else{
+					throw new InvalidException(array($_FILES[$params->get("key")]["error"]."アップロードに失敗しました。"));
 				}
 			}
 		}
