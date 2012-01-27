@@ -23,37 +23,51 @@ class Shop_Order_Import extends FrameworkModule{
 				// トランザクションの開始
 				$db->beginTransaction();
 				
+				// 配送先のリストを取得
+				$deliverys = array();
+				$delivery = $loader->loadModel("DeliveryModel");
+				$result = $delivery->findAllBy();
+				foreach($result as $data){
+					$deliverys[$data->delivery_name] = $data->delivery_id;
+				}
+				
+				// 決済方法のリストを取得
+				$payments = array();
+				$payment = $loader->loadModel("PaymentModel");
+				$result = $payment->findAllBy();
+				foreach($result as $data){
+					$payments[$data->payment_name] = $data->payment_id;
+				}
+				
 				foreach($_SERVER["ATTRIBUTES"][$params->get("key")] as $data){
 					// ローダーを初期化
 					$loader = new PluginLoader("Shop");
 					
 					// 配送方法のテーブルが存在しなければ追加
 					if(empty($data["delivery_id"]) && !empty($data["delivery_name"])){
-						$delivery = $loader->loadModel("DeliveryModel");
-						$delivery->findBy(array("delivery_name" => $data["delivery_name"]));
-						if($delivery->delivery_id == ""){
+						if(!isset($deliverys[$data["delivery_name"]])){
+							$delivery = $loader->loadModel("DeliveryModel");
 							$delivery->delivery_name = $data["delivery_name"];
 							$delivery->deliv_fee = $data["deliv_fee"];
 							$delivery->sort_order = "0";
 							$delivery->save($db);
+							$delivery->findBy(array("delivery_name" => $data["delivery_name"]));
+							$deliverys[$delivery->delivery_name] = $delivery->delivery_id;
 						}
-						$data["delivery_id"] = $delivery->delivery_id;
-						unset($delivery);
 					}
 					
 					// 決済方法のテーブルが存在しなければ追加
 					if(empty($data["payment_id"]) && !empty($data["payment_name"])){
-						$payment = $loader->loadModel("PaymentModel");
-						$payment->findBy(array("payment_name" => $data["payment_name"]));
-						if($payment->payment_id == ""){
+						if(!isset($payments[$data["payment_name"]])){
+							$payment = $loader->loadModel("PaymentModel");
 							$payment->payment_name = $data["payment_name"];
 							$payment->charge = $data["charge"];
 							$payment->credit_flg = "0";
 							$payment->sort_order = "0";
 							$payment->save($db);
+							$payment->findBy(array("payment_name" => $data["payment_name"]));
+							$payments[$payment->payment_name] = $payment->payment_id;
 						}
-						$data["payment_id"] = $payment->payment_id;
-						unset($payment);
 					}
 					
 					// 注文データを上書き

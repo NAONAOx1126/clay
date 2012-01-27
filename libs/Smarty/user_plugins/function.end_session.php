@@ -22,9 +22,7 @@
 function smarty_function_end_session($params, $smarty, $template){
 	// POSTの内容をセッションに戻す
 	if(is_array($_POST)){
-		if(!is_array($_SESSION["INPUT_DATA"][TEMPLATE_DIRECTORY])){
-			$_SESSION["INPUT_DATA"][TEMPLATE_DIRECTORY] = array();
-		}
+		$_SESSION["INPUT_DATA"] = array(TEMPLATE_DIRECTORY => array());
 		foreach($_POST as $key => $value){
 			$_SESSION["INPUT_DATA"][TEMPLATE_DIRECTORY][$key] = $value;
 		}
