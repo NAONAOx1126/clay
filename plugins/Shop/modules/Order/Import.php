@@ -23,10 +23,13 @@ class Shop_Order_Import extends FrameworkModule{
 				// トランザクションの開始
 				$db->beginTransaction();
 				
+				// ローダーを初期化
+				$loader = new PluginLoader("Shop");
+					
 				// 配送先のリストを取得
 				$deliverys = array();
 				$delivery = $loader->loadModel("DeliveryModel");
-				$result = $delivery->findAllBy();
+				$result = $delivery->findAllBy(array());
 				foreach($result as $data){
 					$deliverys[$data->delivery_name] = $data->delivery_id;
 				}
@@ -34,14 +37,12 @@ class Shop_Order_Import extends FrameworkModule{
 				// 決済方法のリストを取得
 				$payments = array();
 				$payment = $loader->loadModel("PaymentModel");
-				$result = $payment->findAllBy();
+				$result = $payment->findAllBy(array());
 				foreach($result as $data){
 					$payments[$data->payment_name] = $data->payment_id;
 				}
 				
 				foreach($_SERVER["ATTRIBUTES"][$params->get("key")] as $data){
-					// ローダーを初期化
-					$loader = new PluginLoader("Shop");
 					
 					// 配送方法のテーブルが存在しなければ追加
 					if(empty($data["delivery_id"]) && !empty($data["delivery_name"])){
