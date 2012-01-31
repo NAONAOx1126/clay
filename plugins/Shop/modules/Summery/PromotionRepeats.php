@@ -36,7 +36,9 @@ class Shop_Summery_PromotionRepeats extends FrameworkModule{
 		$select->joinInner($promoOrderPackage, array($promoOrderDetail->order_package_id." = ".$promoOrderPackage->order_package_id));
 		$select->joinInner($promoOrder, array($promoOrderPackage->order_id." = ".$promoOrder->order_id));
 		$select->joinInner($promotion, array($promoOrderDetail->product_code." = ".$promotion->promotion_product_code));
-		$select->joinLeft($orderDetail, array($orderDetail->product_code." = ".$promotion->product_code, $promoOrder->order_email." = ".$orderDetail->order_email, $promoOrder->order_time." < ".$orderDetail->order_time));
+		$select->joinInner($orderDetail, array($orderDetail->product_code." = ".$promotion->product_code, $promoOrder->order_email." = ".$orderDetail->order_email, $promoOrder->order_time." < ".$orderDetail->order_time));
+		$select->addColumn($orderDetail->product_code, "product_code");
+		$select->addColumn($orderDetail->parent_name, "parent_name")->addColumn($orderDetail->product_name, "product_name");
 		$select->addColumn("SUM(CASE WHEN ".$orderDetail->order_id." IS NOT NULL THEN 1 ELSE 0 END)", "product_repeats");
 		$select->addColumn("SUM(".$orderDetail->quantity.") + ".$promoOrderDetail->quantity, "quantity");
 		$select->addColumn("SUM(".$orderDetail->price.") + ".$promoOrderDetail->price, "price");
@@ -46,16 +48,16 @@ class Shop_Summery_PromotionRepeats extends FrameworkModule{
 		$select->addOrder($promoOrder->order_code);
 		$result = $select->execute();
 		foreach($result as $data){
-			if(!isset($summery[$data["promotion_product_code"]])){
-				$summery[$data["promotion_product_code"]] = array("product_name" => $data["promotion_product_name"], $_POST["last_target"] => array(), $_POST["target"] => array());
+			if(!isset($summery[$data["promotion_product_code"]][$data["product_code"]])){
+				$summery[$data["promotion_product_code"]][$data["product_code"]] = array("promotion_product_name" => $data["promotion_product_name"], "product_name" => $data["product_name"], $_POST["last_target"] => array(), $_POST["target"] => array());
 			}
-			if(!isset($summery[$data["promotion_product_code"]][$_POST["target"]][$data["product_repeats"]])){
-				$summery[$data["promotion_product_code"]][$_POST["target"]][$data["product_repeats"]] = array("count" => 0, "quantity" => 0, "price" => 0);
+			if(!isset($summery[$data["promotion_product_code"]][$data["product_code"]][$_POST["target"]][$data["product_repeats"]])){
+				$summery[$data["promotion_product_code"]][$data["product_code"]][$_POST["target"]][$data["product_repeats"]] = array("count" => 0, "quantity" => 0, "price" => 0);
 			}
 			for($i = 0; $i <= $data["product_repeats"]; $i ++){
-				$summery[$data["promotion_product_code"]][$_POST["target"]][$i]["count"] ++;
-				$summery[$data["promotion_product_code"]][$_POST["target"]][$i]["quantity"] += $data["quantity"];
-				$summery[$data["promotion_product_code"]][$_POST["target"]][$i]["price"] += $data["price"];
+				$summery[$data["promotion_product_code"]][$data["product_code"]][$_POST["target"]][$i]["count"] ++;
+				$summery[$data["promotion_product_code"]][$data["product_code"]][$_POST["target"]][$i]["quantity"] += $data["quantity"];
+				$summery[$data["promotion_product_code"]][$data["product_code"]][$_POST["target"]][$i]["price"] += $data["price"];
 			}
 		}
 		
@@ -66,7 +68,9 @@ class Shop_Summery_PromotionRepeats extends FrameworkModule{
 		$select->joinInner($promoOrderPackage, array($promoOrderDetail->order_package_id." = ".$promoOrderPackage->order_package_id));
 		$select->joinInner($promoOrder, array($promoOrderPackage->order_id." = ".$promoOrder->order_id));
 		$select->joinInner($promotion, array($promoOrderDetail->product_code." = ".$promotion->promotion_product_code));
-		$select->joinLeft($orderDetail, array($orderDetail->product_code." = ".$promotion->product_code, $promoOrder->order_email." = ".$orderDetail->order_email, $promoOrder->order_time." < ".$orderDetail->order_time));
+		$select->joinInner($orderDetail, array($orderDetail->product_code." = ".$promotion->product_code, $promoOrder->order_email." = ".$orderDetail->order_email, $promoOrder->order_time." < ".$orderDetail->order_time));
+		$select->addColumn($orderDetail->product_code, "product_code");
+		$select->addColumn($orderDetail->parent_name, "parent_name")->addColumn($orderDetail->product_name, "product_name");
 		$select->addColumn("SUM(CASE WHEN ".$orderDetail->order_id." IS NOT NULL THEN 1 ELSE 0 END)", "product_repeats");
 		$select->addColumn("SUM(".$orderDetail->quantity.") + ".$promoOrderDetail->quantity, "quantity");
 		$select->addColumn("SUM(".$orderDetail->price.") + ".$promoOrderDetail->price, "price");
@@ -76,16 +80,16 @@ class Shop_Summery_PromotionRepeats extends FrameworkModule{
 		$select->addOrder($promoOrder->order_code);
 		$result = $select->execute();
 		foreach($result as $data){
-			if(!isset($summery[$data["promotion_product_code"]])){
-				$summery[$data["promotion_product_code"]] = array("product_name" => $data["promotion_product_name"], $_POST["last_target"] => array(), $_POST["target"] => array());
+			if(!isset($summery[$data["promotion_product_code"]][$data["product_code"]])){
+				$summery[$data["promotion_product_code"]][$data["product_code"]] = array("promotion_product_name" => $data["promotion_product_name"], "product_name" => $data["product_name"], $_POST["last_target"] => array(), $_POST["target"] => array());
 			}
-			if(!isset($summery[$data["promotion_product_code"]][$_POST["last_target"]][$data["product_repeats"]])){
-				$summery[$data["promotion_product_code"]][$_POST["last_target"]][$data["product_repeats"]] = array("count" => 0, "quantity" => 0, "price" => 0);
+			if(!isset($summery[$data["promotion_product_code"]][$data["product_code"]][$_POST["last_target"]][$data["product_repeats"]])){
+				$summery[$data["promotion_product_code"]][$data["product_code"]][$_POST["last_target"]][$data["product_repeats"]] = array("count" => 0, "quantity" => 0, "price" => 0);
 			}
 			for($i = 0; $i <= $data["product_repeats"]; $i ++){
-				$summery[$data["promotion_product_code"]][$_POST["last_target"]][$i]["count"] ++;
-				$summery[$data["promotion_product_code"]][$_POST["last_target"]][$i]["quantity"] += $data["quantity"];
-				$summery[$data["promotion_product_code"]][$_POST["last_target"]][$i]["price"] += $data["price"];
+				$summery[$data["promotion_product_code"]][$data["product_code"]][$_POST["last_target"]][$i]["count"] ++;
+				$summery[$data["promotion_product_code"]][$data["product_code"]][$_POST["last_target"]][$i]["quantity"] += $data["quantity"];
+				$summery[$data["promotion_product_code"]][$data["product_code"]][$_POST["last_target"]][$i]["price"] += $data["price"];
 			}
 		}
 		

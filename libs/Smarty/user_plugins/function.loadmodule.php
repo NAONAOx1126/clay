@@ -69,9 +69,10 @@ function smarty_function_loadmodule($params, $smarty, $template)
 	try{
 		// モジュール用のクラスをリフレクション
 		$object = $_SERVER["LOADER"]->loadModule($name);
-		Logger::writeDebug($name." = ".var_export($object, true));
 		if(method_exists($object, "execute")){
+			Logger::writeTimer("MODULE : ".$name." start");
 			$object->execute(new LoadModuleParams($params));
+			Logger::writeTimer("MODULE : ".$name." end");
 		}else{
 			Logger::writeAlert($name." is not plugin module.");
 		}
