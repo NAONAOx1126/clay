@@ -39,7 +39,7 @@ class Shop_Summery_OrderDetailRepeat extends FrameworkModule{
 		$targets = array();
 		$targets[] = "quantity";
 		$targets[] = "price";
-		$summerys = $order->summeryByArray($titles, $targets, $conditions, "price");
+		$summerys = $order->summeryByArray($titles, $targets, $conditions, "order_repeat");
 		
 		// リピート回数の入力の先頭に0回〜を加算
 		if(!isset($_POST["repeat"]) || !is_array($_POST["repeat"])){
@@ -134,9 +134,36 @@ class Shop_Summery_OrderDetailRepeat extends FrameworkModule{
 					break;
 			}
 		}
+		foreach($resultAll as $key1 => $result1){
+			foreach($result1 as $key2 => $result2){
+				if(isset($result2["price"])){
+					usort($resultAll, array("Shop_Summery_OrderDetailRepeat", "repeatSort"));
+				}else{
+					foreach($result2 as $key3 => $result3){
+						if(isset($result3["price"])){
+							usort($resultAll[$key1], array("Shop_Summery_OrderDetailRepeat", "repeatSort"));
+						}else{
+							usort($resultAll[$key1][$key2], array("Shop_Summery_OrderDetailRepeat", "repeatSort"));
+						}
+					}
+				}
+			}
+		}
 		unset($summerys);
 		$_SERVER["ATTRIBUTES"]["repeats"] = $_POST["repeat"];
 		$_SERVER["ATTRIBUTES"][$params->get("result", "orders")] = $resultAll;
+	}
+	
+	function repeatSort($a, $b){
+		$aval = 0;
+		$bval = 0;
+		foreach($a as $x){
+			$aval += $x["price"];
+		}
+		foreach($b as $x){
+			$bval += $x["price"];
+		}
+		return ($aval < $bval);
 	}
 }
 ?>

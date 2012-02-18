@@ -15,7 +15,7 @@ function smarty_function_emoji($params, $smarty, $template)
 {
     // codeパラメータは必須です。
     if (empty($params['code'])) {
-        trigger_error("loadmodule: missing code parameter", E_USER_WARNING);
+        trigger_error("emoji: missing code parameter", E_USER_WARNING);
         return;
     }
 	
