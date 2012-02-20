@@ -30,14 +30,15 @@ class Shop_Summery_RepeaterOrder extends FrameworkModule{
 		// 取得する件数の上限をページャのオプションに追加
 		$groups = explode(",", $params->get("title"));
 		$targets = explode(",", $params->get("summery"));
+		$columns = array(":COUNT(DISTINCT order_email):uu:");
 		// $summerys = $order->summeryBy(array("order_email"), $targets, $conditions, $sortKey);
 		// print_r($summery);
 		// exit;
-		$summerys = $order->summeryBy($groups, $targets, $conditions, $sortKey);
+		$summerys = $order->summeryBy($groups, $targets, $conditions, $sortKey, $columns);
 		$_SERVER["ATTRIBUTES"][$params->get("result", "orders")] = $summerys;
-		$summerys = $order->summeryBy($groups, $targets, $conditions_new, $sortKey);
+		$summerys = $order->summeryBy($groups, $targets, $conditions_new, $sortKey, $columns);
 		$_SERVER["ATTRIBUTES"][$params->get("result", "orders")."_new"] = $summerys;
-		$summerys = $order->summeryBy($groups, $targets, $conditions_repeat, $sortKey);
+		$summerys = $order->summeryBy($groups, $targets, $conditions_repeat, $sortKey, $columns);
 		$_SERVER["ATTRIBUTES"][$params->get("result", "orders")."_repeat"] = $summerys;
 	}
 }

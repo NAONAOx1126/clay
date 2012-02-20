@@ -168,7 +168,7 @@ class DatabaseModel{
 		}
 	}
 	
-	public function summeryByArray($groups, $targets, $values = array(), $order = ""){
+	public function summeryByArray($groups, $targets, $values = array(), $order = "", $columns = array()){
 		$select = new DatabaseSelect($this->access);
 		foreach($groups as $group){
 			if(!empty($group)){
@@ -190,6 +190,27 @@ class DatabaseModel{
 				}else{
 					$select->addColumn($this->access->$group);
 					$select->addGroupBy($this->access->$group);
+				}
+			}
+		}
+		foreach($columns as $column){
+			if(!empty($column)){
+				if(substr($column, 0, 1) == ":" && substr($column, -1) == ":"){
+					$column = str_replace(";",",", $column);
+					$arrColumn = explode(":", substr($column, 1, -1));
+					$column_name = array_pop($arrColumn);
+					$column = "";
+					for($i = 0; $i < count($arrColumn); $i ++){
+						if($i % 2 == 0){
+							$column .= $arrColumn[$i];
+						}else{
+							$name = $arrColumn[$i];
+							$column .= $this->access->$name;
+						}
+					}
+					$select->addColumn($column, $column_name);
+				}else{
+					$select->addColumn($this->access->$column);
 				}
 			}
 		}
@@ -237,8 +258,8 @@ class DatabaseModel{
 		return $result;
 	}
 	
-	public function summeryBy($groups, $targets, $values = array(), $order = ""){
-		$result = $this->summeryByArray($groups, $targets, $values, $order);
+	public function summeryBy($groups, $targets, $values = array(), $order = "", $columns = array()){
+		$result = $this->summeryByArray($groups, $targets, $values, $order, $columns);
 		
 		$thisClass = get_class($this);
 		foreach($result as $i => $data){

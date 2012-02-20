@@ -23,7 +23,7 @@ class Shop_RepeaterOrderPaymentModel extends DatabaseModel{
 		$connection->beginTransaction();
 		$prepare = $connection->prepare("TRUNCATE `shop_repeater_order_payments`");
 		$prepare->execute();
-		$sql = "INSERT INTO `shop_repeater_order_payments` SELECT `shop_order_payments`.`order_payment_id` AS `order_payment_id`,`shop_order_payments`.`order_id` AS `order_id`,";
+		$sql = "INSERT INTO `shop_repeater_order_payments` SELECT `shop_orders`.`order_email` AS `order_email`,`shop_order_payments`.`order_payment_id` AS `order_payment_id`,`shop_order_payments`.`order_id` AS `order_id`,";
 		$sql .= "`shop_order_payments`.`payment_id` AS `payment_id`,`shop_order_payments`.`payment_card_company` AS `payment_card_company`,";
 		$sql .= "`shop_order_payments`.`payment_card_no` AS `payment_card_no`,`shop_order_payments`.`payment_card_name` AS `payment_card_name`,";
 		$sql .= "`shop_order_payments`.`payment_card_expires` AS `payment_card_expires`,`shop_order_payments`.`payment_card_split` AS `payment_card_split`,";

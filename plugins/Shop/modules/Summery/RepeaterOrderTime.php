@@ -24,7 +24,8 @@ class Shop_Summery_RepeaterOrderTime extends FrameworkModule{
 		}
 		
 		// 取得する件数の上限をページャのオプションに追加
-		$summerys = $order->summeryBy(array(":HOUR(:order_time:):order_time:", ":CASE WHEN :order_repeat: > 1 THEN 1 ELSE 0 END:order_repeat:"), array("subtotal", "total"), $conditions, "order_time");
+		$columns = array(":COUNT(DISTINCT order_email):uu:");
+		$summerys = $order->summeryBy(array(":HOUR(:order_time:):order_time:", ":CASE WHEN :order_repeat: > 1 THEN 1 ELSE 0 END:order_repeat:"), array("subtotal", "total"), $conditions, "order_time", $columns);
 		$result = array();
 		$result_new = array();
 		$result_repeat = array();
@@ -48,14 +49,17 @@ class Shop_Summery_RepeaterOrderTime extends FrameworkModule{
 							$result[$i] = $result_new[$i] = $result_repeat[$i] = array("order_time" => $time, "order_time_text" => $time.":00〜".($_POST["time"][$i + 1] - 1).":59", "count" => 0, "subtotal" => 0, "total" => 0);
 						}
 						if($summery->order_repeat == 0){
+							$result_new[$i]["uu"] += $summery->uu;
 							$result_new[$i]["count"] += $summery->count;
 							$result_new[$i]["subtotal"] += $summery->subtotal;
 							$result_new[$i]["total"] += $summery->total;
 						}else{
+							$result_repeat[$i]["uu"] += $summery->uu;
 							$result_repeat[$i]["count"] += $summery->count;
 							$result_repeat[$i]["subtotal"] += $summery->subtotal;
 							$result_repeat[$i]["total"] += $summery->total;
 						}
+						$result[$i]["uu"] += $summery->uu;
 						$result[$i]["count"] += $summery->count;
 						$result[$i]["subtotal"] += $summery->subtotal;
 						$result[$i]["total"] += $summery->total;
@@ -68,14 +72,17 @@ class Shop_Summery_RepeaterOrderTime extends FrameworkModule{
 							$result[$i] = $result_new[$i] = $result_repeat[$i] = array("order_time" => $time, "order_time_text" => $time.":00〜".($_POST["time"][$i + 1] - 1).":59", "count" => 0, "subtotal" => 0, "total" => 0);
 						}
 						if($summery->order_repeat == 0){
+							$result_new[$i]["uu"] += $summery->uu;
 							$result_new[$i]["count"] += $summery->count;
 							$result_new[$i]["subtotal"] += $summery->subtotal;
 							$result_new[$i]["total"] += $summery->total;
 						}else{
+							$result_repeat[$i]["uu"] += $summery->uu;
 							$result_repeat[$i]["count"] += $summery->count;
 							$result_repeat[$i]["subtotal"] += $summery->subtotal;
 							$result_repeat[$i]["total"] += $summery->total;
 						}
+						$result[$i]["uu"] += $summery->uu;
 						$result[$i]["count"] += $summery->count;
 						$result[$i]["subtotal"] += $summery->subtotal;
 						$result[$i]["total"] += $summery->total;

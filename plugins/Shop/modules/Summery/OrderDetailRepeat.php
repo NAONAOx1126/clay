@@ -30,17 +30,6 @@ class Shop_Summery_OrderDetailRepeat extends FrameworkModule{
 			}
 		}
 		
-		// 集計用のタイトルとターゲットを追加して、集計処理の実行
-		$titles = explode(",", $params->get("title"));
-		if(!is_array($titles) || empty($titles)){
-			$titles = array();
-		}
-		$titles[] = "order_repeat";
-		$targets = array();
-		$targets[] = "quantity";
-		$targets[] = "price";
-		$summerys = $order->summeryByArray($titles, $targets, $conditions, "order_repeat");
-		
 		// リピート回数の入力の先頭に0回〜を加算
 		if(!isset($_POST["repeat"]) || !is_array($_POST["repeat"])){
 			$_POST["repeat"] = array();
@@ -48,6 +37,40 @@ class Shop_Summery_OrderDetailRepeat extends FrameworkModule{
 		if(!isset($_POST["repeat"][0]) || $_POST["repeat"][0] > 0){
 			array_unshift($_POST["repeat"], "0");
 		}
+		
+		// 集計用のタイトルとターゲットを追加して、集計処理の実行
+		$titles = explode(",", $params->get("title"));
+		if(!is_array($titles) || empty($titles)){
+			$titles = array();
+		}
+		$title = ":(CASE WHEN order_repeat >= 0";
+		foreach($_POST["repeat"] as $i => $repeat){
+			if($_POST["repeat"][0] == 0){
+				if($i > 0 && isset($_POST["repeat"][$i]) && is_numeric($_POST["repeat"][$i])){
+					$title .= " AND order_repeat < ".$_POST["repeat"][$i]." THEN ".($i)." WHEN order_repeat >= ".$_POST["repeat"][$i];
+				}
+			}else{
+				if(isset($_POST["repeat"][$i]) && is_numeric($_POST["repeat"][$i])){
+					$title .= " AND order_repeat < ".$_POST["repeat"][$i]." THEN ".($i + 1)." WHEN order_repeat >= ".$_POST["repeat"][$i];
+				}
+			}
+		}
+		if($_POST["repeat"][0] == 0){
+			$title .= " THEN ".(count($_POST["repeat"]))." END):repeat:";
+		}else{
+			$title .= " THEN ".(count($_POST["repeat"]) + 1)." END):repeat:";
+		}
+		$titles[] = $title;
+		$targets = array();
+		$targets[] = "quantity";
+		$targets[] = "price";
+		$columns = array(":COUNT(DISTINCT order_email):uu:");
+		$summerys = $order->summeryByArray($titles, $targets, $conditions, "order_repeat", $columns);
+		$titles = explode(",", $params->get("title"));
+		if(!is_array($titles) || empty($titles)){
+			$titles = array();
+		}
+		$titles[] = "repeat";
 		
 		// マージキーを取得
 		$merges = explode(",", $params->get("merge"));
@@ -61,9 +84,9 @@ class Shop_Summery_OrderDetailRepeat extends FrameworkModule{
 			// 集計用のリピート関数を取得
 			$order_repeat = 0;
 			foreach($_POST["repeat"] as $i => $repeat){
-				if(isset($_POST["repeat"][$i + 1])){
-					// 次のリピート回数がある場合、その間にリピート回数があるかチェック
-					if($summery["order_repeat"] >= $repeat && $summery["order_repeat"] < $_POST["repeat"][$i + 1]){
+				if($summery["repeat"] == $i + 1){
+					if(isset($_POST["repeat"][$i + 1])){
+						// 次のリピート回数がある場合、その間にリピート回数があるかチェック
 						if($repeat + 1 < $_POST["repeat"][$i + 1]){
 							if($repeat == 0){
 								$order_repeat = "新規〜".$_POST["repeat"][$i + 1]."回";
@@ -77,10 +100,8 @@ class Shop_Summery_OrderDetailRepeat extends FrameworkModule{
 								$order_repeat = $repeat."回";
 							}
 						}
-					}
-				}else{
-					// 次のリピート回数がない場合は、それより大きいかチェック
-					if($summery["order_repeat"] >= $repeat){
+					}else{
+						// 次のリピート回数がない場合は、それより大きいかチェック
 						if($repeat == 0){
 							$order_repeat = "新規〜";
 						}else{
@@ -93,12 +114,13 @@ class Shop_Summery_OrderDetailRepeat extends FrameworkModule{
 				case 1:
 					$merges0 = $merges[0];
 					if(!isset($resultAll[$summery[$merges0]])){
-						$resultAll[$summery[$merges0]][$order_repeat] = array("count" => 0, "quantity" => 0, "price" => 0);
+						$resultAll[$summery[$merges0]][$order_repeat] = array("uu" => 0, "count" => 0, "quantity" => 0, "price" => 0);
 					}
 					foreach($titles as $title){
 						$resultAll[$summery[$merges0]][$order_repeat][$title] = $summery[$title];
 					}
 					$resultAll[$summery[$merges0]][$order_repeat]["order_repeat_text"] = $order_repeat;
+					$resultAll[$summery[$merges0]][$order_repeat]["uu"] += $summery["uu"];
 					$resultAll[$summery[$merges0]][$order_repeat]["count"] += $summery["count"];
 					$resultAll[$summery[$merges0]][$order_repeat]["quantity"] += $summery["quantity"];
 					$resultAll[$summery[$merges0]][$order_repeat]["price"] += $summery["price"];
@@ -107,12 +129,13 @@ class Shop_Summery_OrderDetailRepeat extends FrameworkModule{
 					$merges0 = $merges[0];
 					$merges1 = $merges[1];
 					if(!isset($resultAll[$summery[$merges0]][$summery[$merges1]])){
-						$resultAll[$summery[$merges0]][$summery[$merges1]][$order_repeat] = array("count" => 0, "quantity" => 0, "price" => 0);
+						$resultAll[$summery[$merges0]][$summery[$merges1]][$order_repeat] = array("uu" => 0, "count" => 0, "quantity" => 0, "price" => 0);
 					}
 					foreach($titles as $title){
 						$resultAll[$summery[$merges0]][$summery[$merges1]][$order_repeat][$title] = $summery[$title];
 					}
 					$resultAll[$summery[$merges0]][$summery[$merges1]][$order_repeat]["order_repeat_text"] = $order_repeat;
+					$resultAll[$summery[$merges0]][$summery[$merges1]][$order_repeat]["uu"] += $summery["uu"];
 					$resultAll[$summery[$merges0]][$summery[$merges1]][$order_repeat]["count"] += $summery["count"];
 					$resultAll[$summery[$merges0]][$summery[$merges1]][$order_repeat]["quantity"] += $summery["quantity"];
 					$resultAll[$summery[$merges0]][$summery[$merges1]][$order_repeat]["price"] += $summery["price"];
@@ -122,12 +145,13 @@ class Shop_Summery_OrderDetailRepeat extends FrameworkModule{
 					$merges1 = $merges[1];
 					$merges2 = $merges[2];
 					if(!isset($resultAll[$summery[$merges0]][$summery[$merges1]][$summery[$merges2]])){
-						$resultAll[$summery[$merges0]][$summery[$merges1]][$summery[$merges2]][$order_repeat] = array("count" => 0, "quantity" => 0, "price" => 0);
+						$resultAll[$summery[$merges0]][$summery[$merges1]][$summery[$merges2]][$order_repeat] = array("uu" => 0, "count" => 0, "quantity" => 0, "price" => 0);
 					}
 					foreach($titles as $title){
 						$resultAll[$summery[$merges0]][$summery[$merges1]][$summery[$merges2]][$order_repeat][$title] = $summery[$title];
 					}
 					$resultAll[$summery[$merges0]][$summery[$merges1]][$summery[$merges2]][$order_repeat]["order_repeat_text"] = $order_repeat;
+					$resultAll[$summery[$merges0]][$summery[$merges1]][$summery[$merges2]][$order_repeat]["uu"] += $summery["uu"];
 					$resultAll[$summery[$merges0]][$summery[$merges1]][$summery[$merges2]][$order_repeat]["count"] += $summery["count"];
 					$resultAll[$summery[$merges0]][$summery[$merges1]][$summery[$merges2]][$order_repeat]["quantity"] += $summery["quantity"];
 					$resultAll[$summery[$merges0]][$summery[$merges1]][$summery[$merges2]][$order_repeat]["price"] += $summery["price"];
@@ -136,9 +160,7 @@ class Shop_Summery_OrderDetailRepeat extends FrameworkModule{
 		}
 		foreach($resultAll as $key1 => $result1){
 			foreach($result1 as $key2 => $result2){
-				if(isset($result2["price"])){
-					usort($resultAll, array("Shop_Summery_OrderDetailRepeat", "repeatSort"));
-				}else{
+				if(!isset($result2["price"])){
 					foreach($result2 as $key3 => $result3){
 						if(isset($result3["price"])){
 							usort($resultAll[$key1], array("Shop_Summery_OrderDetailRepeat", "repeatSort"));

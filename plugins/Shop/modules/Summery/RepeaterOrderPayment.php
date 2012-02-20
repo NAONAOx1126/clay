@@ -30,19 +30,20 @@ class Shop_Summery_RepeaterOrderPayment extends FrameworkModule{
 		// 取得する件数の上限をページャのオプションに追加
 		$groups = explode(",", $params->get("title"));
 		$targets = explode(",", $params->get("summery"));
-		$summerys = $order->summeryBy($groups, $targets, $conditions, $sortKey);
+		$columns = array(":COUNT(DISTINCT order_email):uu:");
+		$summerys = $order->summeryBy($groups, $targets, $conditions, $sortKey, $columns);
 		foreach($summerys as $index => $summery){
 			$summerys[$index]->subtotal = $summery->payment_total;
 			$summerys[$index]->payment_name = $summery->payment()->payment_name;
 		}
 		$_SERVER["ATTRIBUTES"][$params->get("result", "orders")] = $summerys;
-		$summerys = $order->summeryBy($groups, $targets, $conditions_new, $sortKey);
+		$summerys = $order->summeryBy($groups, $targets, $conditions_new, $sortKey, $columns);
 		foreach($summerys as $index => $summery){
 			$summerys[$index]->subtotal = $summery->payment_total;
 			$summerys[$index]->payment_name = $summery->payment()->payment_name;
 		}
 		$_SERVER["ATTRIBUTES"][$params->get("result", "orders")."_new"] = $summerys;
-		$summerys = $order->summeryBy($groups, $targets, $conditions_repeat, $sortKey);
+		$summerys = $order->summeryBy($groups, $targets, $conditions_repeat, $sortKey, $columns);
 		foreach($summerys as $index => $summery){
 			$summerys[$index]->subtotal = $summery->payment_total;
 			$summerys[$index]->payment_name = $summery->payment()->payment_name;
