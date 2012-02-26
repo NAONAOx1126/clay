@@ -14,6 +14,9 @@ $_SERVER["CONFIGURE"]->OS = "mac";
 // セッション保存先
 $_SERVER["CONFIGURE"]->SESSION_MANAGER = "DatabaseSessionHandler";
 
+
+$_SERVER["FRAMEWORK_PLUGIN_HOME"] = FRAMEWORK_HOME."/../clay_plugins";
+
 /* デフォルトのDB接続先 */
 $_SERVER["CONFIGURE"]->connection = array("default" => array("dbtype" => "mysql", "host" => "127.0.0.1", "user" => "clay", "password" => "clay", "database" => "clay", "query" => "SET NAMES utf8"));
 ?>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>clay</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>net.sourceforge.phpeclipse.parserbuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>net.sourceforge.phpeclipse.phpnature</nature>
+	</natures>
+	<variableList>
+		<variable>
+			<name>FPDF_HOME</name>
+			<value>file:/Library/WebServer/Documents/clay/libs/FPDF</value>
+		</variable>
+		<variable>
+			<name>PEAR_HOME</name>
+			<value>file:/Library/WebServer/Documents/clay/libs/PEAR</value>
+		</variable>
+	</variableList>
+</projectDescription>

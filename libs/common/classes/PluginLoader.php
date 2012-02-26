@@ -41,8 +41,8 @@ class PluginLoader{
 		}
 		Logger::writeDebug($name." ==> ".number_format(memory_get_usage()));
 		$names = explode(".", $name);
-		$path = implode("/", $names);
 		$class = implode("_", $names);
+		$path = implode("/", $names);
 		if(class_exists($class)){
 			return new $class($params);
 		}
@@ -54,13 +54,14 @@ class PluginLoader{
 			}
 		}
 		array_splice($names, 1, 0, array($type));
-		$path = implode("/", $names);
+		$names[0] = strtolower($names[0]);
+		$path = "clay_".implode("/", $names);
 		if(file_exists(FRAMEWORK_PLUGIN_HOME."/".$path.".php")){
 			Logger::writeDebug("Loaded File for ".$class." class : ".FRAMEWORK_PLUGIN_HOME."/".$path.".php");
 			require_once(FRAMEWORK_PLUGIN_HOME."/".$path.".php");
 			return new $class($params);
 		}
-		Logger::writeDebug("No Plugin File for ".$class." class.");
+		Logger::writeDebug("No Plugin File for ".$class." class : ".FRAMEWORK_PLUGIN_HOME."/".$path.".php");
 	}
 	
 	/**

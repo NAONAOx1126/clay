@@ -36,7 +36,7 @@ class DatabaseSessionHandler extends SessionHandler{
 	/**
 	 * コンストラクタ
 	 */
-	public function __construct($table = "base_sessions", $id_key = "session_id", $data_key = "session_data"){
+	public function __construct($table = "session_stores", $id_key = "session_id", $data_key = "session_data"){
 		list($module, $name) = explode("_", $table, 2);
 		$names = explode("_", $name);
 		$name = "";
