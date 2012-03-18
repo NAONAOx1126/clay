@@ -301,7 +301,7 @@ class SendPCHtmlMail extends SendMail{
 		}else{
 			$extBody = $this->extBody;
 		}
-		$suffix = "\n--".$boundary1."--\n";
+		$suffix = "\n--".$this->boundary."--\n";
 				
 		// メールヘッダを作成
 		$this->sendRaw($this->from, $this->fromAddress, $this->to, $this->subject, $contentType, $extBodyHead.trim(mb_convert_encoding($extBody, "JIS", "UTF-8")).$this->prefix.$this->qp_encode(mb_convert_encoding($this->body, "JIS", "UTF-8")).$suffix);
@@ -352,7 +352,7 @@ class SendPCHtmlMail extends SendMail{
 		}else{
 			$extBody = $this->extBody;
 		}
-		$suffix = "\n--".$boundary1."--\n";
+		$suffix = "\n--".$this->boundary."--\n";
 				
 		// メールヘッダを作成
 		$this->sendRaw($this->to, $this->toAddress, $this->from, $this->subject, $contentType, $extBodyHead.trim(mb_convert_encoding($extBody, "JIS", "UTF-8")).$this->prefix.$this->qp_encode(mb_convert_encoding($this->body, "JIS", "UTF-8")).$suffix);
@@ -552,9 +552,9 @@ class SendHtmlMail extends SendMail{
 		}
 		
 		// 添付画像を設定
-		$suffix .= 	"\n--".$boundary3."--\n";
+		$suffix .= 	"\n--".$this->boundary3."--\n";
 		foreach($this->images as $index => $imageData){
-			$suffix .= "\n--".$boundary2."\n";
+			$suffix .= "\n--".$this->boundary2."\n";
 			if ( preg_match( '/^\x89PNG\x0d\x0a\x1a\x0a/', $imageData) )  {
 				$suffix .= "Content-Type: image/png; name=\"image.png\"\n";
 			} elseif ( preg_match( '/^GIF8[79]a/', $imageData) )  {
@@ -565,9 +565,9 @@ class SendHtmlMail extends SendMail{
 			$suffix .= "Content-Transfer-Encoding: base64\n";
 			$suffix .= "Content-ID: <".sprintf("%02d", ($index + 1))."@".$this->imageKey.">\n\n";
 			$suffix .= chunk_split(base64_encode($imageData));
-			$suffix .= "\n--".$boundary2."--\n";
+			$suffix .= "\n--".$this->boundary2."--\n";
 		}
-		$suffix .= "\n--".$boundary1."--\n";
+		$suffix .= "\n--".$this->boundary1."--\n";
 		
 		// メールヘッダを作成
 		$this->sendRaw($this->to, $this->toAddress, $this->from, $this->subject, $contentType, $this->prefix.mb_convert_encoding($extBody, "JIS", "UTF-8").$this->prefix2.$this->qp_encode(mb_convert_encoding($this->body, "JIS", "UTF-8")).$suffix);

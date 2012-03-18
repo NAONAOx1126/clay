@@ -404,15 +404,16 @@ class DatabaseSelect{
 
 		$values = array_merge($this->tableValues, $this->whereValues, $this->havingValues);
 
-		$search = array();
-		$replace = array();
-
-		foreach($values as $value){
-			$search[] = "?";
-			$replace[] = "'".$value."'";
+		if(is_array($values) && count($values) > 0){
+			$partSqls = explode("?", $sql);
+			$sql = $partSqls[0];
+	
+			foreach($values as $index => $value){
+				$sql .= "'".$value."'".$partSqls[$index + 1];
+			}
 		}
 
-		return str_replace($search, $replace, $sql);
+		return $sql;
 	}
 
 	public function fetch($limit = null, $offset = null){
@@ -690,7 +691,7 @@ class DatabaseInsert{
 	 * @params array $values 挿入データの連想配列
 	 * @return string レコード削除クエリ
 	 */
-	public function buildListQuery($values){
+	public function buildListQuery($list){
 		// パラメータを展開
 		$cols = array();
 		$phs = array();
@@ -870,15 +871,16 @@ class DatabaseUpdate{
 
 		$values = array_merge($this->tableValues, $this->setValues, $this->whereValues);
 
-		$search = array();
-		$replace = array();
-
-		foreach($values as $value){
-			$search[] = "?";
-			$replace[] = "'".$value."'";
+		if(is_array($values) && count($values) > 0){
+			$partSqls = explode("?", $sql);
+			$sql = $partSqls[0];
+	
+			foreach($values as $index => $value){
+				$sql .= "'".$value."'".$partSqls[$index + 1];
+			}
 		}
 
-		return str_replace($search, $replace, $sql);
+		return $sql;
 	}
 
 	public function execute(){
@@ -976,15 +978,16 @@ class DatabaseDelete{
 	public function showQuery(){
 		$sql = $this->buildQuery();
 
-		$search = array();
-		$replace = array();
-
-		foreach($this->values as $value){
-			$search[] = "?";
-			$replace[] = "'".$value."'";
+		if(is_array($values) && count($values) > 0){
+			$partSqls = explode("?", $sql);
+			$sql = $partSqls[0];
+	
+			foreach($values as $index => $value){
+				$sql .= "'".$value."'".$partSqls[$index + 1];
+			}
 		}
 
-		return str_replace($search, $replace, $sql);
+		return $sql;
 	}
 
 	/**

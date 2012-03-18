@@ -11,6 +11,13 @@
  * @version   1.0.0
  */
 
+// カスタムクライアントのユーザーエージェントを補正
+if(preg_match("/^CLAY-(.+)-CLIENT\\[(.+)\\]$/", $_SERVER["HTTP_USER_AGENT"], $params) > 0){
+	$_SERVER["HTTP_USER_AGENT"] = "Mozilla/5.0 (Linux; U; Android 1.6; ja-jp; CLAY-ANDROID-CLIENT)";
+	$_SERVER["USER_TEMPLATE"] = "/".strtolower($params[1]);
+	$_SERVER["HTTP_X_DCMGUID"] = $params[2];
+}
+
 // デフォルトのインクルードパスを全て無効にする。
 ini_set("include_path", ".");
 

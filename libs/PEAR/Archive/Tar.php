@@ -1436,6 +1436,7 @@ class Archive_Tar extends PEAR
     function _extractInString($p_filename)
     {
         $v_result_str = "";
+        $v_header = array();
 
         While (strlen($v_binary_data = $this->_readBlock()) != 0)
         {
@@ -1522,6 +1523,7 @@ class Archive_Tar extends PEAR
     {
       $v_extract_file = FALSE;
       $v_extraction_stopped = 0;
+      $v_header = array();
 
       if (!$this->_readHeader($v_binary_data, $v_header))
         return false;

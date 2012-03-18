@@ -2142,6 +2142,8 @@ class Net_UserAgent_Mobile_DoCoMo_ScreenInfo
                 break;
             }
 
+			$values = array();
+			$indexes = array();
             xml_parse_into_struct($parser, $xml, $values, $indexes);
             if (!xml_parser_free($parser)) {
                 break;

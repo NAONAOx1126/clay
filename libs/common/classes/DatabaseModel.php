@@ -321,13 +321,27 @@ class DatabaseModel{
 					if(!is_array($value)){
 						$value = array($value);
 					}
-					$select->addWhere($this->access->$key." in (?)", array($value));
+					$placeholders = "";
+					foreach($value as $v){
+						if(!empty($placeholders)){
+							$placeholders .= ",";
+						}
+						$placeholders .= "?";
+					}
+					$select->addWhere($this->access->$key." in (".$placeholders.")", $value);
 					break;
 				case "nin":
 					if(!is_array($value)){
 						$value = array($value);
 					}
-					$select->addWhere($this->access->$key." NOT IN (?)", array($value));
+					$placeholders = "";
+					foreach($value as $v){
+						if(!empty($placeholders)){
+							$placeholders .= ",";
+						}
+						$placeholders .= "?";
+					}
+					$select->addWhere($this->access->$key." NOT IN (".$placeholders.")", $value);
 					break;
 				default:
 					break;
@@ -364,7 +378,11 @@ class DatabaseModel{
 			$select = new DatabaseSelect($this->access, $db);
 			$select->addColumn($this->access->_W);
 			foreach($this->primary_keys as $key){
-				$select->addWhere($key." = ?", array($this->values[$key]));
+				if(isset($this->values[$key])){
+					$select->addWhere($key." = ?", array($this->values[$key]));
+				}else{
+					$select->addWhere($key." IS NULL", array());
+				}
 				$pkset = true;
 			}
 			if($pkset){
@@ -404,7 +422,7 @@ class DatabaseModel{
 						// 主キーは更新条件
 						$update->addWhere($this->access->$column." = ?", array($this->values[$column]));
 						$updateWhere = true;
-					}elseif($this->values[$column] != $this->values_org[$column]){
+					}elseif(isset($this->values[$column]) && (!isset($this->values_org[$column]) || $this->values[$column] != $this->values_org[$column])){
 						$update->addSets($this->access->$column." = ?", array($this->values[$column]));
 						$updateSet = true;
 					}

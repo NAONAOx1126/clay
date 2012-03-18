@@ -87,7 +87,7 @@ class Logger{
 	 * @params Exception $exception エラーの原因となった例外オブジェクト
 	 */
 	public static function writeDebug($message){
-		if($_SERVER["CONFIGURE"]->get("DEBUG") != ""){
+		if($_SERVER["CONFIGURE"]->DEBUG){
 			Logger::writeMessage("debug", $message);
 		}
 	}
