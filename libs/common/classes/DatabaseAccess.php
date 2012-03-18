@@ -584,12 +584,12 @@ class DatabaseResult{
 }
 
 /**
- * データベース挿入処理用のクラスです。
+ * データベース挿入処理用のベースクラスです。
  *
  * @package Models
  * @author Naohisa Minagawa <info@sweetberry.jp>
  */
-class DatabaseInsert{
+abstract class DatabaseInsertBase{
 	/**
 	 * データベースの接続
 	 */
@@ -615,6 +615,8 @@ class DatabaseInsert{
 		$this->db = DBFactory::getConnection($table->getModuleName());
 		$this->table = $table;
 	}
+	
+	protected abstract function getPrefix();
 
 	/**
 	 * 現在の状態で発行する挿入クエリを取得する。
@@ -638,7 +640,7 @@ class DatabaseInsert{
 		$sql = "";
 		if(!empty($cols)){
 			// クエリのビルド
-			$sql = "INSERT INTO ".$this->table->_T."(".implode(", ", $cols).") VALUES (".implode(", ", $phs).")";
+			$sql = $this->getPrefix()." INTO ".$this->table->_T."(".implode(", ", $cols).") VALUES (".implode(", ", $phs).")";
 		}
 		return $sql;
 	}
@@ -657,7 +659,7 @@ class DatabaseInsert{
 		$sql = "";
 		if(!empty($cols)){
 			// クエリのビルド
-			$sql = "INSERT INTO ".$this->table->_T."(".implode(", ", $cols).") VALUES (".implode(", ", $vals).")";
+			$sql = $this->getPrefix()." INTO ".$this->table->_T."(".implode(", ", $cols).") VALUES (".implode(", ", $vals).")";
 		}
 		return $sql;
 	}
@@ -683,114 +685,42 @@ class DatabaseInsert{
 			}
 		}
 		return $result;
+	}	
+}
+
+/**
+ * データベース挿入処理用のクラスです。
+ *
+ * @package Models
+ * @author Naohisa Minagawa <info@sweetberry.jp>
+ */
+class DatabaseInsert extends DatabaseInsertBase{
+	protected function getPrefix(){
+		return "INSERT";
 	}
-	
-	/**
-	 * 現在の状態で発行する挿入クエリを取得する。
-	 *
-	 * @params array $values 挿入データの連想配列
-	 * @return string レコード削除クエリ
-	 */
-	public function buildListQuery($list){
-		// パラメータを展開
-		$cols = array();
-		$phs = array();
-		$this->vals = array();
-		// カラムのリストを取得する。
-		$columns = array();
-		foreach($list as $values){
-			foreach($values as $key => $value){
-				if(isset($this->table->$key)){
-					$columns[$key] = $key;
-				}
-			}
-		}
+}
 
-		// 値のリストを取得する。
-		$values = array();
-		foreach($list as $values){
-			foreach($columns as $k => $key){
-				if(isset($this->table->$key)){
-					$phs[] = "?";
-					$this->vals[] = trim($value);
-				}else{
-					$phs[] = "NULL";
-				}
-			}
-			$values[] = $phs;
-		}
-
-		$sql = "";
-		if(!empty($columns)){
-			// クエリのビルド
-			$sql = "REPLACE INTO ".$this->table->_T."(".implode(", ", $columns).") VALUES";
-			foreach($values as $phs){
-				$sql .= " (".implode(", ", $phs)."),";
-			}
-		}
-		return substr($sql, 0, -1);
+/**
+ * データベース排他挿入処理用のクラスです。
+ *
+ * @package Models
+ * @author Naohisa Minagawa <info@sweetberry.jp>
+ */
+class DatabaseInsertIgnore extends DatabaseInsertBase{
+	protected function getPrefix(){
+		return "INSERT IGNORE";
 	}
-	
-	public function showListQuery($list){
-		// パラメータを展開
-		$cols = array();
-		$vals = array();
-		
-		// カラムのリストを取得する。
-		$columns = array();
-		foreach($list as $values){
-			foreach($values as $key => $value){
-				if(isset($this->table->$key)){
-					$columns[$key] = $key;
-				}
-			}
-		}
+}
 
-		// 値のリストを取得する。
-		$values = array();
-		foreach($list as $values){
-			foreach($columns as $k => $key){
-				if(isset($this->table->$key)){
-					$vals[$key] = trim($value);
-				}else{
-					$vals[$key] = null;
-				}
-			}
-			$values[] = $vals;
-		}
-
-		$sql = "";
-		if(!empty($columns)){
-			// クエリのビルド
-			$sql = "REPLACE INTO ".$this->table->_T."(".implode(", ", $columns).") VALUES";
-			foreach($values as $vals){
-				$sql .= " (".implode(", ", $vals)."),";
-			}
-		}
-		return substr($sql, 0, -1);
-	}
-
-	/**
-	 * 現在の状態で挿入クエリを実行する。
-	 *
-	 * @params array $values 挿入データの連想配列
-	 */
-	public function executeList($list){
-		$sql = $this->buildListQuery($list);
-		if(!empty($sql)){
-			// クエリを実行する。
-			try{
-				Logger::writeDebug($this->showListQuery($this->vals));
-				$prepare = $this->db->prepare($sql);
-				$prepare->execute($this->vals);
-				$result = $prepare->rowCount();
-				$prepare->closeCursor();
-			}catch(Exception $e){
-				Logger::writeError($sql, $e);
-				throw new DatabaseException($e);
-			}
-		}
-		return $result;
+/**
+ * データベース置換挿入処理用のクラスです。
+ *
+ * @package Models
+ * @author Naohisa Minagawa <info@sweetberry.jp>
+ */
+class DatabaseReplace extends DatabaseInsertBase{
+	protected function getPrefix(){
+		return "REPLACE";
 	}
 }
 

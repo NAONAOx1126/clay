@@ -436,6 +436,28 @@ class DatabaseModel{
 	}
 
 	/**
+	 * 指定したトランザクション内にて主キーベースでデータの保存を行う。
+	 * 主キーが存在しない場合は何もしない。
+	 * また、モデル内のカラムがDBに無い場合はスキップする。
+	 * データ作成日／更新日は自動的に設定される。
+	 */
+	public function saveAll($db, $list){
+		// 主キーのデータが無かった場合はInsert
+		$insert = new DatabaseInsertIgnore($this->access, $db);
+		foreach($list as $index => $data){
+			// データ作成日／更新日は自動的に設定する。
+			$data["create_time"] = $data["update_time"] = date("Y-m-d H:i:s");
+			$insert->execute($data);
+			foreach($this->primary_keys as $key){
+				if(empty($data[$key])){
+					$list[$index][$key] = $db->lastInsertId();
+				}
+			}
+		}
+		return $list;
+	}
+
+	/**
 	 * 指定したトランザクション内にて主キーベースでデータの削除を行う。
 	 * 主キーが存在しない場合は何もしない。
 	 */
