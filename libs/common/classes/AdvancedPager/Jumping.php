@@ -68,7 +68,7 @@ class AdvancedPager_Jumping extends Pager_Jumping
      */
     function _renderLink($altText, $linkText, $accessKey = "")
     {
-		$this->_url = str_replace("//", "/", $this->_url);
+		$this->_url = $_SERVER["TEMPLATE_NAME"];
         if ($this->_httpMethod == 'GET') {
             if ($this->_append) {
                 $href = '?' . $this->_http_build_query_wrapper($this->_linkData);

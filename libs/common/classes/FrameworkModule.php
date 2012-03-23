@@ -28,5 +28,10 @@ abstract class FrameworkModule{
      * @access public
      */
 	abstract function execute($params);
+	
+	function reload(){
+		header("Location: ".$_SERVER["TEMPLATE_NAME"]);
+		exit;
+	}
 }
 ?>

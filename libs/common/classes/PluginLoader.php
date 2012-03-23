@@ -69,6 +69,26 @@ class PluginLoader{
 	 *
 	 * @params string $name モジュール呼び出し名
 	 */
+	function loadSetting(){
+		if(defined("FRAMEWORK_SITE_HOME")){
+			if(file_exists(FRAMEWORK_SITE_HOME."/Setting.php")){
+				Logger::writeDebug("Loaded File for Setting : ".FRAMEWORK_SITE_HOME."/Setting.php");
+				require_once(FRAMEWORK_SITE_HOME."/Setting.php");
+				return;
+			}
+		}
+		if(file_exists(FRAMEWORK_PLUGIN_HOME."/Setting.php")){
+			Logger::writeDebug("Loaded File for Setting : ".FRAMEWORK_PLUGIN_HOME."/Setting.php");
+			require_once(FRAMEWORK_PLUGIN_HOME."/Setting.php");
+			return;
+		}
+	}
+	
+	/**
+	 * モジュールクラスのファイルを読み込む
+	 *
+	 * @params string $name モジュール呼び出し名
+	 */
 	function loadModule($name, $params = array()){
 		return $this->load("modules", $name, $params);
 	}
