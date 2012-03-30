@@ -18,5 +18,5 @@ $_SERVER["CONFIGURE"]->SESSION_MANAGER = "DatabaseSessionHandler";
 $_SERVER["CONFIGURE"]->connection = array("default" => array("dbtype" => "mysql", "host" => "127.0.0.1", "user" => "clay", "password" => "clay", "database" => "clay", "query" => "SET NAMES utf8"));
 
 /* 使用するテンプレートエンジン */
-$_SERVER["CONFIGURE"]->TEMPLATE_ENGINE = "SmartyTemplate";
+$_SERVER["CONFIGURE"]->TEMPLATE_ENGINE = "PHPTALTemplate";
 ?>

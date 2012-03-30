@@ -44,7 +44,7 @@ class DatabaseModel{
 	 * 初期の値を配列で渡すことで、その値でモデルを構築する。
 	 */
 	public function __construct($accessTable, $values = array()){
-		$this->access = $accessTable;
+		$this->access =& $accessTable;
 		$this->columns = array();
 		$this->primary_keys = $this->access->getPrimaryKeys();
 		$this->values_org = array();

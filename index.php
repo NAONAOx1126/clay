@@ -17,7 +17,9 @@ try{
 	// 共通のライブラリの呼び出し。
 	include(dirname(__FILE__)."/libs/common/require.php");
 	
-	$_SERVER["TEMPLATE"] = new Template();
+	// テンプレートを読み込む
+	$TEMPLATE_ENGINE = $_SERVER["CONFIGURE"]->TEMPLATE_ENGINE;
+	$_SERVER["TEMPLATE"] = new $TEMPLATE_ENGINE();
 	
 	$_SERVER["TEMPLATE"]->assign("u", FRAMEWORK_URL_BASE);
 	foreach($_SERVER as $name =>$value){

@@ -233,7 +233,7 @@ class DatabaseColumn{
 	 * @param string $column フィールドのカラム名
 	 */
 	public function __construct($table, $column){
-		$this->table = $table;
+		$this->table =& $table;
 		$this->field = $column["field"];
 		$this->canNull = (($column["null"] == "YES")?true:false);
 		$this->isKey = (($column["key"] == "PRI")?true:false);
@@ -554,7 +554,7 @@ class DatabaseResult{
 	 */
 
 	public function __construct($prepare){
-		$this->prepare = $prepare;
+		$this->prepare =& $prepare;
 	}
 
 	/**
@@ -613,7 +613,7 @@ abstract class DatabaseInsertBase{
 	 */
 	public function __construct($table){
 		$this->db = DBFactory::getConnection($table->getModuleName());
-		$this->table = $table;
+		$this->table =& $table;
 	}
 	
 	protected abstract function getPrefix();
