@@ -57,6 +57,8 @@ abstract class DataCache{
  * @author Naohisa Minagawa <info@sweetberry.jp>
  */
 class MemoryDataCache extends DataCache{
+	private $file;
+	
 	private $expires;
 	
 	private $mem;
@@ -66,23 +68,28 @@ class MemoryDataCache extends DataCache{
 	}
 	
 	public function init($server, $file, $expires){
+		$this->file = $file;
 		$this->expires = $expires;
-		$this->mem = new Memcached($server.":".$file);
+		$this->mem = new Memcached($server);
 		$this->mem->addServer("localhost", 11211);
 	}
 	
 	public function import($values){
-		foreach($values as $key => $value){
-			$this->set($key, $value);
-		}
+		$this->mem->set($this->file, $values, $this->expires);
 	}
 	
 	public function set($key, $value){
-		$this->mem->set($key, $value, $this->expires);
+		$data = $this->mem->get($this->file);
+		if(!is_array($data)){
+			$data = array();
+		}
+		$data[$key] = $value;
+		$this->mem->set($this->file, $data, $this->expires);
 	}
 	
 	public function get($key){
-		return $this->mem->get($key);
+		$data = $this->mem->get($this->file);
+		return $data[$key];
 	}
 }
 
