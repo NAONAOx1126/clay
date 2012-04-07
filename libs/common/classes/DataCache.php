@@ -77,7 +77,7 @@ class MemoryDataCache extends DataCache{
 	}
 	
 	public function set($key, $value){
-		$this->mem->set($key, $value, 0, $this->expires);
+		$this->mem->set($key, $value, $this->expires);
 	}
 	
 	public function get($key){
