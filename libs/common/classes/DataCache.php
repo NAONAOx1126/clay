@@ -77,11 +77,11 @@ class MemoryDataCache extends DataCache{
 	}
 	
 	public function set($key, $value){
-		$this->mem->set($key, $value, $this->expires);
+		$this->mem->set($key, serialize($value), $this->expires);
 	}
 	
 	public function get($key){
-		return $this->mem->get($key);
+		return unserialize($this->mem->get($key));
 	}
 }
 
