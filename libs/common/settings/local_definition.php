@@ -12,13 +12,20 @@
  */
 
 // セッション管理クラスをインクルード
-if($_SERVER["CONFIGURE"]->get("SESSION_MANAGER") != ""){
-	ini_set("session.save_handler", "user");
-	require(FRAMEWORK_CLASS_LIBRARY_HOME."/SessionHandler.php");
-	$manager = $_SERVER["CONFIGURE"]->get("SESSION_MANAGER");
-	SessionManager::create(new $manager());
-}else{
-	ini_set("session.save_handler", "files");
+switch($_SERVER["CONFIGURE"]->get("SESSION_MANAGER")){
+	case "":
+		ini_set("session.save_handler", "files");
+		break;
+	case "memcache":
+		ini_set("session.save_handler", "memcache");
+		ini_set("session.save_path", "tcp://".$_SERVER["SERVER_NAME"]);	
+		break;
+	default:
+		ini_set("session.save_handler", "user");
+		require(FRAMEWORK_CLASS_LIBRARY_HOME."/SessionHandler.php");
+		$manager = $_SERVER["CONFIGURE"]->get("SESSION_MANAGER");
+		SessionManager::create(new $manager());
+		break;
 }
 
 // 拡張モジュールのテーブルディレクトリ

@@ -319,8 +319,12 @@ class DatabaseSelect{
 
 	private $havingValues;
 
-	public function __construct($table){
-		$this->db = DBFactory::getConnection($table->getModuleName());
+	public function __construct($table, $db = null){
+		if($db != null){
+			$this->db =& $db;
+		}else{
+			$this->db = DBFactory::getConnection($table->getModuleName());
+		}
 		$this->distinct = false;
 		$this->columns = array();
 		$this->tables = $table->_T;
@@ -611,8 +615,12 @@ abstract class DatabaseInsertBase{
 	 * @params string $table レコード挿入対象のテーブル
 	 * @params object $db レコード挿入時に利用するデータベース接続
 	 */
-	public function __construct($table){
-		$this->db = DBFactory::getConnection($table->getModuleName());
+	public function __construct($table, $db = null){
+		if($db != null){
+			$this->db =& $db;
+		}else{
+			$this->db = DBFactory::getConnection($table->getModuleName());
+		}
 		$this->table =& $table;
 	}
 	
@@ -745,8 +753,12 @@ class DatabaseUpdate{
 
 	private $whereValues;
 
-	public function __construct($table){
-		$this->db = DBFactory::getConnection($table->getModuleName());
+	public function __construct($table, $db = null){
+		if($db != null){
+			$this->db =& $db;
+		}else{
+			$this->db = DBFactory::getConnection($table->getModuleName());
+		}
 		$this->tables = $table->_T;
 		$this->sets = array();
 		$this->wheres = array();
@@ -871,8 +883,12 @@ class DatabaseDelete{
 	 * @params string $table レコード削除対象のテーブル
 	 * @params object $db レコード削除時に利用するデータベース接続
 	 */
-	public function __construct($table){
-		$this->db = DBFactory::getConnection($table->getModuleName());
+	public function __construct($table, $db = null){
+		if($db != null){
+			$this->db =& $db;
+		}else{
+			$this->db = DBFactory::getConnection($table->getModuleName());
+		}
 		$this->tables = $table->_T;
 		$this->wheres = array();
 		$this->values = array();
@@ -953,10 +969,11 @@ class DatabaseTruncate{
 	private $tables;
 
 	public function __construct($table, $db = null){
-		if($db == null){
-			$db = DBFactory::getConnection($table->getModuleName());
+		if($db != null){
+			$this->db =& $db;
+		}else{
+			$this->db = DBFactory::getConnection($table->getModuleName());
 		}
-		$this->db = $db;
 		$this->tables = $table->_T;
 	}
 

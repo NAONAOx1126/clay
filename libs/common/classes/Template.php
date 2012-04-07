@@ -193,6 +193,29 @@ class PHPTALTemplate extends PHPTAL{
 		header("Cache-Control: no-cache, must-revalidate");
 		header("Cache-Control: post-check=0, pre-check=0", false);
 		header("Pragma: no-cache");
+		
+		// グローバル変数の情報を自動的に設定
+		$this->assign("CONFIGURE", $_SERVER["CONFIGURE"]);
+		if(isset($_SERVER["ATTRRIBUTES"])){
+			$this->assign("ATTRIBUTES", $_SERVER["ATTRRIBUTES"]);
+		}else{
+			$this->assign("ATTRIBUTES", array());
+		}
+		if(isset($_GET)){
+			$this->assign("GET", $_GET);
+		}else{
+			$this->assign("GET", array());
+		}
+		if(isset($_POST)){
+			$this->assign("POST", $_POST);
+		}else{
+			$this->assign("POST", array());
+		}
+		if(isset($_SESSION)){
+			$this->assign("SESSION", $_SESSION);
+		}else{
+			$this->assign("SESSION", array());
+		}
 	
 		// テンプレート名を設定
 		$this->setTemplate($template);

@@ -118,7 +118,7 @@ class DatabaseModel{
 	 * レコードを特定のキーで検索する。
 	 * 複数件ヒットした場合は、最初の１件をデータとして取得する。
 	 */
-	public function findBy($values){
+	public function findBy($values = array()){
 		$result = $this->findAllBy($values);
 
 		if(count($result) > 0){
@@ -131,11 +131,13 @@ class DatabaseModel{
 	/**
 	 * レコードを特定のキーで検索する。
 	 */
-	public function findAllBy($values, $order = "", $reverse = false){
+	public function findAllBy($values = array(), $order = "", $reverse = false){
 		$select = new DatabaseSelect($this->access);
 		$select->addColumn($this->access->_W);
-		foreach($values as $key => $value){
-			$select = $this->appendWhere($select, $key, $value);
+		if(is_array($values)){
+			foreach($values as $key => $value){
+				$select = $this->appendWhere($select, $key, $value);
+			}
 		}
 		if(!empty($order)){
 			$select->addOrder($order, $reverse);
@@ -153,11 +155,13 @@ class DatabaseModel{
 	/**
 	 * レコードの件数を取得する。
 	 */
-	public function countBy($values){
+	public function countBy($values = array()){
 		$select = new DatabaseSelect($this->access);
 		$select->addColumn("COUNT(*) AS count");
-		foreach($values as $key => $value){
-			$select = $this->appendWhere($select, $key, $value);
+		if(is_array($values)){
+			foreach($values as $key => $value){
+				$select = $this->appendWhere($select, $key, $value);
+			}
 		}
 		$result = $select->execute();
 		
@@ -313,6 +317,15 @@ class DatabaseModel{
 					break;
 				case "like":
 					$select->addWhere($this->access->$key." LIKE ?", array($value));
+					break;
+				case "part":
+					$select->addWhere($this->access->$key." LIKE ?", array("%".$value."%"));
+					break;
+				case "for":
+					$select->addWhere($this->access->$key." LIKE ?", array("%".$value));
+					break;
+				case "back":
+					$select->addWhere($this->access->$key." LIKE ?", array($value."%"));
 					break;
 				case "nlike":
 					$select->addWhere($this->access->$key." NOT LIKE ?", array($value));
