@@ -16,9 +16,9 @@ switch($_SERVER["CONFIGURE"]->get("SESSION_MANAGER")){
 	case "":
 		ini_set("session.save_handler", "files");
 		break;
-	case "memcache":
+	case "memcached":
 		ini_set("session.save_handler", "memcache");
-		ini_set("session.save_path", "tcp://".$_SERVER["SERVER_NAME"]);	
+		ini_set("session.save_path", "localhost:11211");	
 		break;
 	default:
 		ini_set("session.save_handler", "user");
