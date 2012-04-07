@@ -89,7 +89,10 @@ class MemoryDataCache extends DataCache{
 	
 	public function get($key){
 		$data = $this->mem->get($this->file);
-		return $data[$key];
+		if(isset($data[$key])){
+			return $data[$key];
+		}
+		return "";
 	}
 }
 
