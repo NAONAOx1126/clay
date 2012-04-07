@@ -75,7 +75,11 @@ class MemoryDataCache extends DataCache{
 	}
 	
 	public function import($values){
-		$this->mem->set($this->file, $values, $this->expires);
+		$data = $this->mem->get($this->file);
+		foreach($values as $key => $value){
+			$data[$key] = $value;
+		}
+		$this->mem->set($this->file, $data, $this->expires);
 	}
 	
 	public function set($key, $value){
