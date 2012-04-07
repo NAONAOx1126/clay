@@ -68,6 +68,7 @@ class MemoryDataCache extends DataCache{
 	public function init($server, $file, $expires){
 		$this->expires = $expires;
 		$this->mem = new Memcached($server.":".$file);
+		$this->mem->addServer("localhost", 11211);
 	}
 	
 	public function import($values){
@@ -77,11 +78,11 @@ class MemoryDataCache extends DataCache{
 	}
 	
 	public function set($key, $value){
-		$this->mem->set($key, serialize($value), $this->expires);
+		$this->mem->set($key, $value, $this->expires);
 	}
 	
 	public function get($key){
-		return unserialize($this->mem->get($key));
+		return $this->mem->get($key);
 	}
 }
 
