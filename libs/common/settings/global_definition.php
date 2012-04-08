@@ -25,7 +25,7 @@ $_SERVER["FRAMEWORK_HOME"] = realpath(dirname(__FILE__)."/../../../");
 define("FRAMEWORK_HOME", $_SERVER["FRAMEWORK_HOME"]);
 
 // システムのURLホストパスを取得
-$_SERVER["FRAMEWORK_URL_HOST"] = "http".(($_SERVER["HTTPS"] == "on")?"s":"")."://".$_SERVER["SERVER_NAME"];
+$_SERVER["FRAMEWORK_URL_HOST"] = "http".((isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on")?"s":"")."://".$_SERVER["SERVER_NAME"];
 define("FRAMEWORK_URL_HOST", $_SERVER["FRAMEWORK_URL_HOST"]);
 
 // システムのURLのベースパスを取得
