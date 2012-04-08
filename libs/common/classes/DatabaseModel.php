@@ -114,7 +114,32 @@ class DatabaseModel{
 	public function offset($offset = null){
 		$this->offset = $offset;
 	}
-		/**
+	
+	/**
+	 * レコードが作成可能な場合に、レコードを作成します。
+	 */
+	public function create($db){
+		$insert = new DatabaseInsertIgnore($this->access, $db);
+		$sqlvals = array();
+		foreach($this->columns as $column){
+			if(isset($this->values[$column]) && $this->values[$column] != ""){
+				$sqlvals[$column] = $this->values[$column];
+			}
+		}
+		// 何かしらの情報が登録されている場合のみ登録処理を実行する。
+		if(!empty($sqlvals)){
+			// データ作成日／更新日は自動的に設定する。
+			$sqlvals["create_time"] = $sqlvals["update_time"] = date("Y-m-d H:i:s");
+			$insert->execute($sqlvals);
+			foreach($this->primary_keys as $key){
+				if(empty($this->values[$key])){
+					$this->values[$key] = $this->values_org[$key] = $db->lastInsertId();
+				}
+			}
+		}
+	}
+	
+	/**
 	 * レコードを特定のキーで検索する。
 	 * 複数件ヒットした場合は、最初の１件をデータとして取得する。
 	 */
@@ -287,48 +312,57 @@ class DatabaseModel{
 		}else{
 			$op = "eq";
 		}
+		if(strpos($key, "+") > 0){
+			$keys = explode("+", $key);
+			foreach($keys as $index => $key){
+				$keys[$index] = $this->access->$key;
+			}
+			$fullkey = "CONCAT(".implode(", ", $keys).")";
+		}else{
+			$fullkey = $this->access->$key;
+		}
 		if(in_array($key, $this->columns)){
 			switch($op){
 				case "eq":
 					if($value == null){
-						$select->addWhere($this->access->$key." IS NULL");
+						$select->addWhere($fullkey." IS NULL");
 					}else{
-						$select->addWhere($this->access->$key." = ?", array($value));
+						$select->addWhere($fullkey." = ?", array($value));
 					}
 					break;
 				case "ne":
 					if($value == null){
-						$select->addWhere($this->access->$key." IS NOT NULL");
+						$select->addWhere($fullkey." IS NOT NULL");
 					}else{
-						$select->addWhere($this->access->$key." != ?", array($value));
+						$select->addWhere($fullkey." != ?", array($value));
 					}
 					break;
 				case "gt":
-					$select->addWhere($this->access->$key." > ?", array($value));
+					$select->addWhere($fullkey." > ?", array($value));
 					break;
 				case "ge":
-					$select->addWhere($this->access->$key." >= ?", array($value));
+					$select->addWhere($fullkey." >= ?", array($value));
 					break;
 				case "lt":
-					$select->addWhere($this->access->$key." < ?", array($value));
+					$select->addWhere($fullkey." < ?", array($value));
 					break;
 				case "le":
-					$select->addWhere($this->access->$key." <= ?", array($value));
+					$select->addWhere($fullkey." <= ?", array($value));
 					break;
 				case "like":
-					$select->addWhere($this->access->$key." LIKE ?", array($value));
+					$select->addWhere($fullkey." LIKE ?", array($value));
 					break;
 				case "part":
-					$select->addWhere($this->access->$key." LIKE ?", array("%".$value."%"));
+					$select->addWhere($fullkey." LIKE ?", array("%".$value."%"));
 					break;
 				case "for":
-					$select->addWhere($this->access->$key." LIKE ?", array("%".$value));
+					$select->addWhere($fullkey." LIKE ?", array("%".$value));
 					break;
 				case "back":
-					$select->addWhere($this->access->$key." LIKE ?", array($value."%"));
+					$select->addWhere($fullkey." LIKE ?", array($value."%"));
 					break;
 				case "nlike":
-					$select->addWhere($this->access->$key." NOT LIKE ?", array($value));
+					$select->addWhere($fullkey." NOT LIKE ?", array($value));
 					break;
 				case "in":
 					if(!is_array($value)){
@@ -341,7 +375,7 @@ class DatabaseModel{
 						}
 						$placeholders .= "?";
 					}
-					$select->addWhere($this->access->$key." in (".$placeholders.")", $value);
+					$select->addWhere($fullkey." in (".$placeholders.")", $value);
 					break;
 				case "nin":
 					if(!is_array($value)){
@@ -354,7 +388,7 @@ class DatabaseModel{
 						}
 						$placeholders .= "?";
 					}
-					$select->addWhere($this->access->$key." NOT IN (".$placeholders.")", $value);
+					$select->addWhere($fullkey." NOT IN (".$placeholders.")", $value);
 					break;
 				default:
 					break;
@@ -408,23 +442,8 @@ class DatabaseModel{
 			$this->create_time = $this->update_time = date("Y-m-d H:i:s");
 			
 			if(!is_array($result) || empty($result)){
-				// 主キーのデータが無かった場合はInsert
-				$insert = new DatabaseInsert($this->access, $db);
-				$sqlvals = array();
-				foreach($this->columns as $column){
-					if(isset($this->values[$column]) && $this->values[$column] != ""){
-						$sqlvals[$column] = $this->values[$column];
-					}
-				}
-				// 何かしらの情報が登録されている場合のみ登録処理を実行する。
-				if(!empty($sqlvals)){
-					$insert->execute($sqlvals);
-					foreach($this->primary_keys as $key){
-						if(empty($this->values[$key])){
-							$this->values[$key] = $this->values_org[$key] = $db->lastInsertId();
-						}
-					}
-				}
+				// 主キーのデータが無かった場合はデータを作成する。
+				$this->create($db);
 			}else{
 				// 主キーのデータがあった場合は更新する。
 				$update = new DatabaseUpdate($this->access, $db);
