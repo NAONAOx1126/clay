@@ -33,13 +33,30 @@ class DataCacheFactory{
  * @author Naohisa Minagawa <info@sweetberry.jp>
  */
 abstract class DataCache{
+	protected $values;
+	
 	public abstract function init($server, $file, $expires);
 	
-	public abstract function import($values);
+	protected abstract function save();
 	
-	public abstract function get($key);
+	public function import($values){
+		foreach($values as $key => $value){
+			$this->values[$key] = $value;
+		}
+		$this->save();
+	}
 	
-	public abstract function set($key, $value);
+	public function set($key, $value){
+		$this->values[$key] = $value;
+		$this->save();
+	}
+	
+	public function get($key){
+		if(isset($this->values[$key])){
+			return $this->values[$key];
+		}
+		return "";
+	}
 	
 	public function __get($key){
 		return $this->get($key);
@@ -75,20 +92,11 @@ class MemoryDataCache extends DataCache{
 		$this->expires = $expires;
 		$this->mem = new Memcached($server);
 		$this->mem->addServer("localhost", 11211);
+		$this->values = $this->mem->get($server.":".$file);
 	}
 	
-	public function import($values){
-		foreach($values as $key => $value){
-			$this->set($key, $value);
-		}
-	}
-	
-	public function set($key, $value){
-		$this->mem->set($this->server.":".$this->file."@".$key, $value, $this->expires);
-	}
-	
-	public function get($key){
-		return $this->mem->get($this->server.":".$this->file."@".$key);
+	public function save(){
+		$this->mem->set($this->server.":".$this->file, $this->values, $this->expires);
 	}
 }
 
@@ -105,8 +113,6 @@ class FileDataCache extends DataCache{
 	
 	private $expires;
 	
-	private $values;
-	
 	public function __construct($server, $file, $expires){
 		$this->init($server, $file, $expires);
 	}
@@ -121,7 +127,7 @@ class FileDataCache extends DataCache{
 		}
 	}
 	
-	private function save(){
+	protected function save(){
 		if(!is_dir(FRAMEWORK_HOME."/cache")){
 			mkdir(FRAMEWORK_HOME."/cache");
 		}
@@ -138,22 +144,4 @@ class FileDataCache extends DataCache{
 		}
 	}
 	
-	public function import($values){
-		foreach($values as $key => $value){
-			$this->values[$key] = $value;
-		}
-		$this->save();
-	}
-	
-	public function set($key, $value){
-		$this->values[$key] = $value;
-		$this->save();
-	}
-	
-	public function get($key){
-		if(isset($this->values[$key])){
-			return $this->values[$key];
-		}
-		return "";
-	}
 }
