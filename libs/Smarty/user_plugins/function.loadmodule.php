@@ -68,7 +68,8 @@ function smarty_function_loadmodule($params, $smarty, $template)
 	$errors = array();
 	try{
 		// モジュール用のクラスをリフレクション
-		$object = $_SERVER["LOADER"]->loadModule($name);
+		$loader = new PluginLoader("");
+		$object = $loader->loadModule($name);
 		if(method_exists($object, "execute")){
 			Logger::writeTimer("MODULE : ".$name." start");
 			$object->execute(new LoadModuleParams($params));

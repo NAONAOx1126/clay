@@ -62,6 +62,7 @@ class PluginLoader{
 			return new $class($params);
 		}
 		Logger::writeDebug("No Plugin File for ".$class." class : ".FRAMEWORK_PLUGIN_HOME."/".$path.".php");
+		return null;
 	}
 	
 	/**

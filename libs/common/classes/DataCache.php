@@ -143,5 +143,4 @@ class FileDataCache extends DataCache{
 			fclose($fp);
 		}
 	}
-	
 }
