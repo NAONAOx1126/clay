@@ -20,8 +20,8 @@
  * @return string|null
  */
 function smarty_function_base($params, $smarty, $template){
-	if(substr(FRAMEWORK_URL_BASE, -1) != "/"){
-		return FRAMEWORK_URL_BASE."/";
+	if(substr(FRAMEWORK_URL_BASE, -1) == "/"){
+		return substr(FRAMEWORK_URL_BASE, 0, -1);
 	}
 	return FRAMEWORK_URL_BASE;
 }
