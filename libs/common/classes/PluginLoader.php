@@ -36,33 +36,37 @@ class PluginLoader{
 	 * @param string $name 拡張ファイルのオブジェクト名
 	 */
 	private function load($type, $name, $params = array()){
-		if(!empty($this->namespace)){
-			$name = $this->namespace.".".$name;
-		}
-		Logger::writeDebug($name." ==> ".number_format(memory_get_usage()));
-		$names = explode(".", $name);
-		$class = implode("_", $names);
-		$path = implode("/", $names);
-		if(class_exists($class)){
-			return new $class($params);
-		}
-		if(defined("FRAMEWORK_SITE_HOME")){
-			if(file_exists(FRAMEWORK_SITE_HOME."/".$type."/".$path.".php")){
-				Logger::writeDebug("Loaded File for ".$class." class : ".FRAMEWORK_SITE_HOME."/".$type."/".$path.".php");
-				require_once(FRAMEWORK_SITE_HOME."/".$type."/".$path.".php");
+		try{
+			if(!empty($this->namespace)){
+				$name = $this->namespace.".".$name;
+			}
+			Logger::writeDebug($name." ==> ".number_format(memory_get_usage()));
+			$names = explode(".", $name);
+			$class = implode("_", $names);
+			$path = implode("/", $names);
+			if(class_exists($class)){
 				return new $class($params);
 			}
+			if(defined("FRAMEWORK_SITE_HOME")){
+				if(file_exists(FRAMEWORK_SITE_HOME."/".$type."/".$path.".php")){
+					Logger::writeDebug("Loaded File for ".$class." class : ".FRAMEWORK_SITE_HOME."/".$type."/".$path.".php");
+					require_once(FRAMEWORK_SITE_HOME."/".$type."/".$path.".php");
+					return new $class($params);
+				}
+			}
+			array_splice($names, 1, 0, array($type));
+			$names[0] = strtolower($names[0]);
+			$path = "clay_".implode("/", $names);
+			if(file_exists(FRAMEWORK_PLUGIN_HOME."/".$path.".php")){
+				Logger::writeDebug("Loaded File for ".$class." class : ".FRAMEWORK_PLUGIN_HOME."/".$path.".php");
+				require_once(FRAMEWORK_PLUGIN_HOME."/".$path.".php");
+				return new $class($params);
+			}
+			Logger::writeDebug("No Plugin File for ".$class." class : ".FRAMEWORK_PLUGIN_HOME."/".$path.".php");
+			return null;
+		}catch(Exception $e){
+			Logger::writeError("Failed to load plugin", $e);
 		}
-		array_splice($names, 1, 0, array($type));
-		$names[0] = strtolower($names[0]);
-		$path = "clay_".implode("/", $names);
-		if(file_exists(FRAMEWORK_PLUGIN_HOME."/".$path.".php")){
-			Logger::writeDebug("Loaded File for ".$class." class : ".FRAMEWORK_PLUGIN_HOME."/".$path.".php");
-			require_once(FRAMEWORK_PLUGIN_HOME."/".$path.".php");
-			return new $class($params);
-		}
-		Logger::writeDebug("No Plugin File for ".$class." class : ".FRAMEWORK_PLUGIN_HOME."/".$path.".php");
-		return null;
 	}
 	
 	/**
