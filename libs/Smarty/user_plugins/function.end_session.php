@@ -31,5 +31,6 @@ function smarty_function_end_session($params, $smarty, $template){
 		$_SERVER["TEMPLATE"]->assign($name, $value);
 	}
 	$_SERVER["TEMPLATE"]->assign("INPUT", $_POST);
+	Logger::writeDebug("Page Session Ended.");
 }
 ?>

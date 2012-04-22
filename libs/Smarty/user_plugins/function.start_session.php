@@ -33,5 +33,6 @@ function smarty_function_start_session($params, $smarty, $template){
 		}
 	}
 	$_SERVER["POST"] = $_POST;
+	Logger::writeDebug("Page Session Started.");
 }
 ?>
