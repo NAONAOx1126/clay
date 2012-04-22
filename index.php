@@ -31,7 +31,12 @@ try{
 		showHttpError("404", "Not Found", $ex);
 	}
 	
-	ob_end_flush();
+	$content = ob_get_contents();
+	
+	ob_end_clean();
+	
+	Logger::writeDebug("TEMPLATE_CONTENT : ".$content);
+	echo $content;
 	Logger::writeDebug("TEMPLATE_PAGE : ".$_SERVER["TEMPLATE_NAME"]." Finished.");
 }catch(Exception $ex){
 	ob_end_clean();
