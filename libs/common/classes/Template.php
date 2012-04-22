@@ -89,6 +89,14 @@ class SmartyTemplate extends Smarty{
      * @access public
      */
     public function display($template, $cache_id = null, $compile_id = null, $parent = null){
+		// キャッシュ無効にするヘッダを送信
+		header("P3P: CP='UNI CUR OUR'");
+		header("Expires: Thu, 01 Dec 1994 16:00:00 GMT");
+		header("Last-Modified: ". gmdate("D, d M Y H:i:s"). " GMT");
+		header("Cache-Control: no-cache, must-revalidate");
+		header("Cache-Control: post-check=0, pre-check=0", false);
+		header("Pragma: no-cache");
+	
 		// display template
 		if(Net_UserAgent_Mobile::isMobile()){
 			// モバイルユーザーエージェントのインスタンスを取得
