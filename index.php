@@ -32,7 +32,7 @@ try{
 	}
 
 	// 出力対象のコンテンツを取得	
-	$content = ob_get_contents();
+	$content = trim(ob_get_contents());
 	ob_end_clean();
 	
 	Logger::writeDebug("TEMPLATE_CONTENT : ".$content);
