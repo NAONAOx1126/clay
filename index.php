@@ -34,10 +34,10 @@ try{
 	// 出力対象のコンテンツを取得	
 	$content = trim(ob_get_contents());
 	ob_end_clean();
-	
-	Logger::writeDebug("TEMPLATE_CONTENT : ".$content);
 	echo $content;
 	Logger::writeDebug("TEMPLATE_PAGE : ".$_SERVER["TEMPLATE_NAME"]." Finished.");
+	Logger::writeDebug("SESSIONS : ".var_export($_SESSION, true));
+	
 }catch(Exception $ex){
 	ob_end_clean();
 	// キャッシュ無効にするヘッダを送信
