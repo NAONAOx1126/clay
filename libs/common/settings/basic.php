@@ -99,9 +99,6 @@ if (function_exists('curl_init') && function_exists('json_decode')) {
 	require(FRAMEWORK_CLASS_LIBRARY_HOME."/Facebook.php");
 }
 
-// パフォーマンスロガーを開始
-Logger::startTimer();
-
 // REQUEST URIから実際に出力するテンプレートファイルを特定
 $_SERVER["TEMPLATE_NAME"] = str_replace("?".$_SERVER["QUERY_STRING"], "", $_SERVER["REQUEST_URI"]);
 $_SERVER["TEMPLATE_NAME"] = str_replace(FRAMEWORK_URL_BASE, "", $_SERVER["TEMPLATE_NAME"]);

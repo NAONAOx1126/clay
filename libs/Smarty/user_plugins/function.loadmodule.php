@@ -71,9 +71,9 @@ function smarty_function_loadmodule($params, $smarty, $template)
 		$loader = new PluginLoader("");
 		$object = $loader->loadModule($name);
 		if(method_exists($object, "execute")){
-			Logger::writeTimer("MODULE : ".$name." start");
+			Logger::writeDebug("MODULE : ".$name." start");
 			$object->execute(new LoadModuleParams($params));
-			Logger::writeTimer("MODULE : ".$name." end");
+			Logger::writeDebug("MODULE : ".$name." end");
 		}else{
 			Logger::writeAlert($name." is not plugin module.");
 		}

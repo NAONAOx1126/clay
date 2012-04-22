@@ -91,25 +91,5 @@ class Logger{
 			Logger::writeMessage("debug", $message);
 		}
 	}
-
-	/**
-	 * パフォーマンスタイマーを開始する。
-	 */
-	public static function startTimer(){
-		if(!isset(Logger::$startTime)){
-			Logger::$startTime = time();
-		}
-	}
-
-	/**
-	 * パフォーマンスログを出力する。
-	 * 
-	 * @params string $keyword パフォーマンスのポイントを設定するためのキーワード
-	 */
-	public static function writeTimer($keyword){
-		$message = $keyword."(".(time() - Logger::$startTime).")";
-		Logger::writeMessage("performance", $message);
-	}
-
 }
 ?>
