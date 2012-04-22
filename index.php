@@ -32,6 +32,7 @@ try{
 	}
 	
 	ob_end_flush();
+	Logger::writeDebug("TEMPLATE_PAGE : ".$_SERVER["TEMPLATE_NAME"]." Finished.");
 }catch(Exception $ex){
 	ob_end_clean();
 	echo $ex->getMessage();
