@@ -31,12 +31,9 @@ try{
 		showHttpError("404", "Not Found", $ex);
 	}
 	
-	// 抑制していた出力内容を出力
-	Logger::writeTimer("END");
 	ob_end_flush();
 }catch(Exception $ex){
 	ob_end_clean();
 	echo $ex->getMessage();
-	Logger::writeTimer("END");
 }
 ?>

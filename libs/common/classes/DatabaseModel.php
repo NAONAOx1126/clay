@@ -455,7 +455,11 @@ class DatabaseModel{
 						$update->addWhere($this->access->$column." = ?", array($this->values[$column]));
 						$updateWhere = true;
 					}elseif(isset($this->values[$column]) && (!isset($this->values_org[$column]) || $this->values[$column] != $this->values_org[$column])){
-						$update->addSets($this->access->$column." = ?", array($this->values[$column]));
+						if(!empty($this->values[$column])){
+							$update->addSets($this->access->$column." = ?", array($this->values[$column]));
+						}else{
+							$update->addSets($this->access->$column." = NULL", array());
+						}
 						$updateSet = true;
 					}
 				}
