@@ -93,7 +93,9 @@ class MemoryDataCache extends DataCache{
 		$this->mem = new Memcached($server);
 		$this->mem->addServer("localhost", 11211);
 		$this->values = $this->mem->get($server.":".$file);
-		Logger::writeDebug($server.":".$file."\r\n".var_export($this->values, true));
+		if(class_exists("Logger")){
+			Logger::writeDebug($server.":".$file."\r\n".var_export($this->values, true));
+		}
 	}
 	
 	public function save(){
