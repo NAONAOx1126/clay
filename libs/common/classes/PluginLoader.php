@@ -51,16 +51,20 @@ class PluginLoader{
 				if(file_exists(FRAMEWORK_SITE_HOME."/".$type."/".$path.".php")){
 					Logger::writeDebug("Loaded File for ".$class." class : ".FRAMEWORK_SITE_HOME."/".$type."/".$path.".php");
 					require_once(FRAMEWORK_SITE_HOME."/".$type."/".$path.".php");
-					return new $class($params);
+					$cls = new $class($params);
+					Logger::writeDebug("Loading File for ".$class." class : ".FRAMEWORK_SITE_HOME."/".$type."/".$path.".php");
+					return $cls;
 				}
 			}
 			array_splice($names, 1, 0, array($type));
 			$names[0] = strtolower($names[0]);
 			$path = "clay_".implode("/", $names);
 			if(file_exists(FRAMEWORK_PLUGIN_HOME."/".$path.".php")){
-				Logger::writeDebug("Loaded File for ".$class." class : ".FRAMEWORK_PLUGIN_HOME."/".$path.".php");
+				Logger::writeDebug("Loading File for ".$class." class : ".FRAMEWORK_PLUGIN_HOME."/".$path.".php");
 				require_once(FRAMEWORK_PLUGIN_HOME."/".$path.".php");
-				return new $class($params);
+				$cls = new $class($params);
+				Logger::writeDebug("Loaded File for ".$class." class : ".FRAMEWORK_PLUGIN_HOME."/".$path.".php");
+				return $cls;
 			}
 			Logger::writeDebug("No Plugin File for ".$class." class : ".FRAMEWORK_PLUGIN_HOME."/".$path.".php");
 			return null;
