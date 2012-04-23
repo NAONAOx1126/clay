@@ -35,9 +35,8 @@ try{
 	$content = trim(ob_get_contents());
 	ob_end_clean();
 	echo $content;
+	DBFactory::close();
 	Logger::writeDebug("TEMPLATE_PAGE : ".$_SERVER["TEMPLATE_NAME"]." Finished.");
-	Logger::writeDebug("SESSIONS : ".var_export($_SESSION, true));
-	
 }catch(Exception $ex){
 	ob_end_clean();
 	// キャッシュ無効にするヘッダを送信

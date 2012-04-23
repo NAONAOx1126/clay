@@ -123,6 +123,12 @@ class DBFactory{
 			}
 		}
 		return DBFactory::$connections[$code];
-	}	
+	}
+	
+	public static function close(){
+		foreach(DBFactory::$connections as $code => $connection){
+			DBFactory::$connections[$code] = null;
+		}
+	}
 }
 ?>
