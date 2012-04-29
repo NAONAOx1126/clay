@@ -1,13 +1,16 @@
 <?php
 /**
- * ユニットテストを行うためのメインPHPです。
+ * This file is part of CLAY Framework for view-module based system.
  *
- * @category  Test
- * @package   Main
- * @author    Naohisa Minagawa <info@sweetberry.jp>
- * @copyright 2010-2012 Naohisa Minagawa
+ * @author    Naohisa Minagawa <info@clay-system.jp>
+ * @copyright Copyright (c) 2010, Naohisa Minagawa
  * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache License, Version 2.0
- * @version   1.0.0
+ * @since PHP 5.3
+ * @version   3.0.0
+ */
+
+/**
+ * ユニットテストを行うためのメインPHPです。
  */
 
 // 共通のライブラリの呼び出し。

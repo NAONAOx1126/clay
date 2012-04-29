@@ -1,50 +1,40 @@
 <?php
 /**
- * PEAR::Pagerを拡張したページング用のクラスです。
+ * This file is part of CLAY Framework for view-module based system.
  *
- * @category  Common
- * @package   AdvancedPager
- * @author    Naohisa Minagawa <info@sweetberry.jp>
- * @copyright 2010-2012 Naohisa Minagawa
+ * @author    Naohisa Minagawa <info@clay-system.jp>
+ * @copyright Copyright (c) 2010, Naohisa Minagawa
  * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache License, Version 2.0
  * @since PHP 5.3
- * @version   1.0.0
+ * @version   3.0.0
  */
 
 /**
- * このクラスの基底クラスとして使用しているPEAR::Pager_Jumpingが必要です。
+ * This class based on PEAR::Pager_Jumping class.
  */
 require 'Pager/Jumping.php';
 
 /**
- * ジャンプ形式のPEAR::Pager拡張クラスです。
- * モバイル用のアクセスキーを次のページと前のページのリンクに当てるようになっています。
- *
- * @package AdvancedPager
- * @author Naohisa Minagawa <info@sweetberry.jp>
+ * Extended for PEAR::Pager to generate jump pager.
+ * This class append mobile key action to prev and next page.
  */
 class AdvancedPager_Jumping extends Pager_Jumping
 {
 	/**
-	 * 「前のページへ」のリンクに割り当てるアクセスキー用の属性です。
-	 *
-	 * @access private
+	 * Access key for prev page.
 	 */
 	var $_prevAccessKey;
 	
 	/**
-	 * 「次のページへ」のリンクに割り当てるアクセスキー用の属性です。
-	 *
-	 * @access private
+	 * Access key for next page
 	 */
 	var $_nextAccessKey;
 
     /**
-     * コンストラクタです。
-	 * 基本的に使い方はPEAR::Pagerと同じように使えます。
+     * Create pager object.
+	 * Same as PEAR::Pager similery
      *
-     * @param array $options Pagerの動作を指定する連想配列
-     * @access public
+     * @param array $options Pager options
      */
     function __construct($options = array())
     {
@@ -58,13 +48,11 @@ class AdvancedPager_Jumping extends Pager_Jumping
     }
 
     /**
-     * ページ遷移のリンクを構築するためのレンダリング用内部メソッドです。
+     * Internal method for generate page links.
      *
-     * @param string $altText  ページリンクのtitle属性に設定されるテキスト
-     * @param string $linkText ページリンクのinnerTextとして設定されるテキスト
-     *
-     * @return string ページリンクのテキスト
-     * @access private
+     * @param string $altText  "title" text for page link.
+     * @param string $linkText "innerText" text for page link.
+     * @return string pagelink html content.
      */
     function _renderLink($altText, $linkText, $accessKey = "")
     {
@@ -106,13 +94,11 @@ class AdvancedPager_Jumping extends Pager_Jumping
     }
 
     /**
-     * 「前のページへ」のリンク生成用の内部メソッドです。
+     * Generate link for prev page.
      *
-     * @param string $url  「前のページへ」で呼ばれるリンク先のURL
-     * @param string $link 「前のページへ」のリンクとして表示されるHTML
-     *
-     * @return string 「前のページへ」のリンク
-     * @access private
+     * @param string $url  link url for prev page.
+     * @param string $link internal content for prev page.
+     * @return string link content for prev page.
      */
     function _getBackLink($url='', $link='')
     {
@@ -137,13 +123,11 @@ class AdvancedPager_Jumping extends Pager_Jumping
     }
 
     /**
-     * 「次のページへ」のリンク生成用の内部メソッドです。
+     * Generate link for next page.
      *
-     * @param string $url  「次のページへ」で呼ばれるリンク先のURL
-     * @param string $link 「次のページへ」のリンクとして表示されるHTML
-     *
-     * @return string 「次のページへ」のリンク
-     * @access private
+     * @param string $url  link url for next page.
+     * @param string $link internal content for next page
+     * @return string link content for next page.
      */
     function _getNextLink($url='', $link='')
     {

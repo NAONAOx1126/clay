@@ -1,14 +1,12 @@
 <?php
 /**
- * データベースのアクセスを制御するクラスです。
+ * This file is part of CLAY Framework for view-module based system.
  *
- * @category  Common
- * @package   Models
- * @author    Naohisa Minagawa <info@sweetberry.jp>
- * @copyright 2010-2012 Naohisa Minagawa
+ * @author    Naohisa Minagawa <info@clay-system.jp>
+ * @copyright Copyright (c) 2010, Naohisa Minagawa
  * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache License, Version 2.0
  * @since PHP 5.3
- * @version   1.0.0
+ * @version   3.0.0
  */
 
 /**
@@ -21,7 +19,12 @@ class DatabaseTable{
 	/** 
 	 * @var string DB接続に使用するモジュール名
 	 */
-	private $module;
+	protected $module;
+	
+	/**
+	 * @var string DB接続に使用するテーブル名
+	 */
+	protected $tableName;
 
 	/**
 	 * @var array[DatabaseColumn] カラムリスト 
@@ -66,13 +69,21 @@ class DatabaseTable{
 	public function __construct($tableName, $module = DEFAULT_PACKAGE_NAME){
 		// モジュール名を保存
 		$this->module = strtolower($module);
+		
+		// テーブル名を保存
+		$this->tableName = $tableName;
+		
+		// 初期化処理
+		$this->initialize();
+	}
 
+	protected function initialize(){
 		// 構成されたカラム情報を元に設定値を生成
-		$this->_B = $this->_T = $this->_C = "`".$tableName."`";
+		$this->_B = $this->_T = $this->_C = "`".$this->tableName."`";
 		$this->_W = $this->_C.".*";
 
 		// テーブル構成のキャッシュがある場合にはキャッシュからテーブル情報を取得
-		$tableConfigure = DataCacheFactory::create("table_".$tableName);
+		$tableConfigure = DataCacheFactory::create("table_".$this->tableName);
 		if($tableConfigure->options == ""){
 			// DBの接続を取得
 			$connection = DBFactory::getConnection($this->module);
@@ -192,6 +203,14 @@ class DatabaseTable{
 	 */
 	public function __toString(){
 		return $this->_T;
+	}
+	
+	public function __sleep(){
+		return array("tableName", "module");
+	}
+	
+	public function __wakeup(){
+		$this->initialize();
 	}
 }
 

@@ -1,15 +1,12 @@
 <?php
 /**
- * Smarty {emoji} function plugin
+ * This file is part of CLAY Framework for view-module based system.
  *
- * Type:     function<br>
- * Name:     emoji<br>
- * Purpose:  output pict-character for future phone module.<br>
- * @author   Naohisa Minagawa <minagawa at web-life dot co dot jp>
- * @param array $params parameters
- * @param object $smarty Smarty object
- * @param object $template template object
- * @return string|null
+ * @author    Naohisa Minagawa <info@clay-system.jp>
+ * @copyright Copyright (c) 2010, Naohisa Minagawa
+ * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache License, Version 2.0
+ * @since PHP 5.3
+ * @version   3.0.0
  */
 function smarty_function_emoji($params, $smarty, $template)
 {

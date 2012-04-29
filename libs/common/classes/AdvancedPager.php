@@ -1,23 +1,18 @@
 <?php
 /**
- * PEAR::Pagerを拡張したページング用のクラスです。
+ * This file is part of CLAY Framework for view-module based system.
  *
- * @category  Common
- * @package   AdvancedPager
- * @author    Naohisa Minagawa <info@sweetberry.jp>
- * @copyright 2010-2012 Naohisa Minagawa
+ * @author    Naohisa Minagawa <info@clay-system.jp>
+ * @copyright Copyright (c) 2010, Naohisa Minagawa
  * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache License, Version 2.0
  * @since PHP 5.3
- * @version   1.0.0
+ * @version   3.0.0
  */
  require("Pager.php");
 
 /**
- * Pagerのインスタンス生成のためのPEAR::Pager拡張クラスです。
- * モバイル用のアクセスキーを次のページと前のページのリンクに当てるようになっています。
- *
- * @package AdvancedPager
- * @author Naohisa Minagawa <info@sweetberry.jp>
+ * Extended for PEAR::Pager to generate pager.
+ * This class append mobile key action to prev and next page.
  */
 class AdvancedPager extends Pager
 {
