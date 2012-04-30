@@ -86,7 +86,7 @@ class DatabaseTable{
 		$tableConfigure = DataCacheFactory::create("table_".$this->tableName);
 		if($tableConfigure->options == ""){
 			// DBの接続を取得
-			$connection = DBFactory::getConnection($this->module);
+			$connection = DBFactory::getConnection($this->module, true);
 			// テーブルの定義を取得
 			$prepare = $connection->prepare("DESC ".$this->_T);
 			$prepare->execute();
@@ -342,7 +342,7 @@ class DatabaseSelect{
 		if($db != null){
 			$this->db =& $db;
 		}else{
-			$this->db = DBFactory::getConnection($table->getModuleName());
+			$this->db = DBFactory::getConnection($table->getModuleName(), true);
 		}
 		$this->distinct = false;
 		$this->columns = array();
@@ -736,6 +736,18 @@ class DatabaseInsert extends DatabaseInsertBase{
 class DatabaseInsertIgnore extends DatabaseInsertBase{
 	protected function getPrefix(){
 		return "INSERT IGNORE";
+	}
+}
+
+/**
+ * データベース遅延挿入処理用のクラスです。
+ *
+ * @package Models
+ * @author Naohisa Minagawa <info@sweetberry.jp>
+ */
+class DatabaseInsertDelayed extends DatabaseInsertBase{
+	protected function getPrefix(){
+		return "INSERT DELAYED";
 	}
 }
 

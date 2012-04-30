@@ -16,8 +16,6 @@
  * @author Naohisa Minagawa <info@sweetberry.jp>
  */
 class Logger{
-	private static $startTime;
-	
 	/**
 	 * メッセージログを出力する。
 	 *
@@ -26,22 +24,33 @@ class Logger{
 	 */
 	private static function writeMessage($prefix, $message, $exception = null){
 		try{
-			// ログディレクトリが無い場合は自動的に作成
-			$logHome = FRAMEWORK_LOGS_HOME."/".$_SERVER["CONFIGURE"]->get("site_code");
-			if(!is_dir($logHome)){
-				mkdir($logHome);
-				@chmod($logHome, 0777);
-			}
-			// ログファイルに記載
-			$logFile = $logHome."/".$prefix.date("Ymd").".log";
-			if(($fp = fopen($logFile, "a+")) !== FALSE){
-				fwrite($fp, "[".$_SERVER["SERVER_NAME"]."][".date("Y-m-d H:i:s")."]".$message."\r\n");
+			if($_SERVER["CONFIGURE"]->LOGGER == "DatabaseLogger"){
+				$connection = DBFactory::getConnection("base");
+				$sql = "INSERT INTO `base_logs`(`log_type`, `server_name`, `log_time`, `message`, `stacktrace`) VALUES (?, ?, NOW(), ?, ?)";
+				$prepare = $connection->prepare($sql);
 				if($exception != null){
-					fwrite($fp, "[".$_SERVER["SERVER_NAME"]."][".date("Y-m-d H:i:s")."]".$exception->getMessage()."\r\n");
-					fwrite($fp, "[".$_SERVER["SERVER_NAME"]."][".date("Y-m-d H:i:s")."]".$exception->getTraceAsString());
+					$prepare->execute(array($prefix, $_SERVER["SERVER_NAME"], $message, $exception->getMessage()."\r\n".$exception->getTraceAsString()));
+				}else{
+					$prepare->execute(array($prefix, $_SERVER["SERVER_NAME"], $message, ""));
 				}
-				fclose($fp);
-				@chmod($logFile, 0666);
+			}else{
+				// ログディレクトリが無い場合は自動的に作成
+				$logHome = FRAMEWORK_LOGS_HOME."/".$_SERVER["CONFIGURE"]->get("site_code");
+				if(!is_dir($logHome)){
+					mkdir($logHome);
+					@chmod($logHome, 0777);
+				}
+				// ログファイルに記載
+				$logFile = $logHome."/".$prefix.date("Ymd").".log";
+				if(($fp = fopen($logFile, "a+")) !== FALSE){
+					fwrite($fp, "[".$_SERVER["SERVER_NAME"]."][".date("Y-m-d H:i:s")."]".$message."\r\n");
+					if($exception != null){
+						fwrite($fp, "[".$_SERVER["SERVER_NAME"]."][".date("Y-m-d H:i:s")."]".$exception->getMessage()."\r\n");
+						fwrite($fp, "[".$_SERVER["SERVER_NAME"]."][".date("Y-m-d H:i:s")."]".$exception->getTraceAsString());
+					}
+					fclose($fp);
+					@chmod($logFile, 0666);
+				}
 			}
 		}catch(Exception $e){
 			// エラーログ出力に失敗した場合は無限ネストの可能性があるため、例外を無効にする。

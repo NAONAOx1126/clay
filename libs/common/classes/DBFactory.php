@@ -53,11 +53,17 @@ class DBFactory{
 	 * @param string $code データベース設定の元となるキー
 	 * @return array[PDOConnection] データベースの接続
 	 */
-	public static function getConnection($code = "default"){
+	public static function getConnection($code = "default", $readonly = false){
 		// 指定された設定が無い場合はデフォルトの設定を有効にする。
 		if(!isset(DBFactory::$configures[$code])){
 			$code = "default";
 		}
+		
+		// 読み込み専用で読み込み用の定義がある場合には、読み込み定義に変更
+		if($readonly && isset(DBFactory::$configures["read:".$code])){
+			$code = "read:".$code;
+		}
+		
 		// DBのコネクションが設定されていない場合は接続する。
 		if(!isset(DBFactory::$connections[$code])){
 			$conf = DBFactory::$configures[$code];
