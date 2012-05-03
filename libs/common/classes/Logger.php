@@ -26,13 +26,15 @@ class Logger{
 		try{
 			if($_SERVER["CONFIGURE"]->LOGGER == "DatabaseLogger"){
 				$connection = DBFactory::getConnection("base");
-				$sql = "INSERT INTO `base_logs`(`log_type`, `server_name`, `log_time`, `message`, `stacktrace`) VALUES (?, ?, NOW(), ?, ?)";
-				$prepare = $connection->prepare($sql);
+				$sql = "INSERT INTO `base_logs`(`log_type`, `server_name`, `log_time`, `message`, `stacktrace`)";
+				$sql .= " VALUES ('".$connection->escape($prefix)."', '".$connection->escape($_SERVER["SERVER_NAME"])."'";
+				$sql .= ", NOW(), '".$connection->escape($message)."'";
 				if($exception != null){
-					$prepare->execute(array($prefix, $_SERVER["SERVER_NAME"], $message, $exception->getMessage()."\r\n".$exception->getTraceAsString()));
+					$sql .= ", '".$connection->escape($exception->getMessage()."\r\n".$exception->getTraceAsString())."')";
 				}else{
-					$prepare->execute(array($prefix, $_SERVER["SERVER_NAME"], $message, ""));
+					$sql .= ", '')";
 				}
+				$connection->query($sql);
 			}else{
 				// ログディレクトリが無い場合は自動的に作成
 				$logHome = FRAMEWORK_LOGS_HOME."/".$_SERVER["CONFIGURE"]->get("site_code");

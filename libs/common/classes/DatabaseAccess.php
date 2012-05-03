@@ -78,34 +78,23 @@ class DatabaseTable{
 	}
 
 	protected function initialize(){
+		// DBの接続を取得する。
+		$connection = DBFactory::getConnection($this->module, true);
+		
 		// 構成されたカラム情報を元に設定値を生成
-		$this->_B = $this->_T = $this->_C = "`".$this->tableName."`";
+		$this->_B = $this->_T = $this->_C = $connection->escape_identifier($this->tableName);
 		$this->_W = $this->_C.".*";
 
 		// テーブル構成のキャッシュがある場合にはキャッシュからテーブル情報を取得
 		$tableConfigure = DataCacheFactory::create("table_".$this->tableName);
 		if($tableConfigure->options == ""){
-			// DBの接続を取得
-			$connection = DBFactory::getConnection($this->module, true);
 			// テーブルの定義を取得
-			$prepare = $connection->prepare("DESC ".$this->_T);
-			$prepare->execute();
-			$options = array();
-			while($option = $prepare->fetch(PDO::FETCH_ASSOC)){
-				$options[] = $option;
-			}
-			$prepare->closeCursor();
+			$options = $connection->columns($this->_T);
 
 			// テーブルの主キーを取得
-			$prepare = $connection->prepare("SHOW INDEXES FROM ".$this->_T." WHERE Key_name = 'PRIMARY'");
-			$prepare->execute();
-			$keys = array();
-			while($key = $prepare->fetch(PDO::FETCH_ASSOC)){
-				$keys[] = $key["column_name"];
-			}
-			$prepare->closeCursor();
-			$connection = null;
-
+			$keys = $connection->keys($this->_T);
+			
+			// テーブルの設定をデータキャッシュに登録する。
 			$tableConfigure->import(array("options" => $options, "keys" => $keys));
 		}
 
@@ -159,30 +148,14 @@ class DatabaseTable{
 	 * @return DatabaseTable テーブルオブジェクト
 	 */
 	public function setAlias($tableName){
-		$this->_C = "`".$tableName."`";
-		$this->_T = $this->_B." AS `".$tableName."`";
+		// DBの接続を取得する。
+		$connection = DBFactory::getConnection($this->module, true);
+		
+		// エイリアスの設定に応じて、テーブル内の各変数を調整
+		$this->_C = $connection->escape_identifier($tableName);
+		$this->_T = $this->_B." AS ".$connection->escape_identifier($tableName);
 		$this->_W = $this->_C.".*";
 		return $this;
-	}
-
-	/**
-	 * CSVファイルをテーブルに取り込む
-	 * @param string $filename 取り込むCSVファイル名
-	 * @param int $headers 先頭から無視する行数
-	 * @return int 取り込んだ行数
-	 */
-	public function import($filename, $headers = 1){
-		$connection = DBFactory::getConnection($this->module);
-		$sql = "LOAD DATA LOCAL INFILE '".$filename."' REPLACE INTO TABLE ".$this->_B."";
-		$sql .= " FIELDS TERMINATED BY ',' ENCLOSED BY '\"'";
-		$sql .= " IGNORE ".$headers." LINES";
-		$prepare = $connection->prepare($sql);
-		$prepare->execute();
-		$result = $prepare->rowCount();
-		$prepare->closeCursor();
-		$connection = null;
-
-		return $result;
 	}
 
 	/**
@@ -253,10 +226,10 @@ class DatabaseColumn{
 	 */
 	public function __construct($table, $column){
 		$this->table =& $table;
-		$this->field = $column["field"];
-		$this->canNull = (($column["null"] == "YES")?true:false);
-		$this->isKey = (($column["key"] == "PRI")?true:false);
-		$this->isAutoIncrement = (($column["extra"] == "auto_increment")?true:false);
+		$this->field = $column["Field"];
+		$this->canNull = (($column["Null"] == "YES")?true:false);
+		$this->isKey = (($column["Key"] == "PRI")?true:false);
+		$this->isAutoIncrement = (($column["Extra"] == "auto_increment")?true:false);
 	}
 	
 	/**
@@ -276,7 +249,11 @@ class DatabaseColumn{
 	 * @return string クラスの文字列表現
 	 */
 	public function __toString(){
-		return $this->table->_C.".`".$this->field."`";
+		// DBの接続を取得する。
+		$connection = DBFactory::getConnection($this->table->getModuleName(), true);
+		
+		// カラム名をエスケープする。
+		return $this->table->_C.".".$connection->escape_identifier($this->field);
 	}
 }
 
@@ -288,9 +265,9 @@ class DatabaseColumn{
  */
 class DatabaseSelect{
 	/** 
-	 * @var PDOConnection データベース接続オブジェクト 
+	 * @var string 接続に使用するモジュール名 
 	 */
-	private $db;
+	private $module;
 
 	/** 
 	 * @var boolean distinctするかどうかのフラグ 
@@ -339,11 +316,7 @@ class DatabaseSelect{
 	private $havingValues;
 
 	public function __construct($table, $db = null){
-		if($db != null){
-			$this->db =& $db;
-		}else{
-			$this->db = DBFactory::getConnection($table->getModuleName(), true);
-		}
+		$this->module = $table->getModuleName();
 		$this->distinct = false;
 		$this->columns = array();
 		$this->tables = $table->_T;
@@ -426,13 +399,15 @@ class DatabaseSelect{
 		$sql = $this->buildQuery();
 
 		$values = array_merge($this->tableValues, $this->whereValues, $this->havingValues);
+		
+		$connection = DBFactory::getConnection($this->module, true);
 
 		if(is_array($values) && count($values) > 0){
 			$partSqls = explode("?", $sql);
 			$sql = $partSqls[0];
 	
 			foreach($values as $index => $value){
-				$sql .= "'".$value."'".$partSqls[$index + 1];
+				$sql .= "'".$connection->escape($value)."'".$partSqls[$index + 1];
 			}
 		}
 
@@ -453,16 +428,16 @@ class DatabaseSelect{
 
 		// クエリを実行する。
 		try{
-			Logger::writeDebug($this->showQuery());
-			$prepare = $this->db->prepare($sql);
-			$values = array_merge($this->tableValues, $this->whereValues, $this->havingValues);
-			$prepare->execute($values);
+			$sql = $this->showQuery();
+			Logger::writeDebug($sql);
+			$connection = DBFactory::getConnection($this->module, true);
+			$result = $connection->query($sql);
 		}catch(Exception $e){
 			Logger::writeError($sql, $e);
 			throw new DatabaseException($e);
 		}
 
-		return new DatabaseResult($prepare);
+		return new DatabaseResult($result);
 	}
 
 	public function execute($limit = null, $offset = null){
@@ -489,12 +464,13 @@ class DatabaseSelect{
 			$sql = "SELECT COUNT(1) AS count FROM (".$this->buildQuery().") AS t1";
 
 			// クエリを実行する。
-			$prepare = $this->db->prepare($sql);
-			$values = array_merge($this->tableValues, $this->whereValues, $this->havingValues);
-			$prepare->execute($values);
+			$sql = $this->showQuery();
+			Logger::writeDebug($sql);
+			$connection = DBFactory::getConnection($this->module, true);
+			$result = $connection->query($sql);
 			// 検索結果の取得
 			$data = array();
-			if($row = $prepare->fetch(PDO::FETCH_ASSOC)){
+			if($row = $result->fetch()){
 				$options["totalItems"] = $row["count"];
 			}
 			$prepare->closeCursor();
@@ -567,7 +543,7 @@ class DatabaseResult{
 	/**
 	 * クエリ実行に使ったプPrepared Statementオブジェクト
 	 */
-	private $prepare;
+	private $result;
 
 	/**
 	 * データベースの参照結果を初期化します。
@@ -576,8 +552,8 @@ class DatabaseResult{
 	 * @params object $result クエリの実行結果オブジェクト
 	 */
 
-	public function __construct($prepare){
-		$this->prepare =& $prepare;
+	public function __construct($result){
+		$this->result =& $result;
 	}
 
 	/**
@@ -586,7 +562,7 @@ class DatabaseResult{
 	 * @return array 次の実行結果レコードの連想配列、次のレコードが無い場合はFALSE
 	 */
 	public function next(){
-		return $this->prepare->fetch(PDO::FETCH_ASSOC);
+		return $this->result->fetch();
 	}
 
 	/**
@@ -595,14 +571,14 @@ class DatabaseResult{
 	 * @return array 次の実行結果レコードの連想配列、次のレコードが無い場合はFALSE
 	 */
 	public function all(){
-		return $this->prepare->fetchAll(PDO::FETCH_ASSOC);
+		return $this->result->fetchAll();
 	}
 
 	/**
 	 * クエリの実行結果をクローズし、リソースを解放する
 	 */
 	public function close(){
-		$this->prepare->closeCursor();
+		$this->result->close();
 	}
 }
 
@@ -613,10 +589,10 @@ class DatabaseResult{
  * @author Naohisa Minagawa <info@sweetberry.jp>
  */
 abstract class DatabaseInsertBase{
-	/**
-	 * データベースの接続
+	/** 
+	 * @var string 接続に使用するモジュール名 
 	 */
-	private $db;
+	private $module;
 
 	/**
 	 * 挿入対象のテーブル
@@ -634,12 +610,8 @@ abstract class DatabaseInsertBase{
 	 * @params string $table レコード挿入対象のテーブル
 	 * @params object $db レコード挿入時に利用するデータベース接続
 	 */
-	public function __construct($table, $db = null){
-		if($db != null){
-			$this->db =& $db;
-		}else{
-			$this->db = DBFactory::getConnection($table->getModuleName());
-		}
+	public function __construct($table){
+		$this->module = $table->getModuleName();
 		$this->table =& $table;
 	}
 	
@@ -676,10 +648,11 @@ abstract class DatabaseInsertBase{
 		// パラメータを展開
 		$cols = array();
 		$vals = array();
+		$connection = DBFactory::getConnection($this->module, true);
 		foreach($values as $key => $value){
 			if(isset($this->table->$key)){
-				$cols[] = $key;
-				$vals[] = trim($value);
+				$cols[] = $this->table->$key;
+				$vals[] = "'".$connection->escape(trim($value))."'";
 			}
 		}
 
@@ -697,19 +670,14 @@ abstract class DatabaseInsertBase{
 	 * @params array $values 挿入データの連想配列
 	 */
 	public function execute($values){
-		$sql = $this->buildQuery($values);
-		if(!empty($sql)){
-			// クエリを実行する。
-			try{
-				Logger::writeDebug($this->showQuery($this->vals));
-				$prepare = $this->db->prepare($sql);
-				$prepare->execute($this->vals);
-				$result = $prepare->rowCount();
-				$prepare->closeCursor();
-			}catch(Exception $e){
-				Logger::writeError($sql, $e);
-				throw new DatabaseException($e);
-			}
+		try{
+			$connection = DBFactory::getConnection($this->module);
+			$sql = $this->showQuery($values);
+			Logger::writeDebug($sql);
+			$result = $connection->query($sql);
+		}catch(Exception $e){
+			Logger::writeError($sql, $e);
+			throw new DatabaseException($e);
 		}
 		return $result;
 	}	
@@ -770,7 +738,10 @@ class DatabaseReplace extends DatabaseInsertBase{
  * @author Naohisa Minagawa <info@sweetberry.jp>
  */
 class DatabaseUpdate{
-	private $db;
+	/** 
+	 * @var string 接続に使用するモジュール名 
+	 */
+	private $module;
 
 	private $tables;
 
@@ -785,11 +756,7 @@ class DatabaseUpdate{
 	private $whereValues;
 
 	public function __construct($table, $db = null){
-		if($db != null){
-			$this->db =& $db;
-		}else{
-			$this->db = DBFactory::getConnection($table->getModuleName());
-		}
+		$this->module = $table->getModuleName();
 		$this->tables = $table->_T;
 		$this->sets = array();
 		$this->wheres = array();
@@ -848,8 +815,9 @@ class DatabaseUpdate{
 			$partSqls = explode("?", $sql);
 			$sql = $partSqls[0];
 	
+			$connection = DBFactory::getConnection($this->module, true);
 			foreach($values as $index => $value){
-				$sql .= "'".$value."'".$partSqls[$index + 1];
+				$sql .= "'".$connection->escape($value)."'".$partSqls[$index + 1];
 			}
 		}
 
@@ -858,17 +826,13 @@ class DatabaseUpdate{
 
 	public function execute(){
 		if(!empty($this->sets)){
-			// クエリのビルド
-			$sql = $this->buildQuery();
 
 			// クエリを実行する。
 			try{
-				Logger::writeDebug($this->showQuery());
-				$prepare = $this->db->prepare($sql);
-				$values = array_merge($this->tableValues, $this->setValues, $this->whereValues);
-				$prepare->execute($values);
-				$result = $prepare->rowCount();
-				$prepare->closeCursor();
+				$sql = $this->showQuery();
+				$connection = DBFactory::getConnection($this->module);
+				Logger::writeDebug($sql);
+				$result = $connection->query($sql);
 			}catch(Exception $e){
 				Logger::writeError($sql, $e);
 				throw new DatabaseException($e);
@@ -888,10 +852,10 @@ class DatabaseUpdate{
  * @author Naohisa Minagawa <info@sweetberry.jp>
  */
 class DatabaseDelete{
-	/**
-	 * データベースの接続
+	/** 
+	 * @var string 接続に使用するモジュール名 
 	 */
-	private $db;
+	private $module;
 
 	/**
 	 * 削除対象のテーブル
@@ -915,11 +879,7 @@ class DatabaseDelete{
 	 * @params object $db レコード削除時に利用するデータベース接続
 	 */
 	public function __construct($table, $db = null){
-		if($db != null){
-			$this->db =& $db;
-		}else{
-			$this->db = DBFactory::getConnection($table->getModuleName());
-		}
+		$this->module = $table->getModuleName();
 		$this->tables = $table->_T;
 		$this->wheres = array();
 		$this->values = array();
@@ -955,12 +915,13 @@ class DatabaseDelete{
 	public function showQuery(){
 		$sql = $this->buildQuery();
 
-		if(is_array($values) && count($values) > 0){
+		if(is_array($this->values) && count($this->values) > 0){
 			$partSqls = explode("?", $sql);
 			$sql = $partSqls[0];
 	
-			foreach($values as $index => $value){
-				$sql .= "'".$value."'".$partSqls[$index + 1];
+			$connection = DBFactory::getConnection($this->module, true);
+			foreach($this->values as $index => $value){
+				$sql .= "'".$connection->escape($value)."'".$partSqls[$index + 1];
 			}
 		}
 
@@ -971,20 +932,17 @@ class DatabaseDelete{
 	 * レコードの削除を実行する。
 	 */
 	public function execute(){
-		// クエリのビルド
-		$sql = $this->buildQuery();
-
 		// クエリを実行する。
 		try{
-			Logger::writeDebug($this->showQuery());
-			$prepare = $this->db->prepare($sql);
-			$prepare->execute($this->values);
-			$result = $prepare->rowCount();
-			$prepare->closeCursor();
+			$sql = $this->showQuery();
+			$connection = DBFactory::getConnection($this->module);
+			Logger::writeDebug($sql);
+			$result = $connection->query($sql);
 		}catch(Exception $e){
 			Logger::writeError($sql, $e);
 			throw new DatabaseException($e);
 		}
+		return $result;
 	}
 }
 
@@ -995,16 +953,15 @@ class DatabaseDelete{
  * @author Naohisa Minagawa <info@sweetberry.jp>
  */
 class DatabaseTruncate{
-	private $db;
+	/** 
+	 * @var string 接続に使用するモジュール名 
+	 */
+	private $module;
 
 	private $tables;
 
 	public function __construct($table, $db = null){
-		if($db != null){
-			$this->db =& $db;
-		}else{
-			$this->db = DBFactory::getConnection($table->getModuleName());
-		}
+		$this->module = $table->getModuleName();
 		$this->tables = $table->_T;
 	}
 
@@ -1021,12 +978,9 @@ class DatabaseTruncate{
 
 		// クエリを実行する。
 		try{
-			Logger::writeDebug($this->buildQuery());
-			$prepare = $this->db->prepare($sql);
-			$prepare->execute(array());
-			$result = $prepare->rowCount();
-			$prepare->closeCursor();
-			$prepare = null;
+			$connection = DBFactory::getConnection($this->module);
+			Logger::writeDebug($sql);
+			$result = $connection->query($sql);
 		}catch(Exception $e){
 			Logger::writeError($sql, $e);
 			throw new DatabaseException($e);

@@ -95,8 +95,8 @@ class DatabaseSessionHandler extends SessionHandler{
 		$select = new DatabaseSelect($this->table);
 		$select->addColumn($this->table->_W);
 		$select->addWhere($this->table->$id_key." = ?", array($id));
-		Logger::writeDebug($select->showQuery());
 		$result = $select->execute();
+
 		return $result[0][$data_key];
 	}
 
@@ -111,32 +111,13 @@ class DatabaseSessionHandler extends SessionHandler{
 		$id_key = $this->id_key;
 		$data_key = $this->data_key;
 		
-		// セッションデータが登録済みか調べる。
-		$select = new DatabaseSelect($this->table);
-		$select->addColumn($this->table->_W);
-		$select->addWhere($this->table->$id_key." = ?", array($id));
-		Logger::writeDebug($select->showQuery());
-		$result = $select->execute();
-		
-		// トランザクションデータベースの取得
-		$db = DBFactory::getConnection();
-		
 		// セッションに値を設定
 		try{
-			if(count($result) == 0){
-				$insert = new DatabaseInsert($this->table, $db);
-				$sqlval = array($id_key => $id, $data_key => $sess_data);
-				$sqlval["create_time"] = $sqlval["update_time"] = date("Y-m-d H:i:s");
-				Logger::writeDebug($insert->showQuery($sqlval));
-				$insert->execute($sqlval);
-			}else{
-				$update = new DatabaseUpdate($this->table, $db);
-				$update->addSets($this->table->$data_key." = ?", array($sess_data));
-				$update->addSets($this->table->update_time." = ?", array(date("Y-m-d H:i:s")));
-				$update->addWhere($this->table->$id_key." = ?", array($id));
-				Logger::writeDebug($update->showQuery());
-				$update->execute();
-			}
+			$insert = new DatabaseReplace($this->table);
+			$sqlval = array($id_key => $id, $data_key => $sess_data);
+			$sqlval["create_time"] = $sqlval["update_time"] = date("Y-m-d H:i:s");
+			Logger::writeDebug($insert->showQuery($sqlval));
+			$insert->execute($sqlval);
 			return true;
 		}catch(Exception $e){
 			return false;

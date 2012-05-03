@@ -16,8 +16,7 @@ $_SERVER["CONFIGURE"]->SESSION_MANAGER = "DatabaseSessionHandler";
 
 /* デフォルトのDB接続先 */
 $_SERVER["CONFIGURE"]->connection = array(
-	"default" => array("dbtype" => "mysql", "host" => "127.0.0.1", "user" => "clay", "password" => "clay", "database" => "clay", "query" => "SET NAMES utf8"), 
-	"read:default" => array("dbtype" => "mysql", "host" => "127.0.0.1", "user" => "clay", "password" => "clay", "database" => "clay_rep", "query" => "SET NAMES utf8")
+	"default" => array("dbtype" => "mysql", "host" => "127.0.0.1", "user" => "clay", "password" => "clay", "database" => "clay", "query" => "SET NAMES utf8")
 );
 
 /* 使用するテンプレートエンジン */

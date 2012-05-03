@@ -68,59 +68,16 @@ class DBFactory{
 		if(!isset(DBFactory::$connections[$code])){
 			$conf = DBFactory::$configures[$code];
 
-			// 未設定の場合のデフォルト設定
-			if(!isset($conf["host"])){
-				$conf["host"] = "localhost";
-			}
-			if(!isset($conf["database"])){
-				$conf["database"] = $conf["user"];
-			}
-			
-			// DB接続前の設定
-			$options = array();
-			$options[PDO::ATTR_TIMEOUT] = 1;
-			$options[PDO::ATTR_PERSISTENT] = false;
-			$options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-			
 			try{
 				// 設定に応じてDBに接続
 				switch($conf["dbtype"]){
-					case "oracle":
-						if(!isset($conf["port"])){
-							$conf["port"] = "1521";
-						}
-						$dsn = "oci:dbname=//".$conf["host"].":".$conf["port"]."/".$conf["database"];
-						DBFactory::$connections[$code] = new PDO($dsn, $conf["user"], $conf["password"], $options);
-						break;
-					case "mssql":
-						$dsn = "mssql:host=".$conf["host"].";dbname=".$conf["database"];
-						DBFactory::$connections[$code] = new PDO($dsn, $conf["user"], $conf["password"], $options);
-						break;
 					case "pgsql":
-						if(!isset($conf["port"])){
-							$conf["port"] = "5432";
-						}
-						$dsn = "pgsql:dbname=".$conf["database"]." host=".$conf["host"]." port=".$conf["port"];
-						DBFactory::$connections[$code] = new PDO($dsn, $conf["user"], $conf["password"], $options);
+						DBFactory::$connections[$code] = new PostgresqlConnection($conf);
 						break;
 					case "mysql":
-						if(!isset($conf["port"])){
-							$conf["port"] = "3306";
-						}
-						$dsn = "mysql:dbname=".$conf["database"].";host=".$conf["host"].";port=".$conf["port"];
-						DBFactory::$connections[$code] = new PDO($dsn, $conf["user"], $conf["password"], $options);
-						break;
-					default:
+						DBFactory::$connections[$code] = new MysqlConnection($conf);
 						break;
 				}
-	
-				// 接続に成功したら次回以降の接続を変更してオートコミットを無効にする。
-				DBFactory::$connections[$code]->setAttribute(PDO::ATTR_TIMEOUT, 30);
-				DBFactory::$connections[$code]->setAttribute(PDO::ATTR_AUTOCOMMIT, false);
-				DBFactory::$connections[$code]->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER);
-						
-				// DBの初期化クエリを実行
-				DBFactory::$connections[$code]->query($conf["query"]);
 			}catch(PDOException $e){
 				// 接続に失敗した場合にはデータベース例外を発行
 				throw new DatabaseException($e);
@@ -131,8 +88,176 @@ class DBFactory{
 	
 	public static function close(){
 		foreach(DBFactory::$connections as $code => $connection){
-			DBFactory::$connections[$code] = null;
+			$connection->close();
+			unset(DBFactory::$connections[$code]);
 		}
+	}
+}
+
+class MysqlConnection{
+	private $connection;
+	
+	public function __construct($configure){
+		if(!isset($configure["port"])){
+			$configure["port"] = "3306";
+		}
+		$this->connection = mysql_connect($configure["host"].":".$configure["port"], $configure["user"], $configure["password"], true);
+		mysql_select_db($configure["database"], $this->connection);
+		mysql_set_charset("UTF-8", $this->connection);
+		mysql_query($configure["query"], $this->connection);
+	}
+	
+	public function columns($table){
+		// テーブルの定義を取得
+		$result = $this->query("SHOW COLUMNS FROM ".$table);
+		$columns = array();
+		while($column = $result->fetch()){
+			$columns[] = $column;
+		}
+		$result->close();
+		return $columns;
+	}
+	
+	public function keys($table){
+		$result = $this->query("SHOW INDEXES FROM ".$table." WHERE Key_name = 'PRIMARY'");
+		$keys = array();
+		while($key = $result->fetch()){
+			$keys[] = $key["Column_name"];
+		}
+		$result->close();
+		return $keys;
+	}
+	
+	public function escape($value){
+		if($this->connection != null){
+			return mysql_real_escape_string($value, $this->connection);
+		}
+		return null;
+	}
+	
+	public function escape_identifier($identifier){
+		return "`".$identifier."`";
+	}
+	
+	public function query($query){
+		if($this->connection != null){
+			mysql_ping($this->connection);
+			$result = mysql_query($query, $this->connection);
+			if($result === FALSE){
+				return FALSE;
+			}elseif($result !== TRUE){
+				return new MysqlResult($result);
+			}else{
+				return mysql_affected_rows($this->connection);
+			}
+		}
+		return null;
+	}
+	
+	public function auto_increment(){
+		return mysql_insert_id($this->connection);
+	}
+	
+	public function close(){
+		if($this->connection != null){
+			mysql_close($this->connection);
+			$this->connection = null;
+		}
+	}
+}
+
+class MysqlResult{
+	private $resource;
+	
+	public function __construct($resource){
+		$this->resource = $resource;
+	}
+	
+	public function fetch(){
+		if($this->resource != null){
+			return mysql_fetch_assoc($this->resource);
+		}
+		return FALSE;
+	}
+	
+	public function fetchAll(){
+		$result = array();
+		while(($data = $this->fetch()) !== FALSE){
+			$result[] = $data;
+		}
+		return $result;
+	}
+	
+	public function count(){
+		return mysql_num_rows($this->resource);
+	}
+	
+	public function close(){
+		mysql_free_result($this->resource);
+		$this->resource = null;
+	}
+}
+
+class PostgresqlConnection{
+	private $connection;
+	
+	public function __construct($configure){
+		if(!isset($configure["port"])){
+			$configure["port"] = "5432";
+		}
+		$this->connection = pg_connect("host=".$configure["host"]." port=".$configure["port"]." dbname=".$configure["database"]." user=".$configure["user"]." password=".$configure["password"]);
+		pg_set_client_encoding($this->connection, "UTF-8");
+		pg_query($this->connection, $configure["query"]);
+	}
+	
+	public function escape($value){
+		if($this->connection != null){
+			return pg_escape_literal($this->connection, $value);
+		}
+		return null;
+	}
+	
+	public function query($query){
+		if($this->connection != null){
+			return new PostgresqlResult(pg_query($this->connection, $query));
+		}
+		return null;
+	}
+	
+	public function close(){
+		if($this->connection != null){
+			pg_close($this->connection);
+			$this->connection = null;
+		}
+	}
+}
+
+class PostgresqlResult{
+	private $resource;
+	
+	public function __constrcut($resource){
+		$this->resource = $resource;
+	}
+	
+	public function fetch(){
+		if($this->resource != null){
+			return pg_fetch_assoc($this->resource);
+		}
+		return array();
+	}
+	
+	public function fetchAll(){
+		$result = array();
+		while(($data = $this->fetch()) !== FALSE){
+			$result[] = $data;
+		}
+		$this->close();
+		return $result;
+	}
+	
+	public function close(){
+		pg_free_result($this->resource);
+		$this->resource = null;
 	}
 }
 ?>
