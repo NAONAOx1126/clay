@@ -86,6 +86,27 @@ class DBFactory{
 		return DBFactory::$connections[$code];
 	}
 	
+	public static function begin($code = "default"){
+		$connection = DBFactory::getConnection($code);
+		if($connection != null){
+			$connection->begin();
+		}
+	}	
+	
+	public static function commit($code = "default"){
+		$connection = DBFactory::getConnection($code);
+		if($connection != null){
+			$connection->commit();
+		}
+	}	
+	
+	public static function rollback($code = "default"){
+		$connection = DBFactory::getConnection($code);
+		if($connection != null){
+			$connection->rollback();
+		}
+	}	
+	
 	public static function close(){
 		foreach(DBFactory::$connections as $code => $connection){
 			$connection->close();
@@ -126,6 +147,18 @@ class MysqlConnection{
 		}
 		$result->close();
 		return $keys;
+	}
+	
+	public function begin(){
+		$this->query("BEGIN");
+	}
+	
+	public function commit(){
+		$this->query("COMMIT");
+	}
+	
+	public function rollback(){
+		$this->query("ROLLBACK");
 	}
 	
 	public function escape($value){

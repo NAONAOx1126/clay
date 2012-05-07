@@ -6,8 +6,7 @@ include_once("../common/require.php");
 ini_set("max_execution_time", 0);
 
 // トランザクションデータベースの取得
-$db = DBFactory::getLocal();// トランザクションの開始
-$db->beginTransaction();
+DBFactory::begin();// トランザクションの開始
 
 try{
 	// プラグインのローダーの読み込み
@@ -25,7 +24,7 @@ try{
 	echo "BATCH START : ".time()."<br>\r\n";
 
 	// 郵便番号仮テーブルの内容破棄
-	$truncate = new DatabaseTruncate($zipTemps, $db);
+	$truncate = new DatabaseTruncate($zipTemps);
 	$truncate->execute();
 	
 	echo "TEMP DELETED : ".time()."<br>\r\n";
@@ -52,35 +51,35 @@ try{
 			$sqlval["flg4"] = $data[12];
 			$sqlval["flg5"] = $data[13];
 			$sqlval["flg6"] = $data[14];
-			$result = $insert->execute($sqlval, $db);
+			$result = $insert->execute($sqlval);
 		}
 	}
 	
 	echo "TEMP INSERTED : ".time()."<br>\r\n";
 
 	// 本番データの削除
-	$truncate = new DatabaseTruncate($zips, $db);
+	$truncate = new DatabaseTruncate($zips);
 	$truncate->execute();
 	
 	echo "DATA DELETED : ".time()."<br>\r\n";
 	
 	// 一時データを本番データに反映
-	$insert = new DatabaseInsert($zips, $db);
-	$select = new DatabaseSelect($zipTemps, $db);
+	$insert = new DatabaseInsert($zips);
+	$select = new DatabaseSelect($zipTemps);
 	$select->addColumn($zipTemps->_W);
 	$insert->copy($select);
 	
 	echo "DATA INSERTED : ".time()."<br>\r\n";
 
 	// 都道府県データの削除
-	$truncate = new DatabaseTruncate($prefs, $db);
+	$truncate = new DatabaseTruncate($prefs);
 	$truncate->execute();
 	
 	echo "PREF DELETED : ".time()."<br>\r\n";
 	
 	// 都道府県データを郵便番号データから自動生成
-	$insert = new DatabaseInsert($prefs, $db);
-	$select = new DatabaseSelect($zips, $db);
+	$insert = new DatabaseInsert($prefs);
+	$select = new DatabaseSelect($zips);
 	$select->addColumn("SUBSTRING(".$zips->code.", 1, 2)");
 	$select->addColumn($zips->state);
 	$select->addWhere($zips->flg3." = 0");
@@ -89,11 +88,11 @@ try{
 	$insert->copy($select, array("id", "name"));
 	
 	// エラーが無かった場合、処理をコミットする。
-	$db->commit();
+	DBFactory::commit();
 	
 	echo "BATCH FINISHED : ".time()."<br>\r\n";
 }catch(DatabaseException $e){
-	$db->rollBack();
+	DBFactory::rollBack();
 	print_r($e);
 }
 ?>

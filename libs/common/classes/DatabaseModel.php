@@ -116,8 +116,8 @@ class DatabaseModel{
 	/**
 	 * レコードが作成可能な場合に、レコードを作成します。
 	 */
-	public function create($db){
-		$insert = new DatabaseInsertIgnore($this->access, $db);
+	public function create(){
+		$insert = new DatabaseInsertIgnore($this->access);
 		$sqlvals = array();
 		foreach($this->columns as $column){
 			if(isset($this->values[$column]) && $this->values[$column] != ""){
@@ -131,7 +131,7 @@ class DatabaseModel{
 			$insert->execute($sqlvals);
 			foreach($this->primary_keys as $key){
 				if(empty($this->values[$key])){
-					$this->values[$key] = $this->values_org[$key] = $db->lastInsertId();
+					$this->values[$key] = $this->values_org[$key] = $insert->lastInsertId();
 				}
 			}
 		}
@@ -416,11 +416,11 @@ class DatabaseModel{
 	 * また、モデル内のカラムがDBに無い場合はスキップする。
 	 * データ作成日／更新日は自動的に設定される。
 	 */
-	public function save($db){
+	public function save(){
 		if(!empty($this->primary_keys)){
 			// 現在該当のデータが登録されているか調べる。
 			$pkset = false;
-			$select = new DatabaseSelect($this->access, $db);
+			$select = new DatabaseSelect($this->access);
 			$select->addColumn($this->access->_W);
 			foreach($this->primary_keys as $key){
 				if(isset($this->values[$key])){
@@ -441,10 +441,10 @@ class DatabaseModel{
 			
 			if(!is_array($result) || empty($result)){
 				// 主キーのデータが無かった場合はデータを作成する。
-				$this->create($db);
+				$this->create();
 			}else{
 				// 主キーのデータがあった場合は更新する。
-				$update = new DatabaseUpdate($this->access, $db);
+				$update = new DatabaseUpdate($this->access);
 				$updateSet = false;
 				$updateWhere = false;
 				foreach($this->columns as $column){
@@ -475,16 +475,16 @@ class DatabaseModel{
 	 * また、モデル内のカラムがDBに無い場合はスキップする。
 	 * データ作成日／更新日は自動的に設定される。
 	 */
-	public function saveAll($db, $list){
+	public function saveAll($list){
 		// 主キーのデータが無かった場合はInsert
-		$insert = new DatabaseInsertIgnore($this->access, $db);
+		$insert = new DatabaseInsertIgnore($this->access);
 		foreach($list as $index => $data){
 			// データ作成日／更新日は自動的に設定する。
 			$data["create_time"] = $data["update_time"] = date("Y-m-d H:i:s");
 			$insert->execute($data);
 			foreach($this->primary_keys as $key){
 				if(empty($data[$key])){
-					$list[$index][$key] = $db->lastInsertId();
+					$list[$index][$key] = $insert->lastInsertId();
 				}
 			}
 		}
@@ -495,9 +495,9 @@ class DatabaseModel{
 	 * 指定したトランザクション内にて主キーベースでデータの削除を行う。
 	 * 主キーが存在しない場合は何もしない。
 	 */
-	public function delete($db){
+	public function delete(){
 		if(!empty($this->primary_keys)){
-			$delete = new DatabaseDelete($this->access, $db);
+			$delete = new DatabaseDelete($this->access);
 			$deleteWhere = false;
 			foreach($this->columns as $column){
 				if(in_array($column, $this->primary_keys)){

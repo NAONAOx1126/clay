@@ -133,12 +133,9 @@ class DatabaseSessionHandler extends SessionHandler{
 	function destroy($id) {
 		$id_key = $this->id_key;
 		
-		// トランザクションデータベースの取得
-		$db = DBFactory::getConnection();
-		
 		// セッションに値を設定
 		try{
-			$delete = new DatabaseDelete($this->table, $db);
+			$delete = new DatabaseDelete($this->table);
 			$delete->addWhere($this->table->$id_key." = ?", array($id));
 			Logger::writeDebug($delete->showQuery());
 			$delete->execute();
@@ -158,12 +155,9 @@ class DatabaseSessionHandler extends SessionHandler{
 	function clean($maxlifetime) {
 		$limit = date("Y-m-d H:i:s", strtotime("-".$maxlifetime." secs"));
 		
-		// トランザクションデータベースの取得
-		$db = DBFactory::getConnection();
-		
 		// セッションに値を設定
 		try{
-			$delete = new DatabaseDelete($this->table, $db);
+			$delete = new DatabaseDelete($this->table);
 			$delete->addWhere($this->table->update_time." < ?", array($limit));
 			Logger::writeDebug($delete->showQuery());
 			$delete->execute();

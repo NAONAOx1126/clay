@@ -315,7 +315,7 @@ class DatabaseSelect{
 
 	private $havingValues;
 
-	public function __construct($table, $db = null){
+	public function __construct($table){
 		$this->module = $table->getModuleName();
 		$this->distinct = false;
 		$this->columns = array();
@@ -410,7 +410,6 @@ class DatabaseSelect{
 				$sql .= "'".$connection->escape($value)."'".$partSqls[$index + 1];
 			}
 		}
-
 		return $sql;
 	}
 
@@ -608,7 +607,6 @@ abstract class DatabaseInsertBase{
 	 * レコード挿入処理を初期化します。
 	 *
 	 * @params string $table レコード挿入対象のテーブル
-	 * @params object $db レコード挿入時に利用するデータベース接続
 	 */
 	public function __construct($table){
 		$this->module = $table->getModuleName();
@@ -663,6 +661,19 @@ abstract class DatabaseInsertBase{
 		}
 		return $sql;
 	}
+
+	/**
+	 * 最後に挿入したレコードのIDを取得する。
+	 */
+	public function lastInsertId(){
+		try{
+			$connection = DBFactory::getConnection($this->module);
+			return $connection->auto_increment();
+		}catch(Exception $e){
+			Logger::writeError($e->getMessage(), $e);
+			throw new DatabaseException($e);
+		}
+	}	
 
 	/**
 	 * 現在の状態で挿入クエリを実行する。
@@ -755,7 +766,7 @@ class DatabaseUpdate{
 
 	private $whereValues;
 
-	public function __construct($table, $db = null){
+	public function __construct($table){
 		$this->module = $table->getModuleName();
 		$this->tables = $table->_T;
 		$this->sets = array();
@@ -876,9 +887,8 @@ class DatabaseDelete{
 	 * レコード削除処理を初期化します。
 	 *
 	 * @params string $table レコード削除対象のテーブル
-	 * @params object $db レコード削除時に利用するデータベース接続
 	 */
-	public function __construct($table, $db = null){
+	public function __construct($table){
 		$this->module = $table->getModuleName();
 		$this->tables = $table->_T;
 		$this->wheres = array();
@@ -889,7 +899,6 @@ class DatabaseDelete{
 	 * レコード削除条件を追加します。
 	 *
 	 * @params string $condition レコード削除条件式
-	 * @params object $db レコード削除条件式に設定する変数
 	 */
 	public function addWhere($condition, $values = array()){
 		$this->wheres[] = "(".$condition.")";
@@ -960,7 +969,7 @@ class DatabaseTruncate{
 
 	private $tables;
 
-	public function __construct($table, $db = null){
+	public function __construct($table){
 		$this->module = $table->getModuleName();
 		$this->tables = $table->_T;
 	}

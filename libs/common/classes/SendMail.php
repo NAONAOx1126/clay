@@ -17,11 +17,6 @@
  */
 class SendMail{
 	/**
-	 * メールログ保存用のデータベース
-	 */
-	protected $db;
-	
-	/**
 	 * メールの送信元（名称）
 	 */
 	protected $from;
@@ -114,16 +109,6 @@ class SendMail{
 	}
 	
     /**
-	 * メールログ書き込み用のデータベースを設定します。
-	 *
-	 * @params MDB2 $db メールログ書き込み用データベース
-     * @access public
-     */
-	public function setDatabase($db){
-		$this->db = $db;
-	}
-	
-    /**
 	 * テキストメールを送信します。
 	 *
 	 * @parmas string $contentType メール全体のコンテンツタイプ。
@@ -140,7 +125,7 @@ class SendMail{
 			$maillogs = new MaillogsTable();
 					
 			// データベースINSERTモデルの読み込み
-			$insert = new DatabaseInsert($maillogs, $this->db);
+			$insert = new DatabaseInsert($maillogs);
 			
 			// 設定するデータ配列を定義
 			$values = array();
