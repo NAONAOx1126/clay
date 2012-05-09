@@ -104,6 +104,7 @@ class DatabaseModel{
 	public function limit($limit = null, $offset = null){
 		$this->limit = $limit;
 		$this->offset = $offset;
+		return $this;
 	}
 	
 	/**
@@ -111,6 +112,7 @@ class DatabaseModel{
 	 */
 	public function offset($offset = null){
 		$this->offset = $offset;
+		return $this;
 	}
 	
 	/**
@@ -135,6 +137,7 @@ class DatabaseModel{
 				}
 			}
 		}
+		return $this;
 	}
 	
 	/**
