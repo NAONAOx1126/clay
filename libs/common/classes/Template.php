@@ -96,6 +96,8 @@ class SmartyTemplate extends Smarty{
 		header("Pragma: no-cache");
 	
 		// display template
+		Logger::writeDebug("Template Dir : ".var_export($this->template_dir, true));
+		Logger::writeDebug("Template Name : ".$template);
 		if(Net_UserAgent_Mobile::isMobile()){
 			// モバイルユーザーエージェントのインスタンスを取得
 			$agent = Net_UserAgent_Mobile::singleton();

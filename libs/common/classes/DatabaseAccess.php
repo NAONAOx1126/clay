@@ -338,6 +338,10 @@ class DatabaseSelect{
 		return $this;
 	}
 
+	public function join($table, $conditions = array(), $values = array()){
+		return $this->joinInner($table, $conditions, $values);
+	}
+
 	public function joinInner($table, $conditions = array(), $values = array()){
 		$this->tables .= " INNER JOIN ".$table->_T.(!empty($conditions)?" ON ".implode(" AND ", $conditions):"");
 		foreach($values as $v){
@@ -353,6 +357,10 @@ class DatabaseSelect{
 		}
 		return $this;
 	}
+	
+	public function where($condition, $values = array()){
+		return $this->addWhere($condition, $values);
+	}
 
 	public function addWhere($condition, $values = array()){
 		$this->wheres[] = "(".$condition.")";
@@ -361,10 +369,18 @@ class DatabaseSelect{
 		}
 		return $this;
 	}
+	
+	public function group($column){
+		return $this->addGroupBy($column);
+	}
 
 	public function addGroupBy($column){
 		$this->groups[] = $column;
 		return $this;
+	}
+	
+	public function having($condition, $values = array()){
+		return $this->addHaving($condition, $values);
 	}
 
 	public function addHaving($condition, $values = array()){
@@ -373,6 +389,10 @@ class DatabaseSelect{
 			$this->havingValues[] = (is_string($v)?trim($v):$v);
 		}
 		return $this;
+	}
+	
+	public function order($column, $reverse = false){
+		return $this->addOrder($column, $reverse);
 	}
 
 	public function addOrder($column, $reverse = false){
