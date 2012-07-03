@@ -120,9 +120,11 @@ class SendMail{
 		$this->sendRaw($this->from, $this->fromAddress, $this->to, $this->subject, $contentType."; charset=iso-2022-jp", mb_convert_encoding($this->body, "JIS", "UTF-8"));
 		
 		try{
+			// ローダーを初期化
+			$loader = new PluginLoader();
+			$loader->LoadSetting();
 			// メールログのテーブルモデルを読み込み
-			LoadTable("MaillogsTable");
-			$maillogs = new MaillogsTable();
+			$maillogs = $loader->LoadTable("MaillogsTable");
 					
 			// データベースINSERTモデルの読み込み
 			$insert = new DatabaseInsert($maillogs);
@@ -164,7 +166,9 @@ class SendMail{
 		$header .= "Content-Transfer-Encoding: 7bit\n";
 		$header .= "X-Mailer: PHP/".phpversion();
 		
-		mail($to, $subject, $body, $header, "-f ".$fromAddress);		
+		if(!mail($to, $subject, $body, $header, "-f ".$fromAddress)){
+			Logger::writeAlert("メール送信に失敗しました。");
+		}	
 	}
 
 	// エンコード関数
@@ -290,9 +294,11 @@ class SendPCHtmlMail extends SendMail{
 		$this->sendRaw($this->from, $this->fromAddress, $this->to, $this->subject, $contentType, $extBodyHead.trim(mb_convert_encoding($extBody, "JIS", "UTF-8")).$this->prefix.$this->qp_encode(mb_convert_encoding($this->body, "JIS", "UTF-8")).$suffix);
 		
 		try{
-			// 決済方法のテーブルモデルを読み込み
-			LoadTable("MaillogsTable");
-			$maillogs = new MaillogsTable();
+			// ローダーを初期化
+			$loader = new PluginLoader();
+			$loader->LoadSetting();
+			// メールログのテーブルモデルを読み込み
+			$maillogs = $loader->LoadTable("MaillogsTable");
 					
 			// データベースINSERTモデルの読み込み
 			$insert = new DatabaseInsert($maillogs, $this->db);
@@ -488,9 +494,11 @@ class SendHtmlMail extends SendMail{
 		$this->sendRaw($this->from, $this->fromAddress, $this->to, $this->subject, $contentType, $this->prefix.$extBodyHead.trim(mb_convert_encoding($extBody, "JIS", "UTF-8")).$this->prefix2.$this->qp_encode(mb_convert_encoding($this->body, "JIS", "UTF-8")).$suffix);
 		
 		try{
-			// 決済方法のテーブルモデルを読み込み
-			LoadTable("MaillogsTable");
-			$maillogs = new MaillogsTable();
+			// ローダーを初期化
+			$loader = new PluginLoader();
+			$loader->LoadSetting();
+			// メールログのテーブルモデルを読み込み
+			$maillogs = $loader->LoadTable("MaillogsTable");
 					
 			// データベースINSERTモデルの読み込み
 			$insert = new DatabaseInsert($maillogs, $this->db);

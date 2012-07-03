@@ -23,6 +23,8 @@ if($argc < 2){
 }else{
 	$batch = $argv[1];
 	$_SERVER["SERVER_NAME"] = $argv[2];
+	$_SERVER["REQUEST_URI"] = "/";
+	$_SERVER["QUERY_STRING"] = "";
 	$argv = array_slice($argv, 3);
 }
 
@@ -34,9 +36,16 @@ try{
 	// 共通のライブラリの呼び出し。
 	include(dirname(__FILE__)."/libs/common/require.php");
 	
-	if(file_exists(MINES_HOME."/batch/".$batch.".php")){
-		// バッチのモジュールの呼び出し
-		include(MINES_HOME."/batch/".$batch.".php");
+	$loader = new PluginLoader("");
+	$object = $loader->loadBatch($batch);
+	
+	if(method_exists($object, "execute")){
+		Logger::writeDebug("MODULE : ".$batch." start");
+		$object->execute($argv);
+		Logger::writeDebug("MODULE : ".$batch." end");
+	}else{
+		Logger::writeAlert($batch." is not batch module.");
+		echo $batch." is not batch module.";
 	}
 }catch(Exception $ex){
 	echo $ex->getMessage();
