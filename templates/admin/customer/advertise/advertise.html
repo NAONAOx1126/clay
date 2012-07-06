@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="imagetoolbar" content="no" />
+<meta name="loadmodule" content="Shopping.Admin.Login" error="admin/login.html" />
+<meta name="loadmodule" content="Members.AdvertiseList" />
+<link rel="stylesheet" type="text/css" href="../css/import.css" media="all" />
+<script type="text/javascript" language="javascript" src="../js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" language="javascript" src="../js/jquery.dropdownPlain.js"></script>
+<title>広告分析｜トラッキング｜モエゲー管理画面</title>
+</head>
+
+<body>
+<div id="wrap">
+	<!-- HEADER -->
+	<!--{include file="admin/common/header.html"}-->
+	<!-- HEADER END -->
+	<div id="contents">
+		<p class="pankuzu"><a href="/admin/index.html">メインメニュー</a> &gt; <a href="/admin/tracking/advertise.html">トラッキング</a> &gt; 広告分析</p>
+		<h2>【トラッキング】広告分析</h2>
+		<!--{foreach from=$ERRORS item="error"}-->
+		<div><!--{$error|escape}--></div>
+		<!--{/foreach}-->
+		
+		<div><a href="advertise.html">広告TOP</a></div>
+		
+		<div class="inner pdt15 clearfix">
+			<!--{foreach from=$ATTRIBUTES.advertise key="title" item="advertise"}-->
+			<table class="type02" summary="一覧">
+				<tr>
+					<th class="w4"><!--{$title}--></th>
+					<!--{foreach from=$ATTRIBUTES.points item="point"}-->
+					<th class="w4"><!--{$point|number_format}--></th>
+					<!--{/foreach}-->
+				</tr>
+				<!--{foreach from=$advertise key="header" item="data"}-->
+				<tr>
+					<td class="aln_c">
+					<!--{if $data.link_key != ""}--><a href="advertise.html?<!--{$data.link_key}-->"><!--{$header}--></a>
+					<!--{else}--><!--{$header}--><!--{/if}-->
+					</td>
+					<!--{foreach from=$ATTRIBUTES.points item="point"}-->
+					<td class="aln_r"><!--{$data[$point]|number_format}--></td>
+					<!--{/foreach}-->
+				</tr>
+				<!--{/foreach}-->
+			</table>
+			<!--{/foreach}-->
+		</div>
+	</div>
+	<address class="cl">Copyright &copy;2010 menue All Rights Reserved.</address>
+</div>
+
+</body>
+</html>

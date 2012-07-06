@@ -1,0 +1,51 @@
+<div class="navbar navbar-fixed-top">
+	<div class="navbar-inner">
+		<div class="container-fluid">
+			<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</a>
+			<a class="brand" href="/admin/index.html"><!--{$smarty.server.CONFIGURE->site_name}-->管理システム</a>
+			<!--{if $ATTRIBUTES.OPERATOR->operator_id > 0}-->
+			<div class="btn-group pull-right">
+				<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+					<i class="icon-user"></i><!--{$ATTRIBUTES.OPERATOR->operator_name}--><span class="caret"></span>
+				</a>
+				<ul class="dropdown-menu">
+					<li><a href="/admin/login.html">ログアウト</a></li>
+				</ul>
+			</div>
+			<div class="nav-collapse">
+				<ul class="nav">
+					<!--{if strpos($smarty.server.REQUEST_URI, "/admin/customer/") === 0}-->
+					<li class="active"><a href="/admin/customer/index.html">顧客</a></li>
+					<!--{else}-->
+					<li><a href="/admin/customer/index.html">顧客</a></li>
+					<!--{/if}-->
+					<!--{if strpos($smarty.server.REQUEST_URI, "/admin/product/") === 0}-->
+					<li class="active"><a href="/admin/product/index.html">商品</a></li>
+					<!--{else}-->
+					<li><a href="/admin/product/index.html">商品</a></li>
+					<!--{/if}-->
+					<!--{if strpos($smarty.server.REQUEST_URI, "/admin/order/") === 0}-->
+					<li class="active"><a href="/admin/order/index.html">受注</a></li>
+					<!--{else}-->
+					<li><a href="/admin/order/index.html">受注</a></li>
+					<!--{/if}-->
+					<!--{if strpos($smarty.server.REQUEST_URI, "/admin/content/") === 0}-->
+					<li class="active"><a href="/admin/content/index.html">ページ</a></li>
+					<!--{else}-->
+					<li><a href="/admin/content/index.html">ページ</a></li>
+					<!--{/if}-->
+					<!--{if strpos($smarty.server.REQUEST_URI, "/admin/system/") === 0}-->
+					<li class="active"><a href="/admin/system/index.html">システム</a></li>
+					<!--{else}-->
+					<li><a href="/admin/system/index.html">システム</a></li>
+					<!--{/if}-->
+				</ul>
+			</div>
+			<!--{/if}-->
+		</div>
+	</div>
+</div>

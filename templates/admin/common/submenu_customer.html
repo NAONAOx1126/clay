@@ -1,0 +1,28 @@
+<ul class="nav nav-list">
+<li class="nav-header">顧客管理メニュー</li>
+<!--{if strpos($smarty.server.REQUEST_URI, "/admin/customer/customer/") === 0}-->
+<li class="active"><a href="/admin/customer/customer/index.html">顧客一覧</a></li>
+<!--{else}-->
+<li><a href="/admin/customer/customer/index.html">顧客一覧</a></li>
+<!--{/if}-->
+<!--{if strpos($smarty.server.REQUEST_URI, "/admin/customer/welcome/") === 0}-->
+<li class="active"><a href="/admin/customer/welcome/index.html">来店履歴一覧</a></li>
+<!--{else}-->
+<li><a href="/admin/customer/welcome/index.html">来店履歴一覧</a></li>
+<!--{/if}-->
+<!--{if strpos($smarty.server.REQUEST_URI, "/admin/customer/contract/") === 0}-->
+<li class="active"><a href="/admin/customer/contract/index.html">契約一覧</a></li>
+<!--{else}-->
+<li><a href="/admin/customer/contract/index.html">契約一覧</a></li>
+<!--{/if}-->
+<!--{if strpos($smarty.server.REQUEST_URI, "/admin/customer/ticket/") === 0}-->
+<li class="active"><a href="/admin/customer/ticket/index.html">問い合わせ一覧</a></li>
+<!--{else}-->
+<li><a href="/admin/customer/ticket/index.html">問い合わせ一覧</a></li>
+<!--{/if}-->
+<!--{if strpos($smarty.server.REQUEST_URI, "/admin/customer/advertise/") === 0}-->
+<li class="active"><a href="/admin/customer/advertise/index.html">広告分析設定</a></li>
+<!--{else}-->
+<li><a href="/admin/customer/advertise/index.html">広告分析設定</a></li>
+<!--{/if}-->
+</ul>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title><!--{$smarty.server.CONFIGURE->site_name}-->管理システム</title>
+<meta name="loadmodule" content="Base.Operator.Login" error="admin/login.html" />
+<meta name="loadmodule" content="Base.Pref.List" />
+<meta name="loadmodule" content="Member.Customer.Delete" />
+<meta name="loadmodule" content="Member.Customer.Page" clear="1" />
+<!--{include file="admin/common/header.html"}-->
+</head>
+<body>
+<!--{include file="admin/common/menu.html"}-->
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span3">
+			<div class="well sidebar-nav">
+			<!--{include file="admin/common/submenu_customer.html"}-->
+			</div>
+			<!--/.well -->
+		</div>
+		<!--/span-->
+		<div class="span9"> 
+			<form class="well form-search" action="index.html" method="GET">
+			<table class="table table-bordered" summary="サーチ">
+				<tr>
+					<th>顧客名</th><td><input type="text" class="input-medium search-query" name="search[part:sei+mei]" id="search_name" value="<!--{$smarty.post.search["part:sei+mei"]}-->" /></td>
+					<th>顧客名カナ</th><td><input type="text" class="input-medium search-query" name="search[part:sei_kana+mei_kana]" id="search_name_kana" value="<!--{$smarty.post.search["part:sei_kana+mei_kana"]}-->" /></td>
+				</tr>
+				<tr>
+					<th>メールアドレス</th><td><input type="text" class="input-long search-query" name="search[part:email]" id="search_email" value="<!--{$smarty.post.search["part:email"]}-->" /></td>
+					<th>電話番号</th><td><input type="text" class="input-medium search-query" name="search[part:tel1+tel2+tel3]" id="search_tel" value="<!--{$smarty.post.search["part:tel1+tel2+tel3"]}-->" /></td>
+				</tr>
+			</table>
+			<p class="aln_c"><input type="submit" name="" id="" value="上記の条件で検索する" class="mgb30" /></p>
+			</form>
+			<div id="pagelink"><!--{$product_links.all}--><p class="total">全<!--{$ATTRIBUTES.customers_pager->numItems()|number_format}-->件</p></div>
+			<table class="table table-bordered table-striped" summary="一覧">
+				<tr>
+					<th class="blue header">詳細</th>
+					<th class="blue header">顧客コード</th>
+					<th class="blue header">顧客名</th>
+					<th class="blue header">メールアドレス</th>
+					<th class="blue header">端末ID</th>
+					<th class="blue header">外部ID</th>
+					<th class="blue header">電話番号</th>
+				</tr>
+				<!--{foreach from=$ATTRIBUTES.customers key="index" item="customer"}-->
+				<tr>
+					<td><input type="button" name="detail" id="detail_<!--{$product->product_id}-->" value="詳細" onclick="location.href='edit.html?customer_id=<!--{$customer->customer_id}-->'" /></td>
+					<td><!--{$customer->customer_code}--></td>
+					<td><!--{$customer->sei}--> <!--{$customer->mei}--></td>
+					<td><!--{$customer->email}--></td>
+					<td><!--{$customer->mobile_id}--></td>
+					<td><!--{$customer->external_id}--></td>
+					<td><!--{$customer->tel1}--><!--{$customer->tel2}--><!--{$customer->tel3}--></td>
+				</tr>
+				<!--{/foreach}-->
+			</table>
+		</div>
+		<!--/span-->
+	</div>
+	<!--/row-->
+	<hr>
+	<footer>
+		<p>&copy; Clay System 2012</p>
+	</footer>
+</div>
+</body>
+</html>

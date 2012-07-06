@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title><!--{$smarty.server.CONFIGURE->site_name}-->管理システム</title>
+<meta name="loadmodule" content="Base.Operator.Login" error="admin/login.html" />
+<meta name="loadmodule" content="Member.Welcome.Page" clear="1" />
+<!--{include file="admin/common/header.html"}-->
+</head>
+<body>
+<!--{include file="admin/common/menu.html"}-->
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span3">
+			<div class="well sidebar-nav">
+			<!--{include file="admin/common/submenu_customer.html"}-->
+			</div>
+			<!--/.well -->
+		</div>
+		<!--/span-->
+		<div class="span9"> 
+			<form class="well form-search" action="index.html" method="GET">
+			<table class="table table-bordered" summary="サーチ">
+				<tr>
+					<th>来店番号</th><td><input type="text" class="input-medium search-query" name="search[welcome_code]" id="search_welcome_code" value="<!--{$smarty.post.search["welcome_code"]}-->" /></td>
+					<th>来店日付</th><td><input type="text" class="input-medium search-query" name="search[welcome_date]" id="search_welcome_date" value="<!--{$smarty.post.search["welcome_date"]}-->" /></td>
+				</tr>
+			</table>
+			<p class="aln_c"><input type="submit" name="" id="" value="上記の条件で検索する" class="mgb30" /></p>
+			</form>
+			<div id="pagelink"><!--{$product_links.all}--><p class="total">全<!--{$ATTRIBUTES.welcomes_pager->numItems()|number_format}-->件</p></div>
+			<table class="table table-bordered table-striped" summary="一覧">
+				<tr>
+					<th class="blue header">詳細</th>
+					<th class="blue header">来店番号</th>
+					<th class="blue header">来店日付</th>
+					<th class="blue header">会員番号</th>
+					<th class="blue header">メールアドレス</th>
+					<th class="blue header">購入金額</th>
+				</tr>
+				<!--{foreach from=$ATTRIBUTES.welcomes key="index" item="welcome"}-->
+				<tr>
+					<!--{assign var="customer" value=$welcome->customer()}-->
+					<!--{assign var="order" value=$welcome->order()}-->
+					<td><input type="button" name="detail" id="detail_<!--{$welcome->welcome_id}-->" value="詳細" onclick="location.href='edit.html?welcome_id=<!--{$welcome->welcome_id}-->'" /></td>
+					<td><!--{"%10d"|sprintf:$welcome->welcome_id}--></td>
+					<td><!--{$welcome->welcome_date}--></td>
+					<td><!--{"%10d"|sprintf:$customer->customer_id}--></td>
+					<td><!--{$customer->email}--></td>
+					<td><!--{$order->total}--></td>
+				</tr>
+				<!--{/foreach}-->
+			</table>
+		</div>
+		<!--/span-->
+	</div>
+	<!--/row-->
+	<hr>
+	<footer>
+		<p>&copy; Clay System 2012</p>
+	</footer>
+</div>
+</body>
+</html>
