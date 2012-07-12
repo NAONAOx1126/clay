@@ -63,7 +63,7 @@ class SmartyTemplate extends Smarty{
 		parent::__construct();
 
 		// テンプレートのディレクトリとコンパイルのディレクトリをフレームワークのパス上に展開
-		$this->template_dir = array(FRAMEWORK_TEMPLATE_HOME."/", FRAMEWORK_HOME."/templates/");
+		$this->template_dir = array(FRAMEWORK_TEMPLATE_HOME."/");
 		$this->compile_dir = FRAMEWORK_HOME."/cache_smarty/".$_SERVER["CONFIGURE"]->get("site_code").$_SERVER["USER_TEMPLATE"]."/";
 		
 		// プラグインのディレクトリを追加する。

@@ -166,7 +166,29 @@ class DatabaseModel{
 			}
 		}
 		if(!empty($order)){
-			$select->addOrder($order, $reverse);
+			if(is_array($order)){
+				foreach($order as $index => $ord){
+					if(is_array($reverse)){
+						if(isset($reverse[$index])){
+							$select->addOrder($ord, $reverse[$index]);
+						}else{
+							$select->addOrder($ord, false);
+						}
+					}else{
+						$select->addOrder($ord, $reverse);
+					}
+				}
+			}else{
+				if(is_array($reverse)){
+					if(isset($reverse[0])){
+						$select->addOrder($order, $reverse[0]);
+					}else{
+						$select->addOrder($order, false);
+					}
+				}else{
+					$select->addOrder($order, $reverse);
+				}
+			}
 		}
 		$result = $select->execute($this->limit, $this->offset);
 		
@@ -309,7 +331,7 @@ class DatabaseModel{
 	 */
 	protected function appendWhere($select, $key, $value){
 		if(strpos($key, ":") > 0){
-			list($op, $key) = explode(":", $key);
+			list($op, $key, $default) = explode(":", $key, 3);
 		}else{
 			$op = "eq";
 		}
@@ -321,6 +343,9 @@ class DatabaseModel{
 			$fullkey = "CONCAT(".implode(", ", $keys).")";
 		}else{
 			$fullkey = $this->access->$key;
+			if(!empty($default)){
+				$fullkey = "COALESCE(".$fullkey.", '".$default."')";
+			}
 		}
 		if(in_array($key, $this->columns)){
 			switch($op){
