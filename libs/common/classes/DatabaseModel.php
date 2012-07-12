@@ -344,7 +344,12 @@ class DatabaseModel{
 		}else{
 			$fullkey = $this->access->$key;
 			if(isset($default)){
-				$fullkey = "COALESCE(".$fullkey.", '".$default."')";
+				if(is_numeric($default) && (substr($default, 0, 1) != "0" || strlen($default) == 1)){
+					// 全て数字で先頭が0でない、もしくは1桁のみの場合は数値データとして扱う
+					$fullkey = "COALESCE(".$fullkey.", ".$default.")";
+				}else{
+					$fullkey = "COALESCE(".$fullkey.", '".$default."')";
+				}
 			}
 		}
 		if(in_array($key, $this->columns)){
