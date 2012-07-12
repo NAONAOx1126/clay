@@ -343,7 +343,7 @@ class DatabaseModel{
 			$fullkey = "CONCAT(".implode(", ", $keys).")";
 		}else{
 			$fullkey = $this->access->$key;
-			if(!empty($default) || $default === "0"){
+			if(isset($default)){
 				$fullkey = "COALESCE(".$fullkey.", '".$default."')";
 			}
 		}
