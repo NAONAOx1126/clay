@@ -472,7 +472,8 @@ class DatabaseModel{
 			// データ作成日／更新日は自動的に設定する。
 			$this->create_time = $this->update_time = date("Y-m-d H:i:s");
 			
-			if(!is_array($result) || empty($result)){
+			print_r($result)
+;			if(!is_array($result) || empty($result)){
 				// 主キーのデータが無かった場合はデータを作成する。
 				$this->create();
 			}else{
