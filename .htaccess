@@ -5,7 +5,7 @@ php_value post_max_size 20M
 # Rewriteの有効化
 RewriteEngine on
 
-# 携帯の場合はコンテンツ系のファイルを携帯の方に設定
+# 携帯の画像ファイルは自動縮小
 RewriteCond %{HTTP_USER_AGENT} "DoCoMo" [NC,OR]
 RewriteCond %{HTTP_USER_AGENT} "J-PHONE" [NC,OR]
 RewriteCond %{HTTP_USER_AGENT} "KDDI" [NC,OR]
@@ -33,34 +33,19 @@ RewriteCond %{HTTP_USER_AGENT} "L-mode" [NC,OR]
 RewriteCond %{HTTP_USER_AGENT} "UP.Browser" [NC]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_URL} !^[0-9A-Za-z/._-]+\.(jpe?g|gif|png|html?|xml)$
-RewriteRule ^(.+)$ contents/%{SERVER_NAME}/mobile/$1 [L]
+RewriteRule ^([0-9A-Za-z/._-]+)\.(css|js|swf|pdf|zip|gz|Z|doc|txt|xls)$ contents/%{SERVER_NAME}/mobile/$1 [L]
 
-# iPhoneのその他のファイルの場合
-# RewriteCond %{HTTP_USER_AGENT} "^Mozilla/5\.0 \((iPod|iPhone|iPad);" [NC]
-# RewriteCond %{REQUEST_FILENAME} !-f
-# RewriteCond %{REQUEST_FILENAME} !-d
-# RewriteCond %{REQUEST_URL} !^[0-9A-Za-z/._-]+\.(jpe?g|gif|png|html?|xml)$
-# RewriteRule ^(.+)$ contents/%{SERVER_NAME}/iphone/$1 [L]
-
-# iphoneの画像ファイルの場合
+# iphoneのコンテンツファイルの場合
 RewriteCond %{HTTP_USER_AGENT} "^Mozilla/5\.0 \((iPod|iPhone|iPad);" [NC]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^([0-9A-Za-z/._-]+)\.(jpe?g|gif|png|css|js|swf|pdf)$ contents/%{SERVER_NAME}/iphone/$1.$2 [L]
-
-# Androidのその他のファイルの場合
-RewriteCond %{HTTP_USER_AGENT} "^Mozilla/5.0 \(Linux; U; Android" [NC]
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_URL} !^[0-9A-Za-z/._-]+\.(jpe?g|gif|png|html?|xml|apk)$
-RewriteRule ^(.+)$ contents/%{SERVER_NAME}/android/$1 [L]
+RewriteRule ^([0-9A-Za-z/._-]+)\.(jpe?g|gif|png|css|js|swf|pdf|zip|gz|Z|doc|txt|xls)$ contents/%{SERVER_NAME}/iphone/$1.$2 [L]
 
 # Androidの画像ファイルの場合
 RewriteCond %{HTTP_USER_AGENT} "^Mozilla/5.0 \(Linux; U; Android" [NC]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^([0-9A-Za-z/._-]+)\.(jpe?g|gif|png)$ contents/%{SERVER_NAME}/android/$1.$2 [L]
+RewriteRule ^([0-9A-Za-z/._-]+)\.(jpe?g|gif|png|css|js|swf|pdf|zip|gz|Z|doc|txt|xls)$ contents/%{SERVER_NAME}/android/$1.$2 [L]
 
 # Androidのapkファイルの場合
 RewriteCond %{HTTP_USER_AGENT} "^Mozilla/5.0 \(Linux; U; Android" [NC]
@@ -71,13 +56,10 @@ RewriteRule ^([0-9A-Za-z/._-]+)\.apk$ download.php [L]
 # PCの画像ファイルの場合
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^([0-9A-Za-z/._-]+)\.(jpe?g|gif|png|css|js|swf|pdf)$ contents/%{SERVER_NAME}/templates/$1.$2 [L]
-
-# 携帯でない場合はコンテンツファイルをPCの方に設定
-# RewriteCond %{REQUEST_FILENAME} !-f
-# RewriteCond %{REQUEST_URL} !^[0-9A-Za-z/._-]+\.(html?|xml)$
-# RewriteRule ^(.+)$ contents/%{SERVER_NAME}/templates/$1 [L]
+RewriteRule ^([0-9A-Za-z/._-]+)\.(jpe?g|gif|png|css|js|swf|pdf|zip|gz|Z|doc|txt|xls)$ contents/%{SERVER_NAME}/templates/$1.$2 [L]
 
 # htmlの場合はindex.phpを呼び出す。
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URL} !^[0-9A-Za-z/._-]+\.(jpe?g|gif|png|css|js|swf|pdf|zip|gz|Z|doc|txt|xls)$
 RewriteRule ^(.+)$ index.php [L]
-# RewriteRule ^([0-9A-Za-z/._-]+)\.(html?|xml)$  index.php [L]

@@ -36,6 +36,17 @@ if($_SERVER["CONFIGURE"]->get("site_home") != ""){
 		Logger::writeDebug("CREATE SYMBOLIC LINK : ".FRAMEWORK_CONTENTS_HOME."/".$_SERVER["SERVER_NAME"]." => ".$_SERVER["CONFIGURE"]->get("site_home"));
 		symlink($_SERVER["CONFIGURE"]->get("site_home"), FRAMEWORK_CONTENTS_HOME."/".$_SERVER["SERVER_NAME"]);
 	}
+	if(is_writable($_SERVER["CONFIGURE"]->get("site_home"))){
+		if(!file_exists($_SERVER["CONFIGURE"]->get("site_home")."/mobile/")){
+			symlink($_SERVER["CONFIGURE"]->get("site_home")."/templates", $_SERVER["CONFIGURE"]->get("site_home")."/mobile");
+		}
+		if(!file_exists($_SERVER["CONFIGURE"]->get("site_home")."/iphone/")){
+			symlink($_SERVER["CONFIGURE"]->get("site_home")."/templates", $_SERVER["CONFIGURE"]->get("site_home")."/iphone");
+		}
+		if(!file_exists($_SERVER["CONFIGURE"]->get("site_home")."/android/")){
+			symlink($_SERVER["CONFIGURE"]->get("site_home")."/templates", $_SERVER["CONFIGURE"]->get("site_home")."/android");
+		}
+	}
 }
 
 // ユーザーエージェントを取得する（携帯判定）
