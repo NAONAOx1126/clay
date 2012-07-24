@@ -62,7 +62,7 @@ function smarty_function_loadmodule($params, $smarty, $template)
 	}
 	
     // モジュールのクラスが利用可能か調べる。
-	$errors = array();
+	$errors = null;
 	try{
 		// モジュール用のクラスをリフレクション
 		$loader = new PluginLoader("");
@@ -89,7 +89,8 @@ function smarty_function_loadmodule($params, $smarty, $template)
 	}
 	
 	// エラー配列をスタックさせる
-	if(!empty($errors)){
+	if($errors !== null){
+		
 		if(!empty($error)){
 			// errorパラメータが渡っている場合はスタックさせたエラーを全て出力してエラー画面へ
 			$_SERVER["TEMPLATE"]->assign("ERRORS", $errors);
