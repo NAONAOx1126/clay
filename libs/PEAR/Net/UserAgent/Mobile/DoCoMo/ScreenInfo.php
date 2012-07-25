@@ -2057,6 +2057,12 @@ class Net_UserAgent_Mobile_DoCoMo_ScreenInfo
                                          'depth'  => 16777216,
                                          'color'  => 1
                                          ),
+                       'SH11C' => array(
+                                         'width'  => 480,
+                                         'height' => 592,
+                                         'depth'  => 16777216,
+                                         'color'  => 1
+                                         ),
                        'SH07A3' => array(
                                          'width'  => 480,
                                          'height' => 592,
