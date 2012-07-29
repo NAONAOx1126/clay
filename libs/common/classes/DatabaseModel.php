@@ -122,7 +122,7 @@ class DatabaseModel{
 		$insert = new DatabaseInsertIgnore($this->access);
 		$sqlvals = array();
 		foreach($this->columns as $column){
-			if(isset($this->values[$column]) && $this->values[$column] != ""){
+			if(isset($this->values[$column]) && $this->values[$column] !== null){
 				$sqlvals[$column] = $this->values[$column];
 			}
 		}
@@ -486,7 +486,7 @@ class DatabaseModel{
 						$update->addWhere($this->access->$column." = ?", array($this->values[$column]));
 						$updateWhere = true;
 					}elseif(isset($this->values[$column]) && (!isset($this->values_org[$column]) || $this->values[$column] != $this->values_org[$column])){
-						if(!empty($this->values[$column])){
+						if(isset($this->values[$column]) && $this->values[$column] !== null){
 							$update->addSets($this->access->$column." = ?", array($this->values[$column]));
 						}else{
 							$update->addSets($this->access->$column." = NULL", array());
