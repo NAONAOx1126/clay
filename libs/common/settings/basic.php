@@ -67,6 +67,9 @@ set_include_path(get_include_path().PATH_SEPARATOR.FRAMEWORK_PEAR_LIBRARY_HOME);
 // FPDFのパスをinclude_pathに追加
 set_include_path(get_include_path().PATH_SEPARATOR.FRAMEWORK_FPDF_LIBRARY_HOME);
 
+// Zendのパスをinclude_pathに追加
+set_include_path(get_include_path().PATH_SEPARATOR.FRAMEWORK_ZEND_LIBRARY_HOME);
+
 // 共通で使用するクラスをインクルード
 require(FRAMEWORK_CLASS_LIBRARY_HOME."/Logger.php");
 require(FRAMEWORK_CLASS_LIBRARY_HOME."/FrameworkModule.php");
