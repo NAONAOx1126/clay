@@ -60,7 +60,7 @@ class DatabaseModel{
 	 * データベースのカラムのデータを取得する。
 	 */
 	public function __get($name){
-		if(array_key_exists($name, $this->values)){
+		if(isset($this->values[$name])){
 			return $this->values[$name];
 		}
 		return null;
