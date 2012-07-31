@@ -190,6 +190,7 @@ class DatabaseModel{
 				}
 			}
 		}
+		$select->setLimit($this->limit, $this->offset);
 		$result = $select->execute($this->limit, $this->offset);
 		
 		$thisClass = get_class($this);

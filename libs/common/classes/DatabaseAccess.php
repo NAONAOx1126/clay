@@ -314,6 +314,10 @@ class DatabaseSelect{
 	private $whereValues;
 
 	private $havingValues;
+	
+	private $limit;
+	
+	private $offset;
 
 	public function __construct($table){
 		$this->module = $table->getModuleName();
@@ -399,6 +403,11 @@ class DatabaseSelect{
 		$this->orders[] = $column.($reverse?" DESC":" ASC");
 		return $this;
 	}
+	
+	public function setLimit($limit = null, $offset = null){
+		$this->limit = $limit;
+		$this->offset = $offset;
+	}
 
 	public function buildQuery(){
 		// クエリのビルド
@@ -411,6 +420,8 @@ class DatabaseSelect{
 		$sql .= (!empty($this->groups)?" GROUP BY ".implode(", ", $this->groups):"");
 		$sql .= (!empty($this->having)?" HAVING ".implode(", ", $this->having):"");
 		$sql .= (!empty($this->orders)?" ORDER BY ".implode(", ", $this->orders):"");
+		$sql .= (($this->limit !== null)?" LIMIT ".$this->limit:"");
+		$sql .= (($this->offset !== null)?" OFFSET ".$this->offset:"");
 
 		return $sql;
 	}
