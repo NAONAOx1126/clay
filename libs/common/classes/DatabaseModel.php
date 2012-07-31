@@ -486,7 +486,7 @@ class DatabaseModel{
 						// 主キーは更新条件
 						$update->addWhere($this->access->$column." = ?", array($this->values[$column]));
 						$updateWhere = true;
-					}elseif(isset($this->values[$column]) && (!isset($this->values_org[$column]) || $this->values[$column] != $this->values_org[$column])){
+					}elseif(isset($this->values[$column]) && (!isset($this->values_org[$column]) || $this->values[$column] !== $this->values_org[$column])){
 						if(isset($this->values[$column]) && $this->values[$column] !== null){
 							$update->addSets($this->access->$column." = ?", array($this->values[$column]));
 						}else{
