@@ -19,7 +19,7 @@ if($_SERVER["CONFIGURE"]->DEBUG){
 	ini_set('display_errors', 'On');
 	ini_set('log_errors', 'On');
 }else{
-	error_reporting(E_ERROR | E_WARNING | E_PARSE);
+	error_reporting(E_ERROR);
 	ini_set('display_errors', 'Off');
 	ini_set('log_errors', 'On');
 }
