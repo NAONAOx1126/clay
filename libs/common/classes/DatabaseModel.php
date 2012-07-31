@@ -60,7 +60,7 @@ class DatabaseModel{
 	 * データベースのカラムのデータを取得する。
 	 */
 	public function __get($name){
-		if(isset($this->values[$name])){
+		if(array_key_exists($name, $this->values)){
 			return $this->values[$name];
 		}
 		return null;
@@ -122,7 +122,7 @@ class DatabaseModel{
 		$insert = new DatabaseInsertIgnore($this->access);
 		$sqlvals = array();
 		foreach($this->columns as $column){
-			if(isset($this->values[$column]) && $this->values[$column] !== null){
+			if(array_key_exists($column, $this->values) && $this->values[$column] !== null){
 				$sqlvals[$column] = $this->values[$column];
 			}
 		}
@@ -486,8 +486,8 @@ class DatabaseModel{
 						// 主キーは更新条件
 						$update->addWhere($this->access->$column." = ?", array($this->values[$column]));
 						$updateWhere = true;
-					}elseif(isset($this->values[$column]) && (!isset($this->values_org[$column]) || $this->values[$column] !== $this->values_org[$column])){
-						if(isset($this->values[$column]) && $this->values[$column] !== null){
+					}elseif(array_key_exists($column, $this->values) && (!array_key_exists($column, $this->values_org) || $this->values[$column] != $this->values_org[$column])){
+						if(array_key_exists($column, $this->values) && $this->values[$column] !== null){
 							$update->addSets($this->access->$column." = ?", array($this->values[$column]));
 						}else{
 							$update->addSets($this->access->$column." = NULL", array());
