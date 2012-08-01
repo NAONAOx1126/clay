@@ -10,17 +10,20 @@
  */
 
 // エラーメッセージを限定させる。
+if(!isset($_SERVER["CONFIGURE"]->DISPLAY_ERROR)){
+	$_SERVER["CONFIGURE"]->DISPLAY_ERROR = "Off";
+}
 if($_SERVER["CONFIGURE"]->DEBUG){
 	if(defined("E_DEPRECATED")){
 		error_reporting(E_ALL ^ E_DEPRECATED);
 	}else{
 		error_reporting(E_ALL);
 	}
-	ini_set('display_errors', 'On');
+	ini_set('display_errors', $_SERVER["CONFIGURE"]->DISPLAY_ERROR);
 	ini_set('log_errors', 'On');
 }else{
 	error_reporting(E_ERROR);
-	ini_set('display_errors', 'Off');
+	ini_set('display_errors', $_SERVER["CONFIGURE"]->DISPLAY_ERROR);
 	ini_set('log_errors', 'On');
 }
 
