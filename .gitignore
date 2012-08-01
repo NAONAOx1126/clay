@@ -1,0 +1,7 @@
+/.settings
+/cache/*
+/logs/*
+/cache_smarty/*
+/contents/*
+/install/*
+.DS_Store
