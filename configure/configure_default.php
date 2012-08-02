@@ -2,6 +2,9 @@
 // デバッグフラグ
 $_SERVER["CONFIGURE"]->DEBUG = true;
 
+// エラー表示オプション
+$_SERVER["CONFIGURE"]->DISPLAY_ERROR = "On";
+
 // タイムゾーン
 $_SERVER["CONFIGURE"]->TIMEZONE = "Asia/Tokyo";
 
