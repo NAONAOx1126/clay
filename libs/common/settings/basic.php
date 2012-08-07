@@ -106,7 +106,7 @@ if (function_exists('curl_init') && function_exists('json_decode')) {
 // REQUEST URIから実際に出力するテンプレートファイルを特定
 $_SERVER["TEMPLATE_NAME"] = str_replace("?".$_SERVER["QUERY_STRING"], "", $_SERVER["REQUEST_URI"]);
 if(FRAMEWORK_URL_BASE != ""){
-	if(strpos($_SERVER["TEMPLATE_NAME"], FRAMEWORK_URL_BASE)){
+	if(strpos($_SERVER["TEMPLATE_NAME"], FRAMEWORK_URL_BASE) === 0){
 		$_SERVER["TEMPLATE_NAME"] = substr($_SERVER["TEMPLATE_NAME"], strlen(FRAMEWORK_URL_BASE));
 	}	
 }
