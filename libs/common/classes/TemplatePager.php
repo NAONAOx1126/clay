@@ -51,35 +51,35 @@ class TemplatePager{
 	protected $pagerText = "<div class=\"pagination\"><ul>{1}{2}{3}{4}{5}</ul></div>";
 
 	// ページ番号リンクのセパレータ
-	protected $separator = "&nbsp;|&nbsp;";
+	protected $separator = "";
 	
 	// 最初のページ用のテンプレート
 	// {1}：ページリンク
 	// {2}：表示モードが属性の場合にdisabledが入る
-	protected $firstPageText = "<li><a href=\"{1}\" class=\"{2}\">[&gt;&gt;]</a></li>";
+	protected $firstPageText = "<li class=\"{2}\"><a href=\"{1}\">&lt;&lt;</a></li>";
 	
 	// 最後のページ用のテンプレート
 	// {1}：ページリンク
 	// {2}：表示モードが属性の場合にdisabledが入る
-	protected $lastPageText = "<li><a href=\"{1}\" class=\"{2}\">[&lt;&lt;]</a></li>";
+	protected $lastPageText = "<li class=\"{2}\"><a href=\"{1}\">&gt;&gt;</a></li>";
 	
 	// 前のページ用のテンプレート
 	// {1}：ページリンク
 	// {2}：表示モードが属性の場合にdisabledが入る
-	protected $prevPageText = "<li><a href=\"{1}\" class=\"{2}\">[Prev]</a></li>";
+	protected $prevPageText = "<li class=\"{2}\"><a href=\"{1}\">Prev</a></li>";
 	
 	// 次のページ用のテンプレート
 	// {1}：ページリンク
 	// {2}：表示モードが属性の場合にdisabledが入る
-	protected $nextPageText = "<li><a href=\"{1}\" class=\"{2}\">[Next]</a></li>";
+	protected $nextPageText = "<li class=\"{2}\"><a href=\"{1}\">Next</a></li>";
 	
 	// 現在ページ番号用のテンプレート
 	// {1}：ページリンク、{2}：ページ番号
-	protected $currentPageText = "<li><a href=\"{1}\" class=\"disabled\">[{2}]</a></li>";
+	protected $currentPageText = "<li class=\"active\"><a href=\"{1}\">{2}</a></li>";
 	
 	// ページ番号用のテンプレート
 	// {1}：ページリンク、{2}：ページ番号
-	protected $pageText = "<li><a href=\"{1}\">[{2}]</a></li>";
+	protected $pageText = "<li><a href=\"{1}\">{2}</a></li>";
 	
 	// ページ表示用のクエリ文字列
 	protected $queryString;
@@ -183,6 +183,13 @@ class TemplatePager{
 		$this->dataSize = $size;
 	}
 	
+	/**
+	 * データサイズを取得
+	 */
+	public function getDataSize(){
+		return $this->dataSize;
+	}
+		
 	/**
 	 * 現在のページサイズを取得
 	 */
