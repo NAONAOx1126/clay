@@ -78,8 +78,8 @@ require(FRAMEWORK_CLASS_LIBRARY_HOME."/Logger.php");
 require(FRAMEWORK_CLASS_LIBRARY_HOME."/FrameworkModule.php");
 require(FRAMEWORK_CLASS_LIBRARY_HOME."/PluginLoader.php");
 require(FRAMEWORK_CLASS_LIBRARY_HOME."/Template.php");
-require(FRAMEWORK_CLASS_LIBRARY_HOME."/AdvancedPager.php");
-require(FRAMEWORK_CLASS_LIBRARY_HOME."/ImageConverter.php");
+require(FRAMEWORK_CLASS_LIBRARY_HOME."/TemplatePager.php");
+require(FRAMEWORK_CLASS_LIBRARY_HOME."/ImageFilter.php");
 
 // データベース関連クラスをインクルード
 require(FRAMEWORK_CLASS_LIBRARY_HOME."/DBFactory.php");
