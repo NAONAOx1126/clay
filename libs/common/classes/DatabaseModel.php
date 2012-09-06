@@ -13,7 +13,7 @@
  * データベースモデルラッパー用のクラスです。
  *
  * @package Models
- * @author Naohisa Minagawa <info@sweetberry.jp>
+ * @author Naohisa Minagawa <info@clay-system.jp>
  */
 class DatabaseModel{
 	// ベースのデータベースアクセスオブジェクト

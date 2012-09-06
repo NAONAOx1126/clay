@@ -14,7 +14,7 @@
  * 必ず拡張する必要があり、executeメソッドを実装する必要があります。
  *
  * @package Common
- * @author Naohisa Minagawa <info@sweetberry.jp>
+ * @author Naohisa Minagawa <info@clay-system.jp>
  */
 abstract class FrameworkModule{
     /**

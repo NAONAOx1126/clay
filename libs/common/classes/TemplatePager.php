@@ -13,7 +13,7 @@
  * ページャーをテンプレート文字列で作成するためのクラスです。
  *
  * @package Models
- * @author Naohisa Minagawa <info@sweetberry.jp>
+ * @author Naohisa Minagawa <info@clay-system.jp>
  */
 class TemplatePager{
 	// ページIDキー

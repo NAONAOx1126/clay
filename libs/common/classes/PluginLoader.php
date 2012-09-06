@@ -13,7 +13,7 @@
  * 各種モジュールを読み込むためのクラスです。
  *
  * @package Common
- * @author Naohisa Minagawa <info@sweetberry.jp>
+ * @author Naohisa Minagawa <info@clay-system.jp>
  */
 class PluginLoader{
 	/**

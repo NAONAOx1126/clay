@@ -49,7 +49,7 @@ class AC{
  * Smartyを継承して基本的な設定を行っています。
  *
  * @package Common
- * @author Naohisa Minagawa <info@sweetberry.jp>
+ * @author Naohisa Minagawa <info@clay-system.jp>
  * @since PHP 5.2
  * @version 1.0.0
  */

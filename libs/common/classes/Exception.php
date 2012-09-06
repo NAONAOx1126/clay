@@ -13,7 +13,7 @@
  * システム共通例外のクラスです。
  *
  * @package Exception
- * @author Naohisa Minagawa <info@sweetberry.jp>
+ * @author Naohisa Minagawa <info@clay-system.jp>
  */
 class SystemException extends Exception{
 	/**
@@ -40,7 +40,7 @@ class SystemException extends Exception{
  * モジュール内で処理されなかった場合は、次のモジュールに引き継いで処理させることができます。
  *
  * @package Exception
- * @author Naohisa Minagawa <info@sweetberry.jp>
+ * @author Naohisa Minagawa <info@clay-system.jp>
  */
 class InvalidException extends SystemException{
 	/** 
@@ -71,7 +71,7 @@ class InvalidException extends SystemException{
  * データベースエラー時の例外クラスです。
  *
  * @package Exception
- * @author Naohisa Minagawa <info@sweetberry.jp>
+ * @author Naohisa Minagawa <info@clay-system.jp>
  */
 class DatabaseException extends SystemException{
 	/**

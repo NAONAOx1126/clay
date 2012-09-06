@@ -19,7 +19,7 @@ include(FRAMEWORK_FPDF_LIBRARY_HOME."/MBFPDF.php");
  * 元のテンプレートにテキストを埋めるという形になります。
  *
  * @package Common
- * @author Naohisa Minagawa <info@sweetberry.jp>
+ * @author Naohisa Minagawa <info@clay-system.jp>
  */
 class PdfDocument extends MBFPDF{
 	/**

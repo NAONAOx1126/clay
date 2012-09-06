@@ -12,7 +12,7 @@
 /**
  * データキャッシュファクトリクラス
  * @package Cache
- * @author Naohisa Minagawa <info@sweetberry.jp>
+ * @author Naohisa Minagawa <info@clay-system.jp>
  */
 class DataCacheFactory{
 	public static function create($file, $expires = 3600){
@@ -28,7 +28,7 @@ class DataCacheFactory{
 /**
  * データキャッシュ用のインターフェイス
  * @package Cache
- * @author Naohisa Minagawa <info@sweetberry.jp>
+ * @author Naohisa Minagawa <info@clay-system.jp>
  */
 abstract class DataCache{
 	protected $values;
@@ -69,7 +69,7 @@ abstract class DataCache{
  * memcachedによるデータキャッシュクラスです。
  *
  * @package Cache
- * @author Naohisa Minagawa <info@sweetberry.jp>
+ * @author Naohisa Minagawa <info@clay-system.jp>
  */
 class MemoryDataCache extends DataCache{
 	private $server;
@@ -102,7 +102,7 @@ class MemoryDataCache extends DataCache{
  * ファイルによるデータキャッシュクラスです。
  *
  * @package Cache
- * @author Naohisa Minagawa <info@sweetberry.jp>
+ * @author Naohisa Minagawa <info@clay-system.jp>
  */
 class FileDataCache extends DataCache{
 	private $server;

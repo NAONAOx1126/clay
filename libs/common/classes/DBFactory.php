@@ -13,7 +13,7 @@
  * データベースのインスタンスを生成するためのファクトリクラスです。
  *
  * @package Common
- * @author Naohisa Minagawa <info@sweetberry.jp>
+ * @author Naohisa Minagawa <info@clay-system.jp>
  */
 class DBFactory{
 	/**

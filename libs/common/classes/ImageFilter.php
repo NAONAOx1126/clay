@@ -19,7 +19,7 @@ require(FRAMEWORK_CLASS_LIBRARY_HOME."/ImageFilter/ImagePadding.php");
  * 画像の処理を行うクラスです。
  *
  * @package ImageFilter
- * @author Naohisa Minagawa <info@sweetberry.jp>
+ * @author Naohisa Minagawa <info@clay-system.jp>
  */
 class ImageFilter
 {

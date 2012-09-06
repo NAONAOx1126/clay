@@ -13,7 +13,7 @@
  * データベーステーブルラッパー用のクラスです。
  *
  * @package Models
- * @author Naohisa Minagawa <info@sweetberry.jp>
+ * @author Naohisa Minagawa <info@clay-system.jp>
  */
 class DatabaseTable{
 	/** 
@@ -191,7 +191,7 @@ class DatabaseTable{
  * データベースカラムラッパー用のクラスです。
  *
  * @package Models
- * @author Naohisa Minagawa <info@sweetberry.jp>
+ * @author Naohisa Minagawa <info@clay-system.jp>
  */
 class DatabaseColumn{
 	/**
@@ -261,7 +261,7 @@ class DatabaseColumn{
  * データベース参照処理用のクラスです。
  *
  * @package Models
- * @author Naohisa Minagawa <info@sweetberry.jp>
+ * @author Naohisa Minagawa <info@clay-system.jp>
  */
 class DatabaseSelect{
 	/** 
@@ -490,7 +490,7 @@ class DatabaseSelect{
  * データベースSELECTの結果処理用のクラスです。
  *
  * @package Models
- * @author Naohisa Minagawa <info@sweetberry.jp>
+ * @author Naohisa Minagawa <info@clay-system.jp>
  */
 class DatabaseResult{
 	/**
@@ -539,7 +539,7 @@ class DatabaseResult{
  * データベース挿入処理用のベースクラスです。
  *
  * @package Models
- * @author Naohisa Minagawa <info@sweetberry.jp>
+ * @author Naohisa Minagawa <info@clay-system.jp>
  */
 abstract class DatabaseInsertBase{
 	/** 
@@ -652,7 +652,7 @@ abstract class DatabaseInsertBase{
  * データベース挿入処理用のクラスです。
  *
  * @package Models
- * @author Naohisa Minagawa <info@sweetberry.jp>
+ * @author Naohisa Minagawa <info@clay-system.jp>
  */
 class DatabaseInsert extends DatabaseInsertBase{
 	protected function getPrefix(){
@@ -664,7 +664,7 @@ class DatabaseInsert extends DatabaseInsertBase{
  * データベース排他挿入処理用のクラスです。
  *
  * @package Models
- * @author Naohisa Minagawa <info@sweetberry.jp>
+ * @author Naohisa Minagawa <info@clay-system.jp>
  */
 class DatabaseInsertIgnore extends DatabaseInsertBase{
 	protected function getPrefix(){
@@ -676,7 +676,7 @@ class DatabaseInsertIgnore extends DatabaseInsertBase{
  * データベース遅延挿入処理用のクラスです。
  *
  * @package Models
- * @author Naohisa Minagawa <info@sweetberry.jp>
+ * @author Naohisa Minagawa <info@clay-system.jp>
  */
 class DatabaseInsertDelayed extends DatabaseInsertBase{
 	protected function getPrefix(){
@@ -688,7 +688,7 @@ class DatabaseInsertDelayed extends DatabaseInsertBase{
  * データベース置換挿入処理用のクラスです。
  *
  * @package Models
- * @author Naohisa Minagawa <info@sweetberry.jp>
+ * @author Naohisa Minagawa <info@clay-system.jp>
  */
 class DatabaseReplace extends DatabaseInsertBase{
 	protected function getPrefix(){
@@ -700,7 +700,7 @@ class DatabaseReplace extends DatabaseInsertBase{
  * データベース更新処理用のクラスです。
  *
  * @package Models
- * @author Naohisa Minagawa <info@sweetberry.jp>
+ * @author Naohisa Minagawa <info@clay-system.jp>
  */
 class DatabaseUpdate{
 	/** 
@@ -814,7 +814,7 @@ class DatabaseUpdate{
  * データベース削除処理用のクラスです。
  *
  * @package Models
- * @author Naohisa Minagawa <info@sweetberry.jp>
+ * @author Naohisa Minagawa <info@clay-system.jp>
  */
 class DatabaseDelete{
 	/** 
@@ -913,7 +913,7 @@ class DatabaseDelete{
  * データベースクリーンアップ処理用のクラスです。
  *
  * @package Models
- * @author Naohisa Minagawa <info@sweetberry.jp>
+ * @author Naohisa Minagawa <info@clay-system.jp>
  */
 class DatabaseTruncate{
 	/** 

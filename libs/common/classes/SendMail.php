@@ -13,7 +13,7 @@
  * テキスト形式のメール送信に使用するクラスです。
  *
  * @package Common
- * @author Naohisa Minagawa <info@sweetberry.jp>
+ * @author Naohisa Minagawa <info@clay-system.jp>
  */
 class SendMail{
 	/**
