@@ -20,7 +20,11 @@ if(!isset($_SERVER["SERVER_NAME"])){
 // サイトIDが取れない場合は基本設定を再取得
 if($_SERVER["CONFIGURE"]->site_id == ""){
 	// グローバル設定の取得
-	require(FRAMEWORK_CONFIGURE_HOME."/configure.php");
+	if(file_exists(FRAMEWORK_CONFIGURE_HOME."/configure_".$_SERVER["SERVER_NAME"].".php")){
+		require(FRAMEWORK_CONFIGURE_HOME."/configure_".$_SERVER["SERVER_NAME"].".php");
+	}else{
+		require(FRAMEWORK_CONFIGURE_HOME."/configure.php");
+	}
 
 	// データベースファクトリクラスを初期化
 	$base_connections = $_SERVER["CONFIGURE"]->connection;
