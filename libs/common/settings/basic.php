@@ -95,14 +95,6 @@ require(FRAMEWORK_CLASS_LIBRARY_HOME."/Exception.php");
 // メール送信クラスをインクルード
 require(FRAMEWORK_CLASS_LIBRARY_HOME."/SendMail.php");
 
-// Twitter用OAuthクラスをインクルード
-require(FRAMEWORK_CLASS_LIBRARY_HOME."/TwitterOAuth.php");
-
-// Facebook APIクラスをインクルード(CURLとJSONが必須です。)
-if (function_exists('curl_init') && function_exists('json_decode')) {
-	require(FRAMEWORK_CLASS_LIBRARY_HOME."/Facebook.php");
-}
-
 // REQUEST URIから実際に出力するテンプレートファイルを特定
 $_SERVER["TEMPLATE_NAME"] = str_replace("?".$_SERVER["QUERY_STRING"], "", $_SERVER["REQUEST_URI"]);
 if(FRAMEWORK_URL_BASE != ""){
