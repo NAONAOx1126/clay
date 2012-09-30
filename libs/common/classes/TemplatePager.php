@@ -123,10 +123,19 @@ class TemplatePager{
 				}
 				if(is_array($value)){
 					foreach($value as $k => $v){
-						if(!empty($this->queryString)){
-							$this->queryString .= "&";
+						if(is_array($v)){
+							foreach($v as $k2 => $v2){
+								if(!empty($this->queryString)){
+									$this->queryString .= "&";
+								}
+								$this->queryString .= urlencode($key."[".$k."][".$k2."]")."=".urlencode($v2);
+							}
+						}else{
+							if(!empty($this->queryString)){
+								$this->queryString .= "&";
+							}
+							$this->queryString .= urlencode($key."[".$k."]")."=".urlencode($v);
 						}
-						$this->queryString .= urlencode($key."[".$k."]")."=".urlencode($v);
 					}
 				}else{
 					if(!empty($this->queryString)){
