@@ -32,13 +32,13 @@ unset($_POST["_"]);
 // JSONのキャッシュを初期化
 $jsonCache = DataCacheFactory::create("json_".sha1($requestUri));
 
-if($jsonCache->json == ""){
+$loader = new PluginLoader($_POST["c"]);
+$json = $loader->loadJson($_POST["p"]);
+unset($_POST["c"]);
+unset($_POST["p"]);
+
+if($jsonCache->json == "" || isset($json->disable_cache) && $json->disable_cache){
 	try{
-		$loader = new PluginLoader($_POST["c"]);
-		$json = $loader->loadJson($_POST["p"]);
-		unset($_POST["c"]);
-		unset($_POST["p"]);
-		
 		if($json != null){
 			// バッチのモジュールの呼び出し
 			$result = $json->execute();
