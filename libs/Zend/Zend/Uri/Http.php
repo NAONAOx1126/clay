@@ -14,9 +14,9 @@
  *
  * @category  Zend
  * @package   Zend_Uri
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd     New BSD License
- * @version   $Id: Http.php 24594 2012-01-05 21:27:01Z matthew $
+ * @version   $Id: Http.php 9656 2008-06-10 16:21:13Z dasprid $
  */
 
 /**
@@ -35,20 +35,11 @@ require_once 'Zend/Validate/Hostname.php';
  * @category  Zend
  * @package   Zend_Uri
  * @uses      Zend_Uri
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Uri_Http extends Zend_Uri
 {
-    /**
-     * Character classes for validation regular expressions
-     */
-    const CHAR_ALNUM    = 'A-Za-z0-9';
-    const CHAR_MARK     = '-_.!~*\'()\[\]';
-    const CHAR_RESERVED = ';\/?:@&=+$,';
-    const CHAR_SEGMENT  = ':@&=+$,;';
-    const CHAR_UNWISE   = '{}|\\\\^`';
-
     /**
      * HTTP username
      *
@@ -120,27 +111,16 @@ class Zend_Uri_Http extends Zend_Uri
 
         // Set up grammar rules for validation via regular expressions. These
         // are to be used with slash-delimited regular expression strings.
-
-        // Escaped special characters (eg. '%25' for '%')
-        $this->_regex['escaped']    = '%[[:xdigit:]]{2}';
-
-        // Unreserved characters
-        $this->_regex['unreserved'] = '[' . self::CHAR_ALNUM . self::CHAR_MARK . ']';
-
-        // Segment can use escaped, unreserved or a set of additional chars
-        $this->_regex['segment']    = '(?:' . $this->_regex['escaped'] . '|[' .
-            self::CHAR_ALNUM . self::CHAR_MARK . self::CHAR_SEGMENT . '])*';
-
-        // Path can be a series of segmets char strings seperated by '/'
-        $this->_regex['path']       = '(?:\/(?:' . $this->_regex['segment'] . ')?)+';
-
-        // URI characters can be escaped, alphanumeric, mark or reserved chars
-        $this->_regex['uric']       = '(?:' . $this->_regex['escaped'] . '|[' .
-            self::CHAR_ALNUM . self::CHAR_MARK . self::CHAR_RESERVED .
-
-        // If unwise chars are allowed, add them to the URI chars class
-            (self::$_config['allow_unwise'] ? self::CHAR_UNWISE : '') . '])';
-
+        $this->_regex['alphanum']   = '[^\W_]';
+        $this->_regex['escaped']    = '(?:%[\da-fA-F]{2})';
+        $this->_regex['mark']       = '[-_.!~*\'()\[\]]';
+        $this->_regex['reserved']   = '[;\/?:@&=+$,]';
+        $this->_regex['unreserved'] = '(?:' . $this->_regex['alphanum'] . '|' . $this->_regex['mark'] . ')';
+        $this->_regex['segment']    = '(?:(?:' . $this->_regex['unreserved'] . '|' . $this->_regex['escaped']
+                                    . '|[:@&=+$,;])*)';
+        $this->_regex['path']       = '(?:\/' . $this->_regex['segment'] . '?)+';
+        $this->_regex['uric']       = '(?:' . $this->_regex['reserved'] . '|' . $this->_regex['unreserved'] . '|'
+                                    . $this->_regex['escaped'] . ')';
         // If no scheme-specific part was supplied, the user intends to create
         // a new URI with this object.  No further parsing is required.
         if (strlen($schemeSpecific) === 0) {
@@ -170,8 +150,7 @@ class Zend_Uri_Http extends Zend_Uri
     public static function fromString($uri)
     {
         if (is_string($uri) === false) {
-            require_once 'Zend/Uri/Exception.php';
-            throw new Zend_Uri_Exception('$uri is not a string');
+            throw new InvalidArgumentException('$uri is not a string');
         }
 
         $uri            = explode(':', $uri, 2);
@@ -179,7 +158,6 @@ class Zend_Uri_Http extends Zend_Uri
         $schemeSpecific = isset($uri[1]) === true ? $uri[1] : '';
 
         if (in_array($scheme, array('http', 'https')) === false) {
-            require_once 'Zend/Uri/Exception.php';
             throw new Zend_Uri_Exception("Invalid scheme: '$scheme'");
         }
 
@@ -217,20 +195,24 @@ class Zend_Uri_Http extends Zend_Uri
 
         // Additional decomposition to get username, password, host, and port
         $combo   = isset($matches[3]) === true ? $matches[3] : '';
-        $pattern = '~^(([^:@]*)(:([^@]*))?@)?((?(?=[[])[[][^]]+[]]|[^:]+))(:(.*))?$~';        
+        $pattern = '~^(([^:@]*)(:([^@]*))?@)?([^:]+)(:(.*))?$~';
         $status  = @preg_match($pattern, $combo, $matches);
         if ($status === false) {
             require_once 'Zend/Uri/Exception.php';
             throw new Zend_Uri_Exception('Internal error: authority decomposition failed');
         }
-        
+
+        // Failed decomposition; no further processing needed
+        if ($status === false) {
+            return;
+        }
+
         // Save remaining URI components
         $this->_username = isset($matches[2]) === true ? $matches[2] : '';
         $this->_password = isset($matches[4]) === true ? $matches[4] : '';
-        $this->_host     = isset($matches[5]) === true 
-                         ? preg_replace('~^\[([^]]+)\]$~', '\1', $matches[5])  // Strip wrapper [] from IPv6 literal
-                         : '';
+        $this->_host     = isset($matches[5]) === true ? $matches[5] : '';
         $this->_port     = isset($matches[7]) === true ? $matches[7] : '';
+
     }
 
     /**
@@ -312,9 +294,8 @@ class Zend_Uri_Http extends Zend_Uri
         }
 
         // Check the username against the allowed values
-        $status = @preg_match('/^(?:' . $this->_regex['escaped'] . '|[' .
-            self::CHAR_ALNUM . self::CHAR_MARK . ';:&=+$,' . '])+$/', $username);
-
+        $status = @preg_match('/^(' . $this->_regex['alphanum']  . '|' . $this->_regex['mark'] . '|'
+                            . $this->_regex['escaped'] . '|[;:&=+$,])+$/', $username);
         if ($status === false) {
             require_once 'Zend/Uri/Exception.php';
             throw new Zend_Uri_Exception('Internal error: username validation failed');
@@ -379,9 +360,8 @@ class Zend_Uri_Http extends Zend_Uri
         }
 
         // Check the password against the allowed values
-        $status = @preg_match('/^(?:' . $this->_regex['escaped'] . '|[' .
-            self::CHAR_ALNUM . self::CHAR_MARK . ';:&=+$,' . '])+$/', $password);
-
+        $status = @preg_match('/^(' . $this->_regex['alphanum']  . '|' . $this->_regex['mark'] . '|'
+                             . $this->_regex['escaped'] . '|[;:&=+$,])+$/', $password);
         if ($status === false) {
             require_once 'Zend/Uri/Exception.php';
             throw new Zend_Uri_Exception('Internal error: password validation failed.');
@@ -518,7 +498,7 @@ class Zend_Uri_Http extends Zend_Uri
     }
 
     /**
-     * Returns the path and filename portion of the URL.
+     * Returns the path and filename portion of the URL, or FALSE if none.
      *
      * @return string
      */
@@ -588,23 +568,6 @@ class Zend_Uri_Http extends Zend_Uri
     }
 
     /**
-     * Returns the query portion of the URL (after ?) as a
-     * key-value-array. If the query is empty an empty array
-     * is returned
-     *
-     * @return array
-     */
-    public function getQueryAsArray()
-    {
-        $query = $this->getQuery();
-        $querryArray = array();
-        if ($query !== false) {
-            parse_str($query, $querryArray);
-        }
-        return $querryArray;
-    }
-
-    /**
      * Returns true if and only if the query string passes validation. If no query is passed,
      * then the query string contained in the instance variable is used.
      *
@@ -633,32 +596,6 @@ class Zend_Uri_Http extends Zend_Uri
         }
 
         return $status == 1;
-    }
-
-    /**
-     * Add or replace params in the query string for the current URI, and
-     * return the old query.
-     *
-     * @param  array $queryParams
-     * @return string Old query string
-     */
-    public function addReplaceQueryParameters(array $queryParams)
-    {
-        $queryParams = array_merge($this->getQueryAsArray(), $queryParams);
-        return $this->setQuery($queryParams);
-    }
-
-    /**
-     * Remove params in the query string for the current URI, and
-     * return the old query.
-     *
-     * @param  array $queryParamKeys
-     * @return string Old query string
-     */
-    public function removeQueryParameters(array $queryParamKeys)
-    {
-        $queryParams = array_diff_key($this->getQueryAsArray(), array_fill_keys($queryParamKeys, 0));
-        return $this->setQuery($queryParams);
     }
 
     /**
