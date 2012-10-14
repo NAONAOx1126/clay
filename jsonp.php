@@ -25,8 +25,10 @@ if(strpos($_SERVER["REQUEST_URI"], "&callback=") !== FALSE){
 }
 
 // コールバックを取得
-$callback = $_POST["callback"];
-unset($_POST["callback"]);
+if(isset($_POST["callback"])){
+	$callback = $_POST["callback"];
+	unset($_POST["callback"]);
+}
 unset($_POST["_"]);
 
 // JSONのキャッシュを初期化
