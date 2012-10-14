@@ -58,5 +58,9 @@ $data = json_encode($result);
 
 header("Content-Type: application/json; charset=utf-8");
 
-echo $callback."(".$data.");";
+if(!empty($callback)){
+	echo $callback."(".$data.");";
+}else{
+	echo $data;
+}
 ?>
