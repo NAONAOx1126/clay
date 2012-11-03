@@ -86,7 +86,7 @@ class DatabaseTable{
 		$this->_W = $this->_C.".*";
 
 		// テーブル構成のキャッシュがある場合にはキャッシュからテーブル情報を取得
-		$tableConfigure = DataCacheFactory::create("table_".$this->tableName);
+		$tableConfigure = Clay_Cache_Factory::create("table_".$this->tableName);
 		if($tableConfigure->options == ""){
 			// テーブルの定義を取得
 			$options = $connection->columns($this->_T);

@@ -34,7 +34,7 @@ set_time_limit(0);
 
 try{
 	// 共通のライブラリの呼び出し。
-	include(dirname(__FILE__)."/libs/common/require.php");
+	require(dirname(__FILE__)."/libs/require.php");
 	
 	$loader = new PluginLoader("");
 	$object = $loader->loadBatch($batch);

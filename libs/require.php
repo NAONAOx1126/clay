@@ -9,6 +9,14 @@
  * @version   3.0.0
  */
 
+// フレームワークのシステムを起動する
+require_once(dirname(__FILE__)."/classes/Clay.php");
+
+// PHP Excelのシステムを読み込む
+require_once(dirname(__FILE__)."/classes/PHPExcel.php");
+
+Clay::startup();
+
 // カスタムクライアントのユーザーエージェントを補正
 if(preg_match("/^CLAY-(.+)-CLIENT\\[(.+)\\]$/", $_SERVER["HTTP_USER_AGENT"], $params) > 0){
 	$_SERVER["HTTP_USER_AGENT"] = "Mozilla/5.0 (Linux; U; Android 1.6; ja-jp; CLAY-ANDROID-CLIENT)";
@@ -20,7 +28,7 @@ if(preg_match("/^CLAY-(.+)-CLIENT\\[(.+)\\]$/", $_SERVER["HTTP_USER_AGENT"], $pa
 ini_set("include_path", ".");
 
 // グローバルの定数定義ファイルを読み込み
-require_once(dirname(__FILE__)."/settings/global_definition.php");
+require_once(dirname(__FILE__)."/common/settings/global_definition.php");
 
 // 基本設定ファイルを読み込み
 require(FRAMEWORK_COMMON_LIBRARY_HOME."/settings/basic.php");

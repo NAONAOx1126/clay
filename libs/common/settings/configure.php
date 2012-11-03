@@ -10,7 +10,7 @@
  */
 
 // サイトの設定を取得
-$_SERVER["CONFIGURE"] = DataCacheFactory::create("site_configure");
+$_SERVER["CONFIGURE"] = Clay_Cache_Factory::create("site_configure");
 
 // SERVER_NAMEが未設定の場合はlocalhostを割当
 if(!isset($_SERVER["SERVER_NAME"])){

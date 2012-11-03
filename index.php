@@ -18,7 +18,7 @@ ob_start();
 
 try{
 	// 共通のライブラリの呼び出し。
-	include(dirname(__FILE__)."/libs/common/require.php");
+	require(dirname(__FILE__)."/libs/require.php");
 	
 	// テンプレートを読み込む
 	$TEMPLATE_ENGINE = $_SERVER["CONFIGURE"]->TEMPLATE_ENGINE;

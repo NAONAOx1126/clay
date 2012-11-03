@@ -14,7 +14,7 @@
  */
 
 // 共通のライブラリの呼び出し。
-include(dirname(__FILE__)."/libs/common/require.php");
+require(dirname(__FILE__)."/libs/require.php");
 
 if($argc < 2){
 	echo "実行するテストメソッドを指定してください。";

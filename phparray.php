@@ -14,7 +14,7 @@
  */
 
 // 共通のライブラリの呼び出し。
-include(dirname(__FILE__)."/libs/common/require.php");
+require(dirname(__FILE__)."/libs/require.php");
 
 list($requestUri, $dummy) = explode("&callback=", $_SERVER["REQUEST_URI"]);
 // JSONキャッシュディレクトリが無い場合は自動的に作成

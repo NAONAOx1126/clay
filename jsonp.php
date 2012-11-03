@@ -14,7 +14,7 @@
  */
 
 // 共通のライブラリの呼び出し。
-include(dirname(__FILE__)."/libs/common/require.php");
+require(dirname(__FILE__)."/libs/require.php");
 
 ini_set("memory_limit", -1);
 
@@ -32,7 +32,7 @@ if(isset($_POST["callback"])){
 unset($_POST["_"]);
 
 // JSONのキャッシュを初期化
-$jsonCache = DataCacheFactory::create("json_".sha1($requestUri));
+$jsonCache = Clay_Cache_Factory::create("json_".sha1($requestUri));
 
 $loader = new PluginLoader($_POST["c"]);
 $json = $loader->loadJson($_POST["p"]);
