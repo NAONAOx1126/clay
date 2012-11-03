@@ -6,7 +6,7 @@ include_once("../common/require.php");
 ini_set("max_execution_time", 0);
 
 // トランザクションデータベースの取得
-DBFactory::begin();// トランザクションの開始
+Clay_Database_Factory::begin();// トランザクションの開始
 
 try{
 	// プラグインのローダーの読み込み
@@ -88,11 +88,11 @@ try{
 	$insert->copy($select, array("id", "name"));
 	
 	// エラーが無かった場合、処理をコミットする。
-	DBFactory::commit();
+	Clay_Database_Factory::commit();
 	
 	echo "BATCH FINISHED : ".time()."<br>\r\n";
 }catch(Clay_Exception_Database $e){
-	DBFactory::rollBack();
+	Clay_Database_Factory::rollBack();
 	print_r($e);
 }
 ?>

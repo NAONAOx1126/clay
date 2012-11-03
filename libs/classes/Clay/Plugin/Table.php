@@ -79,7 +79,7 @@ class Clay_Plugin_Table{
 
 	protected function initialize(){
 		// DBの接続を取得する。
-		$connection = DBFactory::getConnection($this->module, true);
+		$connection = Clay_Database_Factory::getConnection($this->module, true);
 		
 		// 構成されたカラム情報を元に設定値を生成
 		$this->_B = $this->_T = $this->_C = $connection->escape_identifier($this->tableName);
@@ -149,7 +149,7 @@ class Clay_Plugin_Table{
 	 */
 	public function setAlias($tableName){
 		// DBの接続を取得する。
-		$connection = DBFactory::getConnection($this->module, true);
+		$connection = Clay_Database_Factory::getConnection($this->module, true);
 		
 		// エイリアスの設定に応じて、テーブル内の各変数を調整
 		$this->_C = $connection->escape_identifier($tableName);

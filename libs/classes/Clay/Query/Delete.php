@@ -81,7 +81,7 @@ class Clay_Query_Delete{
 			$partSqls = explode("?", $sql);
 			$sql = $partSqls[0];
 	
-			$connection = DBFactory::getConnection($this->module, true);
+			$connection = Clay_Database_Factory::getConnection($this->module, true);
 			foreach($this->values as $index => $value){
 				$sql .= "'".$connection->escape($value)."'".$partSqls[$index + 1];
 			}
@@ -97,7 +97,7 @@ class Clay_Query_Delete{
 		// クエリを実行する。
 		try{
 			$sql = $this->showQuery();
-			$connection = DBFactory::getConnection($this->module);
+			$connection = Clay_Database_Factory::getConnection($this->module);
 			Logger::writeDebug($sql);
 			$result = $connection->query($sql);
 		}catch(Exception $e){

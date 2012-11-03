@@ -38,7 +38,7 @@ try{
 	$content = trim(ob_get_contents());
 	ob_end_clean();
 	echo $content;
-	DBFactory::close();
+	Clay_Database_Factory::close();
 	Logger::writeDebug("TEMPLATE_PAGE : ".$_SERVER["TEMPLATE_NAME"]." Finished.");
 }catch(Exception $ex){
 	ob_end_clean();

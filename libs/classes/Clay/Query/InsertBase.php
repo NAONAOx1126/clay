@@ -74,7 +74,7 @@ abstract class Clay_Query_InsertBase{
 		// パラメータを展開
 		$cols = array();
 		$vals = array();
-		$connection = DBFactory::getConnection($this->module, true);
+		$connection = Clay_Database_Factory::getConnection($this->module, true);
 		foreach($values as $key => $value){
 			if(isset($this->table->$key)){
 				$cols[] = $this->table->$key;
@@ -95,7 +95,7 @@ abstract class Clay_Query_InsertBase{
 	 */
 	public function lastInsertId(){
 		try{
-			$connection = DBFactory::getConnection($this->module);
+			$connection = Clay_Database_Factory::getConnection($this->module);
 			return $connection->auto_increment();
 		}catch(Exception $e){
 			Logger::writeError($e->getMessage(), $e);
@@ -110,7 +110,7 @@ abstract class Clay_Query_InsertBase{
 	 */
 	public function execute($values){
 		try{
-			$connection = DBFactory::getConnection($this->module);
+			$connection = Clay_Database_Factory::getConnection($this->module);
 			$sql = $this->showQuery($values);
 			Logger::writeDebug($sql);
 			$result = $connection->query($sql);

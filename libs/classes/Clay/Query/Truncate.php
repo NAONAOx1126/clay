@@ -41,7 +41,7 @@ class Clay_Query_Truncate{
 
 		// クエリを実行する。
 		try{
-			$connection = DBFactory::getConnection($this->module);
+			$connection = Clay_Database_Factory::getConnection($this->module);
 			Logger::writeDebug($sql);
 			$result = $connection->query($sql);
 		}catch(Exception $e){

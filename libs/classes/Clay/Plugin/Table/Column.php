@@ -72,7 +72,7 @@ class Clay_Plugin_Table_Column{
 	 */
 	public function __toString(){
 		// DBの接続を取得する。
-		$connection = DBFactory::getConnection($this->table->getModuleName(), true);
+		$connection = Clay_Database_Factory::getConnection($this->table->getModuleName(), true);
 		
 		// カラム名をエスケープする。
 		return $this->table->_C.".".$connection->escape_identifier($this->field);

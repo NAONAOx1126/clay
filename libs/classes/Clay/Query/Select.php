@@ -183,7 +183,7 @@ class Clay_Query_Select{
 
 		$values = array_merge($this->tableValues, $this->whereValues, $this->havingValues);
 		
-		$connection = DBFactory::getConnection($this->module, true);
+		$connection = Clay_Database_Factory::getConnection($this->module, true);
 
 		if(is_array($values) && count($values) > 0){
 			$partSqls = explode("?", $sql);
@@ -212,7 +212,7 @@ class Clay_Query_Select{
 		try{
 			$sql = $this->showQuery();
 			Logger::writeDebug($sql);
-			$connection = DBFactory::getConnection($this->module, true);
+			$connection = Clay_Database_Factory::getConnection($this->module, true);
 			$result = $connection->query($sql);
 		}catch(Exception $e){
 			Logger::writeError($sql, $e);

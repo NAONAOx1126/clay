@@ -17,7 +17,7 @@ set_time_limit(0);
 
 
 // データベースに接続する。
-$connection = DBFactory::getConnection($config_name);
+$connection = Clay_Database_Factory::getConnection($config_name);
 
 // データベースからテーブルのリストを取得する。
 $prepare = $connection->prepare("SHOW TABLES");
@@ -47,7 +47,7 @@ while($row = $prepare->fetch(PDO::FETCH_NUM)){
 	$source = "<?php\r\n";
 	$source .= 'class '.$packageName.'_'.$className.' extends Clay_Plugin_Table{'."\r\n";
 	$source .= "\t".'function __construct(){'."\r\n";
-	$source .= "\t\t".'$this->db = DBFactory::getConnection("'.$packageCode.'");'."\r\n";
+	$source .= "\t\t".'$this->db = Clay_Database_Factory::getConnection("'.$packageCode.'");'."\r\n";
 	$source .= "\t\t".'parent::__construct("'.$tableName.'", "'.$packageCode.'");'."\r\n";
 	$source .= "\t".'}'."\r\n";
 	$source .= '}'."\r\n";

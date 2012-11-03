@@ -79,9 +79,6 @@ require(FRAMEWORK_CLASS_LIBRARY_HOME."/Template.php");
 require(FRAMEWORK_CLASS_LIBRARY_HOME."/TemplatePager.php");
 require(FRAMEWORK_CLASS_LIBRARY_HOME."/ImageFilter.php");
 
-// データベース関連クラスをインクルード
-require(FRAMEWORK_CLASS_LIBRARY_HOME."/DBFactory.php");
-
 // メール送信クラスをインクルード
 require(FRAMEWORK_CLASS_LIBRARY_HOME."/SendMail.php");
 

@@ -25,7 +25,7 @@ class Logger{
 	private static function writeMessage($prefix, $message, $exception = null){
 		try{
 			if($_SERVER["CONFIGURE"]->LOGGER == "DatabaseLogger"){
-				$connection = DBFactory::getConnection("base");
+				$connection = Clay_Database_Factory::getConnection("base");
 				$sql = "INSERT INTO `base_logs`(`log_type`, `server_name`, `log_time`, `message`, `stacktrace`)";
 				$sql .= " VALUES ('".$connection->escape($prefix)."', '".$connection->escape($_SERVER["SERVER_NAME"])."'";
 				$sql .= ", NOW(), '".$connection->escape($message)."'";

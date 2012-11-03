@@ -29,7 +29,7 @@ if($_SERVER["CONFIGURE"]->site_id == ""){
 	// データベースファクトリクラスを初期化
 	$base_connections = $_SERVER["CONFIGURE"]->connection;
 	$defaultDatabase = $base_connections["default"];
-	DBFactory::initialize(array("default" => $defaultDatabase));
+	Clay_Database_Factory::initialize(array("default" => $defaultDatabase));
 
 	// サイト情報を取得する。
 	$loader = new Clay_Plugin();
@@ -70,5 +70,5 @@ if($_SERVER["CONFIGURE"]->site_id == ""){
 define("SITE_ID", $_SERVER["CONFIGURE"]->site_id);
 
 // データベースの設定をリロード
-DBFactory::initialize($_SERVER["CONFIGURE"]->connection);
+Clay_Database_Factory::initialize($_SERVER["CONFIGURE"]->connection);
 ?>
