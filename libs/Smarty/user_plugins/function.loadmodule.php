@@ -74,15 +74,15 @@ function smarty_function_loadmodule($params, $smarty, $template)
 		}else{
 			Logger::writeAlert($name." is not plugin module.");
 		}
-	}catch(InvalidException $e){
+	}catch(Clay_Exception_Invalid $e){
 		// 入力エラーなどの例外（ただし、メッセージリストを空にすると例外処理を行わない）
 		Logger::writeError($e->getMessage(), $e);
 		$errors = $e->getErrors();
-	}catch(SystemException $e){
+	}catch(Clay_Exception_System $e){
 		// システムエラーの例外処理
 		Logger::writeError($e->getMessage(), $e);
 		$errors = array($e->getMessage());
-	}catch(ErrorException $e){
+	}catch(Exception $e){
 		// システムエラーの例外処理
 		Logger::writeError($e->getMessage(), $e);
 		$errors = array($e->getMessage());

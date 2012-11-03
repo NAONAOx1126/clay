@@ -464,7 +464,7 @@ class DatabaseSelect{
 			$result = $connection->query($sql);
 		}catch(Exception $e){
 			Logger::writeError($sql, $e);
-			throw new DatabaseException($e);
+			throw new Clay_Exception_Database($e);
 		}
 
 		return new DatabaseResult($result);
@@ -625,7 +625,7 @@ abstract class DatabaseInsertBase{
 			return $connection->auto_increment();
 		}catch(Exception $e){
 			Logger::writeError($e->getMessage(), $e);
-			throw new DatabaseException($e);
+			throw new Clay_Exception_Database($e);
 		}
 	}	
 
@@ -642,7 +642,7 @@ abstract class DatabaseInsertBase{
 			$result = $connection->query($sql);
 		}catch(Exception $e){
 			Logger::writeError($sql, $e);
-			throw new DatabaseException($e);
+			throw new Clay_Exception_Database($e);
 		}
 		return $result;
 	}	
@@ -800,7 +800,7 @@ class DatabaseUpdate{
 				$result = $connection->query($sql);
 			}catch(Exception $e){
 				Logger::writeError($sql, $e);
-				throw new DatabaseException($e);
+				throw new Clay_Exception_Database($e);
 			}
 
 			return $result;
@@ -903,7 +903,7 @@ class DatabaseDelete{
 			$result = $connection->query($sql);
 		}catch(Exception $e){
 			Logger::writeError($sql, $e);
-			throw new DatabaseException($e);
+			throw new Clay_Exception_Database($e);
 		}
 		return $result;
 	}
@@ -946,7 +946,7 @@ class DatabaseTruncate{
 			$result = $connection->query($sql);
 		}catch(Exception $e){
 			Logger::writeError($sql, $e);
-			throw new DatabaseException($e);
+			throw new Clay_Exception_Database($e);
 		}
 
 		return $result;

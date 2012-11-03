@@ -86,12 +86,6 @@ require(FRAMEWORK_CLASS_LIBRARY_HOME."/DBFactory.php");
 require(FRAMEWORK_CLASS_LIBRARY_HOME."/DatabaseAccess.php");
 require(FRAMEWORK_CLASS_LIBRARY_HOME."/DatabaseModel.php");
 
-// データキャッシュクラスをインクルード
-require(FRAMEWORK_CLASS_LIBRARY_HOME."/DataCache.php");
-
-// 例外クラスをインクルード
-require(FRAMEWORK_CLASS_LIBRARY_HOME."/Exception.php");
-
 // メール送信クラスをインクルード
 require(FRAMEWORK_CLASS_LIBRARY_HOME."/SendMail.php");
 

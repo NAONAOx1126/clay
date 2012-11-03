@@ -91,7 +91,7 @@ try{
 	DBFactory::commit();
 	
 	echo "BATCH FINISHED : ".time()."<br>\r\n";
-}catch(DatabaseException $e){
+}catch(Clay_Exception_Database $e){
 	DBFactory::rollBack();
 	print_r($e);
 }

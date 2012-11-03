@@ -80,7 +80,7 @@ class DBFactory{
 				}
 			}catch(PDOException $e){
 				// 接続に失敗した場合にはデータベース例外を発行
-				throw new DatabaseException($e);
+				throw new Clay_Exception_Database($e);
 			}
 		}
 		return DBFactory::$connections[$code];
