@@ -6,43 +6,13 @@
  * @copyright Copyright (c) 2010, Naohisa Minagawa
  * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache License, Version 2.0
  * @since PHP 5.3
- * @version   3.0.0
+ * @version   4.0.0
  */
-
+ 
 /**
  * このクラスの基底クラスとして使用しているSmartyが必要です。
  */
-require(FRAMEWORK_SMARTY_LIBRARY_HOME."/Smarty.class.php");
-
-// Smartyのsyspluginsとpluginsのフォルダをインクルードパスに追加する。
-set_include_path(get_include_path().PATH_SEPARATOR. SMARTY_SYSPLUGINS_DIR);
-set_include_path(get_include_path().PATH_SEPARATOR. SMARTY_PLUGINS_DIR);
-
-class AC{
-	private $result;
-	
-	public function __construct(){
-		$this->result = array();
-	}
-	
-	public static function c(){
-		return new AC();
-	}
-	
-	public function a($value){
-		$this->result[] = $value;
-		return $this;
-	}
-	
-	public function aa($key, $value){
-		$this->result[$key] = $value;
-		return $this;
-	}
-	
-	public function v(){
-		return $this->result;
-	}
-}
+require(CLAY_CLASSES_ROOT.DIRECTORY_SEPARATOR."Smarty".DIRECTORY_SEPARATOR."Smarty.class.php");
 
 /**
  * ページ表示用のテンプレートクラスです。
@@ -53,7 +23,7 @@ class AC{
  * @since PHP 5.2
  * @version 1.0.0
  */
-class SmartyTemplate extends Smarty{
+class Clay_Template extends Smarty{
     /**
 	 * コンストラクタです。ページテンプレートを初期化します。
 	 *
@@ -64,10 +34,13 @@ class SmartyTemplate extends Smarty{
 
 		// テンプレートのディレクトリとコンパイルのディレクトリをフレームワークのパス上に展開
 		$this->template_dir = array(FRAMEWORK_TEMPLATE_HOME."/");
-		$this->compile_dir = FRAMEWORK_HOME."/cache_smarty/".$_SERVER["CONFIGURE"]->get("site_code").$_SERVER["USER_TEMPLATE"]."/";
+		$this->compile_dir = CLAY_ROOT.DIRECTORY_SEPARATOR."cache_smarty".DIRECTORY_SEPARATOR.$_SERVER["CONFIGURE"]->get("site_code").$_SERVER["USER_TEMPLATE"]."/";
 		
 		// プラグインのディレクトリを追加する。
-		$this->plugins_dir[] = FRAMEWORK_SMARTY_LIBRARY_HOME."/user_plugins/";
+		$smartyPath = CLAY_CLASSES_ROOT.DIRECTORY_SEPARATOR."Smarty";
+		$this->plugins_dir[] = $smartyPath.DIRECTORY_SEPARATOR."plugins".DIRECTORY_SEPARATOR;
+		$this->plugins_dir[] = $smartyPath.DIRECTORY_SEPARATOR."sysplugins".DIRECTORY_SEPARATOR;
+		$this->plugins_dir[] = $smartyPath.DIRECTORY_SEPARATOR."user_plugins".DIRECTORY_SEPARATOR;
 
 		// デリミタを変更する。
 		$this->left_delimiter = "<!--{";
@@ -135,4 +108,4 @@ class SmartyTemplate extends Smarty{
 		}
     } 
 }
-?>
+ 

@@ -9,6 +9,9 @@
  * @version   4.0.0
  */
 
+// デフォルトパッケージ名を設定
+define("DEFAULT_PACKAGE_NAME", "Base");
+
 /**
  * フレームワークの起点となるクラス
  * 
@@ -20,6 +23,12 @@ class Clay{
 	 * フレームワークの起動処理を行うメソッドです。
 	 */
 	public static function startup(){
+		// PHPのバージョンIDを設定する。
+		if (!defined('PHP_VERSION_ID')) {
+		    $version = explode('.', PHP_VERSION);
+		    define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 + $version[2]));
+		}
+		
 		// システムのルートディレクトリを設定
 		if (!defined('CLAY_ROOT')) {
 			define('CLAY_ROOT', realpath(dirname(__FILE__).DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR.".."));
@@ -37,6 +46,8 @@ class Clay{
 		if (!defined('CLAY_CACHE_ROOT')) {
 			define('CLAY_CACHE_ROOT', realpath(CLAY_ROOT.DIRECTORY_SEPARATOR."cache"));
 		}
+		
+		// 起動処理を追加
 		
 		register_shutdown_function(array("Clay", "shutdown"));
 	}

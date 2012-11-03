@@ -6,22 +6,16 @@
  * @copyright Copyright (c) 2010, Naohisa Minagawa
  * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache License, Version 2.0
  * @since PHP 5.3
- * @version   3.0.0
+ * @version   4.0.0
  */
-
-// フィルタを読み込み
-require(FRAMEWORK_CLASS_LIBRARY_HOME."/ImageFilter/BaseFilter.php");
-require(FRAMEWORK_CLASS_LIBRARY_HOME."/ImageFilter/ImageOverlay.php");
-require(FRAMEWORK_CLASS_LIBRARY_HOME."/ImageFilter/ImageResize.php");
-require(FRAMEWORK_CLASS_LIBRARY_HOME."/ImageFilter/ImagePadding.php");
-
+ 
 /**
  * 画像の処理を行うクラスです。
  *
- * @package ImageFilter
+ * @package Filter
  * @author Naohisa Minagawa <info@clay-system.jp>
  */
-class ImageFilter
+class Clay_Filter_Image
 {
 	var $info = null;
 
@@ -90,4 +84,4 @@ class ImageFilter
 		}
 	}
 }
-?>
+ 

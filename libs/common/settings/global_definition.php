@@ -9,18 +9,9 @@
  * @version   3.0.0
  */
 
-// デフォルトパッケージ名を設定
-define("DEFAULT_PACKAGE_NAME", "Base");
-
-// PHPのバージョンIDを設定する。
-if (!defined('PHP_VERSION_ID')) {
-    $version = explode('.', PHP_VERSION);
-    define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 + $version[2]));
-}
-
 // システムのホームディレクトリを設定する。
-$_SERVER["FRAMEWORK_HOME"] = realpath(dirname(__FILE__)."/../../../");
-define("FRAMEWORK_HOME", $_SERVER["FRAMEWORK_HOME"]);
+$_SERVER["CLAY_ROOT"] = realpath(dirname(__FILE__)."/../../../");
+define("CLAY_ROOT", $_SERVER["CLAY_ROOT"]);
 
 // システムのURLホストパスを取得
 $_SERVER["FRAMEWORK_URL_HOST"] = "http".((isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on")?"s":"")."://".$_SERVER["SERVER_NAME"];
@@ -32,7 +23,7 @@ if(!empty($_SERVER["DOCUMENT_ROOT"])){
 		$_SERVER["DOCUMENT_ROOT"] = substr($_SERVER["DOCUMENT_ROOT"], 0, -1);
 	}
 }
-$_SERVER["FRAMEWORK_URL_BASE"] = str_replace($_SERVER["DOCUMENT_ROOT"], "", FRAMEWORK_HOME);
+$_SERVER["FRAMEWORK_URL_BASE"] = str_replace($_SERVER["DOCUMENT_ROOT"], "", CLAY_ROOT);
 define("FRAMEWORK_URL_BASE", $_SERVER["FRAMEWORK_URL_BASE"]);
 
 // システムのURLホームパスを取得
@@ -40,26 +31,26 @@ $_SERVER["FRAMEWORK_URL_HOME"] = FRAMEWORK_URL_HOST.FRAMEWORK_URL_BASE;
 define("FRAMEWORK_URL_HOME", $_SERVER["FRAMEWORK_URL_HOME"]);
 
 // 設定ファイルのパスを取得
-$_SERVER["FRAMEWORK_CONFIGURE_HOME"] = FRAMEWORK_HOME."/configure";
+$_SERVER["FRAMEWORK_CONFIGURE_HOME"] = CLAY_ROOT."/configure";
 define("FRAMEWORK_CONFIGURE_HOME", $_SERVER["FRAMEWORK_CONFIGURE_HOME"]);
 
 // グローバル設定の取得
 require(FRAMEWORK_CONFIGURE_HOME."/configure.php");
 
 // キャッシュファイルのパスを取得
-$_SERVER["FRAMEWORK_CACHE_HOME"] = FRAMEWORK_HOME."/cache";
+$_SERVER["FRAMEWORK_CACHE_HOME"] = CLAY_ROOT."/cache";
 define("FRAMEWORK_CACHE_HOME", $_SERVER["FRAMEWORK_CACHE_HOME"]);
 
 // コンテンツファイルのパスを取得
-$_SERVER["FRAMEWORK_CONTENTS_HOME"] = FRAMEWORK_HOME."/contents";
+$_SERVER["FRAMEWORK_CONTENTS_HOME"] = CLAY_ROOT."/contents";
 define("FRAMEWORK_CONTENTS_HOME", $_SERVER["FRAMEWORK_CONTENTS_HOME"]);
 
 // ログファイルのパスを取得
-$_SERVER["FRAMEWORK_LOGS_HOME"] = FRAMEWORK_HOME."/logs";
+$_SERVER["FRAMEWORK_LOGS_HOME"] = CLAY_ROOT."/logs";
 define("FRAMEWORK_LOGS_HOME", $_SERVER["FRAMEWORK_LOGS_HOME"]);
 
 // ライブラリ関連のパスを取得
-$_SERVER["FRAMEWORK_LIBRARY_HOME"] = FRAMEWORK_HOME."/libs";
+$_SERVER["FRAMEWORK_LIBRARY_HOME"] = CLAY_ROOT."/libs";
 define("FRAMEWORK_LIBRARY_HOME", $_SERVER["FRAMEWORK_LIBRARY_HOME"]);
 
 // 共通ライブラリ関連のパスを取得
@@ -92,7 +83,7 @@ define("FRAMEWORK_CLASS_LIBRARY_HOME", $_SERVER["FRAMEWORK_CLASS_LIBRARY_HOME"])
 
 // プラグインのホームディレクトリ
 if(!isset($_SERVER["FRAMEWORK_PLUGIN_HOME"])){
-	$_SERVER["FRAMEWORK_PLUGIN_HOME"] = FRAMEWORK_HOME."/../clay_plugins";
+	$_SERVER["FRAMEWORK_PLUGIN_HOME"] = CLAY_ROOT."/../clay_plugins";
 }
 define("FRAMEWORK_PLUGIN_HOME", $_SERVER["FRAMEWORK_PLUGIN_HOME"]);
 ?>

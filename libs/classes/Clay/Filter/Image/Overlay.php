@@ -1,9 +1,22 @@
 <?php
 /**
+ * This file is part of CLAY Framework for view-module based system.
+ *
+ * @author    Naohisa Minagawa <info@clay-system.jp>
+ * @copyright Copyright (c) 2010, Naohisa Minagawa
+ * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache License, Version 2.0
+ * @since PHP 5.3
+ * @version   4.0.0
+ */
+ 
+/**
  * 画像に対して重ねあわせの処理を行う。
  * 位置を指定しない場合には中央になるように配置する。
+ *
+ * @package Filter
+ * @author Naohisa Minagawa <info@clay-system.jp>
  */
-class ImageFilter_ImageOverlay extends ImageFilter_BaseFilter{
+class Clay_Filter_Image_Overlay extends Clay_Filter_Image_Base{
 	var $resize;
 	
 	var $info;
@@ -57,4 +70,4 @@ class ImageFilter_ImageOverlay extends ImageFilter_BaseFilter{
 		return $image;
 	}
 }
-?>
+ 

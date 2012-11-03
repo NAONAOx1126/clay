@@ -10,8 +10,8 @@
  */
 
 // ホームに書き込み権限が必要です。
-if(!is_writable(FRAMEWORK_HOME)){
-	echo "\"".FRAMEWORK_HOME."\"に書き込み許可を与えてください。";
+if(!is_writable(CLAY_ROOT)){
+	echo "\"".CLAY_ROOT."\"に書き込み許可を与えてください。";
 	exit;
 }
 // configureに書き込み権限が必要です。

@@ -1,8 +1,21 @@
 <?php
 /**
- * 規定の矩形に収まるように縮小処理を行う。
+ * This file is part of CLAY Framework for view-module based system.
+ *
+ * @author    Naohisa Minagawa <info@clay-system.jp>
+ * @copyright Copyright (c) 2010, Naohisa Minagawa
+ * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache License, Version 2.0
+ * @since PHP 5.3
+ * @version   4.0.0
  */
-abstract class ImageFilter_BaseFilter{
+ 
+/**
+ * 画像フィルタリングの基底クラス。
+ *
+ * @package Filter
+ * @author Naohisa Minagawa <info@clay-system.jp>
+ */
+abstract class Clay_Filter_Image_Base{
 	var $width;
 	
 	var $height;
@@ -67,4 +80,4 @@ abstract class ImageFilter_BaseFilter{
 	
 	abstract function filter($image, $info);
 }
-?>
+ 

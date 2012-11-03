@@ -30,7 +30,7 @@ try{
 	echo "TEMP DELETED : ".time()."<br>\r\n";
 	
 	// CSVファイルを読み込む
-	if(($fp = fopen(FRAMEWORK_HOME."/install/csvs/KEN_ALL.CSV", "r")) !== FALSE){
+	if(($fp = fopen(CLAY_ROOT."/install/csvs/KEN_ALL.CSV", "r")) !== FALSE){
 		$insert = new Clay_Query_Insert($zipTemps);
 		while(($line = fgets($fp)) !== FALSE){
 			// CSVの内容をDBに登録する。

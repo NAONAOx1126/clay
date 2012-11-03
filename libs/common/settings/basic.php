@@ -73,10 +73,6 @@ set_include_path(get_include_path().PATH_SEPARATOR.FRAMEWORK_FPDF_LIBRARY_HOME);
 // Zendのパスをinclude_pathに追加
 set_include_path(get_include_path().PATH_SEPARATOR.FRAMEWORK_ZEND_LIBRARY_HOME);
 
-// 共通で使用するクラスをインクルード
-require(FRAMEWORK_CLASS_LIBRARY_HOME."/Template.php");
-require(FRAMEWORK_CLASS_LIBRARY_HOME."/ImageFilter.php");
-
 // REQUEST URIから実際に出力するテンプレートファイルを特定
 $_SERVER["TEMPLATE_NAME"] = str_replace("?".$_SERVER["QUERY_STRING"], "", $_SERVER["REQUEST_URI"]);
 if(FRAMEWORK_URL_BASE != ""){

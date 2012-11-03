@@ -1,8 +1,21 @@
 <?php
 /**
- * 規定の矩形に収まるように縮小処理を行う。
+ * This file is part of CLAY Framework for view-module based system.
+ *
+ * @author    Naohisa Minagawa <info@clay-system.jp>
+ * @copyright Copyright (c) 2010, Naohisa Minagawa
+ * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache License, Version 2.0
+ * @since PHP 5.3
+ * @version   4.0.0
  */
-class ImageFilter_ImagePadding extends ImageFilter_ImageResize{
+ 
+/**
+ * 規定の矩形に収まるように縮小処理を行う。
+ *
+ * @package Filter
+ * @author Naohisa Minagawa <info@clay-system.jp>
+ */
+class Clay_Filter_Image_Padding extends Clay_Filter_Image_Base{
 	var $background;
 	
 	function __construct($width, $height, $background = array(255, 255, 255)){
@@ -54,4 +67,4 @@ class ImageFilter_ImagePadding extends ImageFilter_ImageResize{
 		return $image;
 	}
 }
-?>
+ 

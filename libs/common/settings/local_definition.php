@@ -64,7 +64,7 @@ if(isset($_SERVER["HTTP_USER_AGENT"])){
 	}else{
 		$_SERVER["USER_TEMPLATE"] = "/templates";
 	}
-	if(!is_dir(FRAMEWORK_SITE_HOME.$_SERVER["USER_TEMPLATE"]) && !is_dir(FRAMEWORK_HOME.$_SERVER["USER_TEMPLATE"])){
+	if(!is_dir(FRAMEWORK_SITE_HOME.$_SERVER["USER_TEMPLATE"]) && !is_dir(CLAY_ROOT.$_SERVER["USER_TEMPLATE"])){
 		$_SERVER["USER_TEMPLATE"] = "/templates";
 	}
 }else{
@@ -92,16 +92,16 @@ if(is_dir(FRAMEWORK_TEMPLATE_HOME.$_SERVER["TEMPLATE_NAME"])){
 	}
 }
 if(!file_exists(FRAMEWORK_TEMPLATE_HOME.$_SERVER["TEMPLATE_NAME"]) || is_dir(FRAMEWORK_TEMPLATE_HOME.$_SERVER["TEMPLATE_NAME"])){
-	if(is_dir(FRAMEWORK_HOME."/templates/".$_SERVER["TEMPLATE_NAME"]) && substr($_SERVER["TEMPLATE_NAME"], -1) != "/" ){
+	if(is_dir(CLAY_ROOT."/templates/".$_SERVER["TEMPLATE_NAME"]) && substr($_SERVER["TEMPLATE_NAME"], -1) != "/" ){
 		$_SERVER["TEMPLATE_NAME"] .= "/";
 	}
 	// 呼び出し先がスラッシュで終わっている場合にはファイル名を補完
 	if(substr($_SERVER["TEMPLATE_NAME"], -1) == "/"){
-		if(file_exists(FRAMEWORK_HOME."/templates/".$_SERVER["TEMPLATE_NAME"]."index.html")){
+		if(file_exists(CLAY_ROOT."/templates/".$_SERVER["TEMPLATE_NAME"]."index.html")){
 			$_SERVER["TEMPLATE_NAME"] .= "index.html";
-		}elseif(file_exists(FRAMEWORK_HOME."/templates/".$_SERVER["TEMPLATE_NAME"]."index.htm")){
+		}elseif(file_exists(CLAY_ROOT."/templates/".$_SERVER["TEMPLATE_NAME"]."index.htm")){
 			$_SERVER["TEMPLATE_NAME"] .= "index.htm";
-		}elseif(file_exists(FRAMEWORK_HOME."/templates/".$_SERVER["TEMPLATE_NAME"]."index.xml")){
+		}elseif(file_exists(CLAY_ROOT."/templates/".$_SERVER["TEMPLATE_NAME"]."index.xml")){
 			$_SERVER["TEMPLATE_NAME"] .= "index.xml";
 		}
 	}
