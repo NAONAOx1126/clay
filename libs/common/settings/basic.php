@@ -75,8 +75,6 @@ set_include_path(get_include_path().PATH_SEPARATOR.FRAMEWORK_ZEND_LIBRARY_HOME);
 
 // 共通で使用するクラスをインクルード
 require(FRAMEWORK_CLASS_LIBRARY_HOME."/Logger.php");
-require(FRAMEWORK_CLASS_LIBRARY_HOME."/FrameworkModule.php");
-require(FRAMEWORK_CLASS_LIBRARY_HOME."/PluginLoader.php");
 require(FRAMEWORK_CLASS_LIBRARY_HOME."/Template.php");
 require(FRAMEWORK_CLASS_LIBRARY_HOME."/TemplatePager.php");
 require(FRAMEWORK_CLASS_LIBRARY_HOME."/ImageFilter.php");
@@ -84,7 +82,6 @@ require(FRAMEWORK_CLASS_LIBRARY_HOME."/ImageFilter.php");
 // データベース関連クラスをインクルード
 require(FRAMEWORK_CLASS_LIBRARY_HOME."/DBFactory.php");
 require(FRAMEWORK_CLASS_LIBRARY_HOME."/DatabaseAccess.php");
-require(FRAMEWORK_CLASS_LIBRARY_HOME."/DatabaseModel.php");
 
 // メール送信クラスをインクルード
 require(FRAMEWORK_CLASS_LIBRARY_HOME."/SendMail.php");

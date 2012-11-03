@@ -16,7 +16,7 @@
  * @package Common
  * @author Naohisa Minagawa <info@clay-system.jp>
  */
-abstract class FrameworkModule{
+abstract class Clay_Plugin_Module{
     /**
 	 * デフォルト実行のメソッドになります。
 	 * このメソッド以外がモジュールとして呼ばれることはありません。
@@ -35,13 +35,13 @@ abstract class FrameworkModule{
 /**
  * 一覧取得用のモジュールクラスになります。
  */
-abstract class FrameworkListModule extends FrameworkModule{
+abstract class Clay_Plugin_Module_List extends Clay_Plugin_Module{
 	abstract protected function getModelName();
 	
 	abstract protected function getDefaultResultKey();
 
 	protected function getLoader(){
-		return new PluginLoader();
+		return new Clay_Plugin();
 	}
 	
 	protected function getExtendedCondition($condition, $params){
@@ -112,7 +112,7 @@ abstract class FrameworkListModule extends FrameworkModule{
 /**
  * ページング一覧表示用のモジュールです。
  */
-abstract class FrameworkPageModule extends FrameworkListModule{
+abstract class Clay_Plugin_Module_Page extends Clay_Plugin_Module_List{
 	public function execute($params){
 		// 検索に使用するプラグインローダーを取得する。
 		$loader = $this->getLoader();
@@ -175,7 +175,7 @@ abstract class FrameworkPageModule extends FrameworkListModule{
 /**
  * ページング一覧表示用のモジュールです。
  */
-abstract class FrameworkDetailModule extends FrameworkListModule{
+abstract class Clay_Plugin_Module_Detail extends Clay_Plugin_Module_List{
 	public function execute($params){
 		// 検索に使用するプラグインローダーを取得する。
 		$loader = $this->getLoader();

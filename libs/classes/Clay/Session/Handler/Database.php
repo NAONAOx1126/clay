@@ -34,7 +34,7 @@ class Clay_Session_Handler_Database extends Clay_Session_Handler{
 			$name .= strtoupper(substr($part, 0, 1)).strtolower(substr($part, 1));
 		}
 		$name .= "Table";
-		$loader = new PluginLoader($module);
+		$loader = new Clay_Plugin($module);
 		$this->table = $loader->loadTable($name);
 		$this->id_key = $id_key;
 		$this->data_key = $data_key;

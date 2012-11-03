@@ -251,7 +251,7 @@ class SendMail{
 	 */
 	protected function logMail(){
 		// ローダーを初期化
-		$loader = new PluginLoader();
+		$loader = new Clay_Plugin();
 		$loader->LoadSetting();
 		// メールログのテーブルモデルを読み込み
 		$maillogs = $loader->LoadTable("MaillogsTable");

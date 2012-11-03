@@ -34,7 +34,7 @@ unset($_POST["_"]);
 // JSONのキャッシュを初期化
 $jsonCache = Clay_Cache_Factory::create("json_".sha1($requestUri));
 
-$loader = new PluginLoader($_POST["c"]);
+$loader = new Clay_Plugin($_POST["c"]);
 $json = $loader->loadJson($_POST["p"]);
 unset($_POST["c"]);
 unset($_POST["p"]);

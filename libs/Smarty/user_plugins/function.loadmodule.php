@@ -65,7 +65,7 @@ function smarty_function_loadmodule($params, $smarty, $template)
 	$errors = null;
 	try{
 		// モジュール用のクラスをリフレクション
-		$loader = new PluginLoader("");
+		$loader = new Clay_Plugin("");
 		$object = $loader->loadModule($name);
 		if(method_exists($object, "execute")){
 			Logger::writeDebug("MODULE : ".$name." start");

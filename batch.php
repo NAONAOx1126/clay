@@ -36,7 +36,7 @@ try{
 	// 共通のライブラリの呼び出し。
 	require(dirname(__FILE__)."/libs/require.php");
 	
-	$loader = new PluginLoader("");
+	$loader = new Clay_Plugin("");
 	$object = $loader->loadBatch($batch);
 	
 	if(method_exists($object, "execute")){

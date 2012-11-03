@@ -32,7 +32,7 @@ if($_SERVER["CONFIGURE"]->site_id == ""){
 	DBFactory::initialize(array("default" => $defaultDatabase));
 
 	// サイト情報を取得する。
-	$loader = new PluginLoader();
+	$loader = new Clay_Plugin();
 	$site = $loader->loadModel("SiteModel");
 	if($site->findByHostName()){
 		$siteArray = $site->toArray();

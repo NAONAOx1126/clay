@@ -6,7 +6,7 @@
  * @copyright Copyright (c) 2010, Naohisa Minagawa
  * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache License, Version 2.0
  * @since PHP 5.3
- * @version   3.0.0
+ * @version   4.0.0
  */
  
 /**
@@ -15,7 +15,7 @@
  * @package Models
  * @author Naohisa Minagawa <info@clay-system.jp>
  */
-class DatabaseModel{
+class Clay_Plugin_Model{
 	// ベースのデータベースアクセスオブジェクト
 	protected $access;
 
@@ -436,7 +436,7 @@ class DatabaseModel{
 	protected function setValues($values){
 		$this->values_org = array();
 		$this->values = array();
-		if($values instanceof DatabaseModel){
+		if($values instanceof Clay_Plugin_Model){
 			$values = $values->values;
 		}
 		foreach($values as $key => $value){
@@ -566,4 +566,3 @@ class DatabaseModel{
 		return $copy;
 	}
 }
-?>

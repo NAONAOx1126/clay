@@ -10,7 +10,7 @@ DBFactory::begin();// トランザクションの開始
 
 try{
 	// プラグインのローダーの読み込み
-	$loader = new PluginLoader();
+	$loader = new Clay_Plugin();
 	
 	// 郵便番号仮テーブルを読み込み
 	$zipTemps = $loader->loadTable("ZipTempsTable");
