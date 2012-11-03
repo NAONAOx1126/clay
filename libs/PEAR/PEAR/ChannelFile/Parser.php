@@ -33,7 +33,7 @@ require_once 'PEAR/ChannelFile.php';
 class PEAR_ChannelFile_Parser extends PEAR_XMLParser
 {
     var $_config;
-    var $_logger;
+    var $_Clay_Logger;
     var $_registry;
 
     function setConfig(&$c)
@@ -42,9 +42,9 @@ class PEAR_ChannelFile_Parser extends PEAR_XMLParser
         $this->_registry = &$c->getRegistry();
     }
 
-    function setLogger(&$l)
+    function setClay_Logger(&$l)
     {
-        $this->_logger = &$l;
+        $this->_Clay_Logger = &$l;
     }
 
     function parse($data, $file)
@@ -55,8 +55,8 @@ class PEAR_ChannelFile_Parser extends PEAR_XMLParser
 
         $ret = new PEAR_ChannelFile;
         $ret->setConfig($this->_config);
-        if (isset($this->_logger)) {
-            $ret->setLogger($this->_logger);
+        if (isset($this->_Clay_Logger)) {
+            $ret->setClay_Logger($this->_Clay_Logger);
         }
 
         $ret->fromArray($this->_unserializedData);

@@ -98,7 +98,7 @@ abstract class Clay_Query_InsertBase{
 			$connection = Clay_Database_Factory::getConnection($this->module);
 			return $connection->auto_increment();
 		}catch(Exception $e){
-			Logger::writeError($e->getMessage(), $e);
+			Clay_Logger::writeError($e->getMessage(), $e);
 			throw new Clay_Exception_Database($e);
 		}
 	}	
@@ -112,10 +112,10 @@ abstract class Clay_Query_InsertBase{
 		try{
 			$connection = Clay_Database_Factory::getConnection($this->module);
 			$sql = $this->showQuery($values);
-			Logger::writeDebug($sql);
+			Clay_Logger::writeDebug($sql);
 			$result = $connection->query($sql);
 		}catch(Exception $e){
-			Logger::writeError($sql, $e);
+			Clay_Logger::writeError($sql, $e);
 			throw new Clay_Exception_Database($e);
 		}
 		return $result;

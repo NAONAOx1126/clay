@@ -6,16 +6,16 @@
  * @copyright Copyright (c) 2010, Naohisa Minagawa
  * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache License, Version 2.0
  * @since PHP 5.3
- * @version   3.0.0
+ * @version   4.0.0
  */
-
+ 
 /**
  * テキスト形式のメール送信に使用するクラスです。
  *
  * @package Common
  * @author Naohisa Minagawa <info@clay-system.jp>
  */
-class SendMail{
+class Clay_Sendmail{
 	/**
 	 * メールの送信元（名称）
 	 */
@@ -288,7 +288,7 @@ class SendMail{
 		$header .= "X-Mailer: PHP/".phpversion();
 		
 		if(!mail($to, $subject, $body, $header, "-f ".$fromAddress)){
-			Logger::writeAlert("メール送信に失敗しました。");
+			Clay_Logger::writeAlert("メール送信に失敗しました。");
 		}	
 	}
 
@@ -333,4 +333,4 @@ class SendMail{
 		}
 	}
 }
-?>
+ 

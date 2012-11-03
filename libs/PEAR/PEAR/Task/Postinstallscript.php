@@ -284,22 +284,22 @@ class PEAR_Task_Postinstallscript extends PEAR_Task_Common
         // remove the tasks: namespace if present
         $this->_pkg = $pkg;
         $this->_stripNamespace();
-        $this->logger->log(0, 'Including external post-installation script "' .
+        $this->Clay_Logger->log(0, 'Including external post-installation script "' .
             $contents . '" - any errors are in this script');
         include_once $contents;
         if (class_exists($this->_class)) {
-            $this->logger->log(0, 'Inclusion succeeded');
+            $this->Clay_Logger->log(0, 'Inclusion succeeded');
         } else {
             return $this->throwError('init of post-install script class "' . $this->_class
                 . '" failed');
         }
         $this->_obj = new $this->_class;
-        $this->logger->log(1, 'running post-install script "' . $this->_class . '->init()"');
+        $this->Clay_Logger->log(1, 'running post-install script "' . $this->_class . '->init()"');
         PEAR::pushErrorHandling(PEAR_ERROR_RETURN);
         $res = $this->_obj->init($this->config, $pkg, $this->_lastversion);
         PEAR::popErrorHandling();
         if ($res) {
-            $this->logger->log(0, 'init succeeded');
+            $this->Clay_Logger->log(0, 'init succeeded');
         } else {
             return $this->throwError('init of post-install script "' . $this->_class .
                 '->init()" failed');

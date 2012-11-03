@@ -47,7 +47,7 @@ class PEAR_PackageFile
     var $_config;
     var $_debug;
 
-    var $_logger = false;
+    var $_Clay_Logger = false;
     /**
      * @var boolean
      */
@@ -83,9 +83,9 @@ class PEAR_PackageFile
         $this->_rawReturn = true;
     }
 
-    function setLogger(&$l)
+    function setClay_Logger(&$l)
     {
-        $this->_logger = &$l;
+        $this->_Clay_Logger = &$l;
     }
 
     /**
@@ -148,8 +148,8 @@ class PEAR_PackageFile
     {
         if (isset($arr['xsdversion'])) {
             $obj = &$this->factory($arr['xsdversion']);
-            if ($this->_logger) {
-                $obj->setLogger($this->_logger);
+            if ($this->_Clay_Logger) {
+                $obj->setClay_Logger($this->_Clay_Logger);
             }
 
             $obj->setConfig($this->_config);
@@ -163,8 +163,8 @@ class PEAR_PackageFile
             $obj = &$this->factory('1.0');
         }
 
-        if ($this->_logger) {
-            $obj->setLogger($this->_logger);
+        if ($this->_Clay_Logger) {
+            $obj->setClay_Logger($this->_Clay_Logger);
         }
 
         $obj->setConfig($this->_config);
@@ -193,8 +193,8 @@ class PEAR_PackageFile
             }
 
             $object = &$this->parserFactory($packageversion[1]);
-            if ($this->_logger) {
-                $object->setLogger($this->_logger);
+            if ($this->_Clay_Logger) {
+                $object->setClay_Logger($this->_Clay_Logger);
             }
 
             $object->setConfig($this->_config);
@@ -209,10 +209,10 @@ class PEAR_PackageFile
 
             if (!$pf->validate($state)) {;
                 if ($this->_config->get('verbose') > 0
-                    && $this->_logger && $pf->getValidationWarnings(false)
+                    && $this->_Clay_Logger && $pf->getValidationWarnings(false)
                 ) {
                     foreach ($pf->getValidationWarnings(false) as $warning) {
-                        $this->_logger->log(0, 'ERROR: ' . $warning['message']);
+                        $this->_Clay_Logger->log(0, 'ERROR: ' . $warning['message']);
                     }
                 }
 
@@ -221,9 +221,9 @@ class PEAR_PackageFile
                 return $a;
             }
 
-            if ($this->_logger && $pf->getValidationWarnings(false)) {
+            if ($this->_Clay_Logger && $pf->getValidationWarnings(false)) {
                 foreach ($pf->getValidationWarnings() as $warning) {
-                    $this->_logger->log(0, 'WARNING: ' . $warning['message']);
+                    $this->_Clay_Logger->log(0, 'WARNING: ' . $warning['message']);
                 }
             }
 
@@ -262,9 +262,9 @@ class PEAR_PackageFile
                 return $a;
             }
 
-            if ($this->_logger && $pf->getValidationWarnings(false)) {
+            if ($this->_Clay_Logger && $pf->getValidationWarnings(false)) {
                 foreach ($pf->getValidationWarnings() as $warning) {
-                    $this->_logger->log(0, 'WARNING: ' . $warning['message']);
+                    $this->_Clay_Logger->log(0, 'WARNING: ' . $warning['message']);
                 }
             }
 

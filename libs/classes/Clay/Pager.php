@@ -6,16 +6,16 @@
  * @copyright Copyright (c) 2010, Naohisa Minagawa
  * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache License, Version 2.0
  * @since PHP 5.3
- * @version   3.0.0
+ * @version   4.0.0
  */
  
 /**
  * ページャーをテンプレート文字列で作成するためのクラスです。
  *
- * @package Models
+ * @package Common
  * @author Naohisa Minagawa <info@clay-system.jp>
  */
-class TemplatePager{
+class Clay_Pager{
 	// ページIDキー
 	const PAGE_ID_KEY = "pageID";
 	
@@ -100,25 +100,25 @@ class TemplatePager{
 		$this->pageMode = $pageMode;
 		$this->displayMode = $displayMode;
 		$this->displayPages = $display;
-		if($this->pageMode == TemplatePager::PAGE_JUMP && $this->displayPages == 0){
+		if($this->pageMode == Clay_Pager::PAGE_JUMP && $this->displayPages == 0){
 			$this->displayPages = 7;
 		}
-		if($this->pageMode == TemplatePager::PAGE_SLIDE && $this->displayPages == 0){
+		if($this->pageMode == Clay_Pager::PAGE_SLIDE && $this->displayPages == 0){
 			$this->displayPages = 3;
 		}
 		$this->pageSize = $size;
 		if(!($this->pageSize > 0)){
-			$this->pageSize = TemplatePager::DEFAULT_PAGE_SIZE;
+			$this->pageSize = Clay_Pager::DEFAULT_PAGE_SIZE;
 		}
-		if($_POST[TemplatePager::PAGE_ID_KEY] > 0){
-			$this->currentPageId = $_POST[TemplatePager::PAGE_ID_KEY];
+		if($_POST[Clay_Pager::PAGE_ID_KEY] > 0){
+			$this->currentPageId = $_POST[Clay_Pager::PAGE_ID_KEY];
 		}else{
 			$this->currentPageId = "1";
 		}
 		$this->queryString = "";
 		if(count($_POST) > 0){
 			foreach($_POST as $key => $value){
-				if($key == TemplatePager::PAGE_ID_KEY){
+				if($key == Clay_Pager::PAGE_ID_KEY){
 					continue;
 				}
 				if(is_array($value)){
@@ -312,7 +312,7 @@ class TemplatePager{
 			$first = $this->getFormatText($this->firstPageText, $this->getLink("1"));
 			$prev = $this->getFormatText($this->prevPageText, $this->getLink($this->getPrevPageId()));
 		}else{
-			if($this->displayMode == TemplatePager::DISPLAY_HIDE){
+			if($this->displayMode == Clay_Pager::DISPLAY_HIDE){
 				$first = "";
 				$prev = "";
 			}else{
@@ -324,7 +324,7 @@ class TemplatePager{
 			$last = $this->getFormatText($this->lastPageText, $this->getLink($this->getPages()));
 			$next = $this->getFormatText($this->nextPageText, $this->getLink($this->getNextPageId()));
 		}else{
-			if($this->displayMode == TemplatePager::DISPLAY_HIDE){
+			if($this->displayMode == Clay_Pager::DISPLAY_HIDE){
 				$last = "";
 				$next = "";
 			}else{
@@ -351,9 +351,9 @@ class TemplatePager{
 	 */
 	protected function getLink($page){
 		if(!empty($this->queryString)){
-			return $this->queryString."&".TemplatePager::PAGE_ID_KEY."=".$page;
+			return $this->queryString."&".Clay_Pager::PAGE_ID_KEY."=".$page;
 		}else{
-			return "?".TemplatePager::PAGE_ID_KEY."=".$page;			
+			return "?".Clay_Pager::PAGE_ID_KEY."=".$page;			
 		}
 	}
 	
@@ -379,11 +379,11 @@ class TemplatePager{
 	 */
 	private function getMinDisplayPageId(){
 		switch($this->pageMode){
-			case TemplatePager::PAGE_ALL:
+			case Clay_Pager::PAGE_ALL:
 				return 1;
-			case TemplatePager::PAGE_JUMP:
+			case Clay_Pager::PAGE_JUMP:
 				return floor(($this->getCurrentPageId() - 1) / $this->displayPages) * $this->displayPages + 1;
-			case TemplatePager::PAGE_SLIDE:
+			case Clay_Pager::PAGE_SLIDE:
 				if($this->getCurrentPageId() <= $this->displayPages){
 					return 1;
 				}elseif($this->getCurrentPageId() >= $this->getPages() - $this->displayPages){
@@ -403,15 +403,15 @@ class TemplatePager{
 	 */
 	private function getMaxDisplayPageId(){
 		switch($this->pageMode){
-			case TemplatePager::PAGE_ALL:
+			case Clay_Pager::PAGE_ALL:
 				return $this->getPages();
-			case TemplatePager::PAGE_JUMP:
+			case Clay_Pager::PAGE_JUMP:
 				if($this->getMinDisplayPageID() + $this->displayPages - 1 < $this->getPages()){
 					return $this->getPages();
 				}else{
 					return $this->getMinDisplayPageID() + $this->displayPages - 1;
 				}
-			case TemplatePager::PAGE_SLIDE:
+			case Clay_Pager::PAGE_SLIDE:
 				if($this->getCurrentPageId() + $this->displayPages >= $this->getPages()){
 					return $this->getPages();
 				}elseif($this->getCurrentPageId() <= $this->displayPages){
@@ -426,4 +426,4 @@ class TemplatePager{
 		}
 	}
 }
-?>
+ 

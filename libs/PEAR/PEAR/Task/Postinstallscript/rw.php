@@ -41,13 +41,13 @@ class PEAR_Task_Postinstallscript_rw extends PEAR_Task_Postinstallscript
      *
      * @param PEAR_PackageFile_v2_rw $pkg
      * @param PEAR_Config $config
-     * @param PEAR_Frontend $logger
+     * @param PEAR_Frontend $Clay_Logger
      * @param array $fileXml
      * @return PEAR_Task_Postinstallscript_rw
      */
-    function PEAR_Task_Postinstallscript_rw(&$pkg, &$config, &$logger, $fileXml)
+    function PEAR_Task_Postinstallscript_rw(&$pkg, &$config, &$Clay_Logger, $fileXml)
     {
-        parent::PEAR_Task_Common($config, $logger, PEAR_TASK_PACKAGE);
+        parent::PEAR_Task_Common($config, $Clay_Logger, PEAR_TASK_PACKAGE);
         $this->_contents = $fileXml;
         $this->_pkg = &$pkg;
         $this->_params = array();

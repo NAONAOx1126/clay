@@ -95,7 +95,7 @@ class Clay_Session_Handler_Database extends Clay_Session_Handler{
 			$insert = new Clay_Query_Replace($this->table);
 			$sqlval = array($id_key => $id, $data_key => $sess_data);
 			$sqlval["create_time"] = $sqlval["update_time"] = date("Y-m-d H:i:s");
-			Logger::writeDebug($insert->showQuery($sqlval));
+			Clay_Logger::writeDebug($insert->showQuery($sqlval));
 			$insert->execute($sqlval);
 			return true;
 		}catch(Exception $e){
@@ -116,7 +116,7 @@ class Clay_Session_Handler_Database extends Clay_Session_Handler{
 		try{
 			$delete = new Clay_Query_Delete($this->table);
 			$delete->addWhere($this->table->$id_key." = ?", array($id));
-			Logger::writeDebug($delete->showQuery());
+			Clay_Logger::writeDebug($delete->showQuery());
 			$delete->execute();
 			return true;
 		}catch(Exception $e){
@@ -138,7 +138,7 @@ class Clay_Session_Handler_Database extends Clay_Session_Handler{
 		try{
 			$delete = new Clay_Query_Delete($this->table);
 			$delete->addWhere($this->table->update_time." < ?", array($limit));
-			Logger::writeDebug($delete->showQuery());
+			Clay_Logger::writeDebug($delete->showQuery());
 			$delete->execute();
 			return true;
 		}catch(Exception $e){

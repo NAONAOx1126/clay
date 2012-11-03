@@ -211,11 +211,11 @@ class Clay_Query_Select{
 		// クエリを実行する。
 		try{
 			$sql = $this->showQuery();
-			Logger::writeDebug($sql);
+			Clay_Logger::writeDebug($sql);
 			$connection = Clay_Database_Factory::getConnection($this->module, true);
 			$result = $connection->query($sql);
 		}catch(Exception $e){
-			Logger::writeError($sql, $e);
+			Clay_Logger::writeError($sql, $e);
 			throw new Clay_Exception_Database($e);
 		}
 

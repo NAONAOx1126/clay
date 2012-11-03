@@ -80,7 +80,7 @@ class PEAR_Task_Common
     /**
      * @access protected
      */
-    var $logger;
+    var $Clay_Logger;
     /**
      * @access protected
      */
@@ -89,11 +89,11 @@ class PEAR_Task_Common
      * @param PEAR_Config
      * @param PEAR_Common
      */
-    function PEAR_Task_Common(&$config, &$logger, $phase)
+    function PEAR_Task_Common(&$config, &$Clay_Logger, $phase)
     {
         $this->config = &$config;
         $this->registry = &$config->getRegistry();
-        $this->logger = &$logger;
+        $this->Clay_Logger = &$Clay_Logger;
         $this->installphase = $phase;
         if ($this->type == 'multiple') {
             $GLOBALS['_PEAR_TASK_POSTINSTANCES'][get_class($this)][] = &$this;

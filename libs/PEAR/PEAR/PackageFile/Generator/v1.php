@@ -695,8 +695,8 @@ class PEAR_PackageFile_Generator_v1
 
         $ret = new $class;
         $ret->setConfig($this->_packagefile->_config);
-        if (isset($this->_packagefile->_logger) && is_object($this->_packagefile->_logger)) {
-            $ret->setLogger($this->_packagefile->_logger);
+        if (isset($this->_packagefile->_Clay_Logger) && is_object($this->_packagefile->_Clay_Logger)) {
+            $ret->setClay_Logger($this->_packagefile->_Clay_Logger);
         }
 
         $ret->fromArray($arr);

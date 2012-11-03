@@ -111,7 +111,7 @@ class PEAR_Packager extends PEAR_Common
             }
         }
 
-        $main->setLogger($this);
+        $main->setClay_Logger($this);
         if (!$main->validate(PEAR_VALIDATE_PACKAGING)) {
             foreach ($main->getValidationWarnings() as $warning) {
                 $this->log(0, 'Error: ' . $warning['message']);
@@ -124,7 +124,7 @@ class PEAR_Packager extends PEAR_Common
         }
 
         if ($pkg2) {
-            $other->setLogger($this);
+            $other->setClay_Logger($this);
             $a = false;
             if (!$other->validate(PEAR_VALIDATE_NORMAL) || $a = !$main->isEquivalent($other)) {
                 foreach ($other->getValidationWarnings() as $warning) {

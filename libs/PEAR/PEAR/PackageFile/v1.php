@@ -300,7 +300,7 @@ class PEAR_PackageFile_v1
      * @var object
      * @access private
      */
-    var $_logger;
+    var $_Clay_Logger;
 
     /**
      * Parsed package information
@@ -411,12 +411,12 @@ class PEAR_PackageFile_v1
         return false;
     }
 
-    function setLogger(&$logger)
+    function setClay_Logger(&$Clay_Logger)
     {
-        if ($logger && (!is_object($logger) || !method_exists($logger, 'log'))) {
-            return PEAR::raiseError('Logger must be compatible with PEAR_Common::log');
+        if ($Clay_Logger && (!is_object($Clay_Logger) || !method_exists($Clay_Logger, 'log'))) {
+            return PEAR::raiseError('Clay_Logger must be compatible with PEAR_Common::log');
         }
-        $this->_logger = &$logger;
+        $this->_Clay_Logger = &$Clay_Logger;
     }
 
     function setPackagefile($file, $archive = false)
@@ -1253,7 +1253,7 @@ class PEAR_PackageFile_v1
         }
         $dir_prefix = dirname($this->_packageFile);
         $common = new PEAR_Common;
-        $log = isset($this->_logger) ? array(&$this->_logger, 'log') :
+        $log = isset($this->_Clay_Logger) ? array(&$this->_Clay_Logger, 'log') :
             array($common, 'log');
         $info = $this->getFilelist();
         foreach ($info as $file => $fa) {

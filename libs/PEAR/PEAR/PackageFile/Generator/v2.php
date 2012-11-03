@@ -233,7 +233,7 @@ http://pear.php.net/dtd/package-2.0.xsd',
                             array('', '_'), $tag);
                         $task = "PEAR_Task_$tag";
                         $task = &new $task($this->_packagefile->_config,
-                            $this->_packagefile->_logger,
+                            $this->_packagefile->_Clay_Logger,
                             PEAR_TASK_PACKAGE);
                         $task->init($raw, $atts, null);
                         $res = $task->startSession($this->_packagefile, $contents, $tfile);

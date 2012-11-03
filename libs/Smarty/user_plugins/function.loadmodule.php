@@ -68,23 +68,23 @@ function smarty_function_loadmodule($params, $smarty, $template)
 		$loader = new Clay_Plugin("");
 		$object = $loader->loadModule($name);
 		if(method_exists($object, "execute")){
-			Logger::writeDebug("MODULE : ".$name." start");
+			Clay_Logger::writeDebug("MODULE : ".$name." start");
 			$object->execute(new LoadModuleParams($params));
-			Logger::writeDebug("MODULE : ".$name." end");
+			Clay_Logger::writeDebug("MODULE : ".$name." end");
 		}else{
-			Logger::writeAlert($name." is not plugin module.");
+			Clay_Logger::writeAlert($name." is not plugin module.");
 		}
 	}catch(Clay_Exception_Invalid $e){
 		// 入力エラーなどの例外（ただし、メッセージリストを空にすると例外処理を行わない）
-		Logger::writeError($e->getMessage(), $e);
+		Clay_Logger::writeError($e->getMessage(), $e);
 		$errors = $e->getErrors();
 	}catch(Clay_Exception_System $e){
 		// システムエラーの例外処理
-		Logger::writeError($e->getMessage(), $e);
+		Clay_Logger::writeError($e->getMessage(), $e);
 		$errors = array($e->getMessage());
 	}catch(Exception $e){
 		// システムエラーの例外処理
-		Logger::writeError($e->getMessage(), $e);
+		Clay_Logger::writeError($e->getMessage(), $e);
 		$errors = array($e->getMessage());
 	}
 	

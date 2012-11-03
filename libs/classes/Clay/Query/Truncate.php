@@ -42,10 +42,10 @@ class Clay_Query_Truncate{
 		// クエリを実行する。
 		try{
 			$connection = Clay_Database_Factory::getConnection($this->module);
-			Logger::writeDebug($sql);
+			Clay_Logger::writeDebug($sql);
 			$result = $connection->query($sql);
 		}catch(Exception $e){
-			Logger::writeError($sql, $e);
+			Clay_Logger::writeError($sql, $e);
 			throw new Clay_Exception_Database($e);
 		}
 

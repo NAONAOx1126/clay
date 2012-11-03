@@ -67,12 +67,12 @@
  *     }
  *  }
  *
- *  function myLogger($pear_exception) {
+ *  function myClay_Logger($pear_exception) {
  *     echo $pear_exception->getMessage();
  *  }
- *  // each time a exception is thrown the 'myLogger' will be called
+ *  // each time a exception is thrown the 'myClay_Logger' will be called
  *  // (its use is completely optional)
- *  PEAR_Exception::addObserver('myLogger');
+ *  PEAR_Exception::addObserver('myClay_Logger');
  *  $test = new Test;
  *  try {
  *     $test->foo();

@@ -40,11 +40,11 @@ try{
 	$object = $loader->loadBatch($batch);
 	
 	if(method_exists($object, "execute")){
-		Logger::writeDebug("MODULE : ".$batch." start");
+		Clay_Logger::writeDebug("MODULE : ".$batch." start");
 		$object->execute($argv);
-		Logger::writeDebug("MODULE : ".$batch." end");
+		Clay_Logger::writeDebug("MODULE : ".$batch." end");
 	}else{
-		Logger::writeAlert($batch." is not batch module.");
+		Clay_Logger::writeAlert($batch." is not batch module.");
 		echo $batch." is not batch module.";
 	}
 }catch(Exception $ex){

@@ -39,7 +39,7 @@ try{
 	ob_end_clean();
 	echo $content;
 	Clay_Database_Factory::close();
-	Logger::writeDebug("TEMPLATE_PAGE : ".$_SERVER["TEMPLATE_NAME"]." Finished.");
+	Clay_Logger::writeDebug("TEMPLATE_PAGE : ".$_SERVER["TEMPLATE_NAME"]." Finished.");
 }catch(Exception $ex){
 	ob_end_clean();
 	// キャッシュ無効にするヘッダを送信

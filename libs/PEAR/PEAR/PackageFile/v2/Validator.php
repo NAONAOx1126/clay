@@ -1730,7 +1730,7 @@ class PEAR_PackageFile_v2_Validator
         }
         $dir_prefix = dirname($this->_pf->_packageFile);
         $common = new PEAR_Common;
-        $log = isset($this->_pf->_logger) ? array(&$this->_pf->_logger, 'log') :
+        $log = isset($this->_pf->_Clay_Logger) ? array(&$this->_pf->_Clay_Logger, 'log') :
             array($common, 'log');
         $info = $this->_pf->getContents();
         $info = $info['bundledpackage'];
@@ -1775,7 +1775,7 @@ class PEAR_PackageFile_v2_Validator
         }
         $dir_prefix = dirname($this->_pf->_packageFile);
         $common = new PEAR_Common;
-        $log = isset($this->_pf->_logger) ? array(&$this->_pf->_logger, 'log') :
+        $log = isset($this->_pf->_Clay_Logger) ? array(&$this->_pf->_Clay_Logger, 'log') :
             array(&$common, 'log');
         $info = $this->_pf->getContents();
         if (!$info || !isset($info['dir']['file'])) {

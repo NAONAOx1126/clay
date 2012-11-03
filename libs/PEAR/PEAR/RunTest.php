@@ -45,7 +45,7 @@ putenv("PHP_PEAR_RUNTESTS=1");
 class PEAR_RunTest
 {
     var $_headers = array();
-    var $_logger;
+    var $_Clay_Logger;
     var $_options;
     var $_php;
     var $tests_count;
@@ -84,7 +84,7 @@ class PEAR_RunTest
      * An object that supports the PEAR_Common->log() signature, or null
      * @param PEAR_Common|null
      */
-    function PEAR_RunTest($logger = null, $options = array())
+    function PEAR_RunTest($Clay_Logger = null, $options = array())
     {
         if (!defined('E_DEPRECATED')) {
             define('E_DEPRECATED', 0);
@@ -93,11 +93,11 @@ class PEAR_RunTest
             define('E_STRICT', 0);
         }
         $this->ini_overwrites[] = 'error_reporting=' . (E_ALL & ~(E_DEPRECATED | E_STRICT));
-        if (is_null($logger)) {
+        if (is_null($Clay_Logger)) {
             require_once 'PEAR/Common.php';
-            $logger = new PEAR_Common;
+            $Clay_Logger = new PEAR_Common;
         }
-        $this->_logger  = $logger;
+        $this->_Clay_Logger  = $Clay_Logger;
         $this->_options = $options;
 
         $conf = &PEAR_Config::singleton();
@@ -250,8 +250,8 @@ class PEAR_RunTest
         }
 
         $cmd = $this->_preparePhpBin($this->_php, $file, $ini_settings);
-        if (isset($this->_logger)) {
-            $this->_logger->log(2, 'Running command "' . $cmd . '"');
+        if (isset($this->_Clay_Logger)) {
+            $this->_Clay_Logger->log(2, 'Running command "' . $cmd . '"');
         }
 
         $savedir = getcwd(); // in case the test moves us around
@@ -333,7 +333,7 @@ class PEAR_RunTest
               !empty($section_text['COOKIE']) || !empty($section_text['EXPECTHEADERS'])) {
             if (empty($this->_options['cgi'])) {
                 if (!isset($this->_options['quiet'])) {
-                    $this->_logger->log(0, "SKIP $test_nr$tested (reason: --cgi option needed for this test, type 'pear help run-tests')");
+                    $this->_Clay_Logger->log(0, "SKIP $test_nr$tested (reason: --cgi option needed for this test, type 'pear help run-tests')");
                 }
                 if (isset($this->_options['tapoutput'])) {
                     return array('ok', ' # skip --cgi option needed for this test, "pear help run-tests" for info');
@@ -420,8 +420,8 @@ class PEAR_RunTest
         $args = $section_text['ARGS'] ? ' -- '.$section_text['ARGS'] : '';
         $cmd = $this->_preparePhpBin($this->_php, $temp_file, $ini_settings);
         $cmd.= "$args 2>&1";
-        if (isset($this->_logger)) {
-            $this->_logger->log(2, 'Running command "' . $cmd . '"');
+        if (isset($this->_Clay_Logger)) {
+            $this->_Clay_Logger->log(2, 'Running command "' . $cmd . '"');
         }
 
         // Reset environment from any previous test.
@@ -550,7 +550,7 @@ class PEAR_RunTest
                         break;
                     }
                     if (!isset($this->_options['quiet'])) {
-                        $this->_logger->log(0, "PASS $test_nr$tested$info");
+                        $this->_Clay_Logger->log(0, "PASS $test_nr$tested$info");
                     }
                     if (isset($this->_options['tapoutput'])) {
                         return array('ok', ' - ' . $tested);
@@ -583,7 +583,7 @@ class PEAR_RunTest
                         break;
                     }
                     if (!isset($this->_options['quiet'])) {
-                        $this->_logger->log(0, "PASS $test_nr$tested$info");
+                        $this->_Clay_Logger->log(0, "PASS $test_nr$tested$info");
                     }
                     if (isset($this->_options['tapoutput'])) {
                         return array('ok', ' - ' . $tested);
@@ -602,7 +602,7 @@ class PEAR_RunTest
             $wanted   = preg_replace('/\r/', '', trim($section_text['FAIL']));
             if ($faildiff == $wanted) {
                 if (!isset($this->_options['quiet'])) {
-                    $this->_logger->log(0, "PASS $test_nr$tested$info");
+                    $this->_Clay_Logger->log(0, "PASS $test_nr$tested$info");
                 }
                 if (isset($this->_options['tapoutput'])) {
                     return array('ok', ' - ' . $tested);
@@ -619,7 +619,7 @@ class PEAR_RunTest
 
         // Test failed so we need to report details.
         $txt = $warn ? 'WARN ' : 'FAIL ';
-        $this->_logger->log(0, $txt . $test_nr . $tested . $info);
+        $this->_Clay_Logger->log(0, $txt . $test_nr . $tested . $info);
 
         // write .exp
         $res = $this->_writeLog($exp_filename, $wanted);
@@ -759,7 +759,7 @@ $text
                     $skipreason .= '(reason: ' . $m[1] . ')';
                 }
                 if (!isset($this->_options['quiet'])) {
-                    $this->_logger->log(0, $skipreason);
+                    $this->_Clay_Logger->log(0, $skipreason);
                 }
                 if (isset($this->_options['tapoutput'])) {
                     return array('ok', ' # skip ' . $reason);

@@ -32,7 +32,7 @@ class PEAR_PackageFile_Parser_v1
 {
     var $_registry;
     var $_config;
-    var $_logger;
+    var $_Clay_Logger;
     /**
      * BC hack to allow PEAR_Common::infoFromString() to sort of
      * work with the version 2.0 format - there's no filelist though
@@ -51,9 +51,9 @@ class PEAR_PackageFile_Parser_v1
         $this->_registry = &$c->getRegistry();
     }
 
-    function setLogger(&$l)
+    function setClay_Logger(&$l)
     {
-        $this->_logger = &$l;
+        $this->_Clay_Logger = &$l;
     }
 
     /**
@@ -100,8 +100,8 @@ class PEAR_PackageFile_Parser_v1
 
         $pf = new PEAR_PackageFile_v1;
         $pf->setConfig($this->_config);
-        if (isset($this->_logger)) {
-            $pf->setLogger($this->_logger);
+        if (isset($this->_Clay_Logger)) {
+            $pf->setClay_Logger($this->_Clay_Logger);
         }
         $pf->setPackagefile($file, $archive);
         $pf->fromArray($this->_packageInfo);

@@ -109,10 +109,10 @@ class Clay_Query_Update{
 			try{
 				$sql = $this->showQuery();
 				$connection = Clay_Database_Factory::getConnection($this->module);
-				Logger::writeDebug($sql);
+				Clay_Logger::writeDebug($sql);
 				$result = $connection->query($sql);
 			}catch(Exception $e){
-				Logger::writeError($sql, $e);
+				Clay_Logger::writeError($sql, $e);
 				throw new Clay_Exception_Database($e);
 			}
 

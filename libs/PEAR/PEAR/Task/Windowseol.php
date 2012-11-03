@@ -70,7 +70,7 @@ class PEAR_Task_Windowseol extends PEAR_Task_Common
      */
     function startSession($pkg, $contents, $dest)
     {
-        $this->logger->log(3, "replacing all line endings with \\r\\n in $dest");
+        $this->Clay_Logger->log(3, "replacing all line endings with \\r\\n in $dest");
         return preg_replace("/\r\n|\n\r|\r|\n/", "\r\n", $contents);
     }
 }

@@ -70,7 +70,7 @@ class PEAR_Task_Unixeol extends PEAR_Task_Common
      */
     function startSession($pkg, $contents, $dest)
     {
-        $this->logger->log(3, "replacing all line endings with \\n in $dest");
+        $this->Clay_Logger->log(3, "replacing all line endings with \\n in $dest");
         return preg_replace("/\r\n|\n\r|\r|\n/", "\n", $contents);
     }
 }

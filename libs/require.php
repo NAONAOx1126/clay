@@ -53,7 +53,7 @@ function showHttpError($code, $message, $ex = null){
 	ob_end_clean();
 	
 	// エラーログに書き込み
-	Logger::writeError($message."(".$code.")", $ex);
+	Clay_Logger::writeError($message."(".$code.")", $ex);
 	
 	// カスタムエラーページのパス
 	$path = "";

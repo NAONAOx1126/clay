@@ -26,5 +26,5 @@ $_SERVER["CONFIGURE"]->connection = array(
 $_SERVER["CONFIGURE"]->TEMPLATE_ENGINE = "SmartyTemplate";
 
 /* 使用するロガー */
-// $_SERVER["CONFIGURE"]->LOGGER = "DatabaseLogger";
+// $_SERVER["CONFIGURE"]->Clay_Logger = "DatabaseClay_Logger";
 ?>

@@ -325,7 +325,7 @@ used for automated conversion or learning the format.
         $a = &new PEAR_PackageFile($config, $debug);
         $common = new PEAR_Common;
         $common->ui = $this->ui;
-        $a->setLogger($common);
+        $a->setClay_Logger($common);
         return $a;
     }
 

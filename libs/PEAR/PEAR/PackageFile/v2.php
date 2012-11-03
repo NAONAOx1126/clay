@@ -56,7 +56,7 @@ class PEAR_PackageFile_v2
      * @var PEAR_Common
      * @access protected
      */
-    var $_logger;
+    var $_Clay_Logger;
 
     /**
      * This is set to the highest validation level that has been validated
@@ -737,12 +737,12 @@ class PEAR_PackageFile_v2
         $this->_registry = &$config->getRegistry();
     }
 
-    function setLogger(&$logger)
+    function setClay_Logger(&$Clay_Logger)
     {
-        if (!is_object($logger) || !method_exists($logger, 'log')) {
-            return PEAR::raiseError('Logger must be compatible with PEAR_Common::log');
+        if (!is_object($Clay_Logger) || !method_exists($Clay_Logger, 'log')) {
+            return PEAR::raiseError('Clay_Logger must be compatible with PEAR_Common::log');
         }
-        $this->_logger = &$logger;
+        $this->_Clay_Logger = &$Clay_Logger;
     }
 
     /**
@@ -1878,7 +1878,7 @@ class PEAR_PackageFile_v2
             if (!isset($this->$name)) {
                 continue;
             }
-            if ($name == '_config' || $name == '_logger'|| $name == '_registry' ||
+            if ($name == '_config' || $name == '_Clay_Logger'|| $name == '_registry' ||
                   $name == '_stack') {
                 $a->$name = &$this->$name;
             } else {

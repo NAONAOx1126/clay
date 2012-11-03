@@ -64,20 +64,20 @@ $GLOBALS['_PEAR_ERRORSTACK_DEFAULT_CALLBACK'] = array(
  * 
  * This is only used if set to non-false.  Use to set a default log object for
  * all stacks, regardless of instantiation order or location
- * @see PEAR_ErrorStack::setDefaultLogger()
+ * @see PEAR_ErrorStack::setDefaultClay_Logger()
  * @access private
- * @global array $GLOBALS['_PEAR_ERRORSTACK_DEFAULT_LOGGER']
+ * @global array $GLOBALS['_PEAR_ERRORSTACK_DEFAULT_Clay_Logger']
  */
-$GLOBALS['_PEAR_ERRORSTACK_DEFAULT_LOGGER'] = false;
+$GLOBALS['_PEAR_ERRORSTACK_DEFAULT_Clay_Logger'] = false;
 
 /**
  * Global Overriding Callback
  * 
- * This callback will override any error callbacks that specific loggers have set.
+ * This callback will override any error callbacks that specific Clay_Loggers have set.
  * Use with EXTREME caution
  * @see PEAR_ErrorStack::staticPushCallback()
  * @access private
- * @global array $GLOBALS['_PEAR_ERRORSTACK_DEFAULT_LOGGER']
+ * @global array $GLOBALS['_PEAR_ERRORSTACK_DEFAULT_Clay_Logger']
  */
 $GLOBALS['_PEAR_ERRORSTACK_OVERRIDE_CALLBACK'] = array();
 
@@ -212,7 +212,7 @@ class PEAR_ErrorStack {
      * @var false|Log
      * @access protected
      */
-    var $_logger = false;
+    var $_Clay_Logger = false;
     
     /**
      * Error messages - designed to be overridden
@@ -299,12 +299,12 @@ class PEAR_ErrorStack {
      * @param Log $log 
      * @static
      */
-    function setDefaultLogger(&$log)
+    function setDefaultClay_Logger(&$log)
     {
         if (is_object($log) && method_exists($log, 'log') ) {
-            $GLOBALS['_PEAR_ERRORSTACK_DEFAULT_LOGGER'] = &$log;
+            $GLOBALS['_PEAR_ERRORSTACK_DEFAULT_Clay_Logger'] = &$log;
         } elseif (is_callable($log)) {
-            $GLOBALS['_PEAR_ERRORSTACK_DEFAULT_LOGGER'] = &$log;
+            $GLOBALS['_PEAR_ERRORSTACK_DEFAULT_Clay_Logger'] = &$log;
 	}
     }
     
@@ -312,12 +312,12 @@ class PEAR_ErrorStack {
      * Set up a PEAR::Log object for this error stack
      * @param Log $log 
      */
-    function setLogger(&$log)
+    function setClay_Logger(&$log)
     {
         if (is_object($log) && method_exists($log, 'log') ) {
-            $this->_logger = &$log;
+            $this->_Clay_Logger = &$log;
         } elseif (is_callable($log)) {
-            $this->_logger = &$log;
+            $this->_Clay_Logger = &$log;
         }
     }
     
@@ -574,7 +574,7 @@ class PEAR_ErrorStack {
             $this->_errorsByLevel[$err['level']][] = &$this->_errors[0];
         }
         if ($log) {
-            if ($this->_logger || $GLOBALS['_PEAR_ERRORSTACK_DEFAULT_LOGGER']) {
+            if ($this->_Clay_Logger || $GLOBALS['_PEAR_ERRORSTACK_DEFAULT_Clay_Logger']) {
                 $this->_log($err);
             }
         }
@@ -628,12 +628,12 @@ class PEAR_ErrorStack {
      */
     function _log($err)
     {
-        if ($this->_logger) {
-            $logger = &$this->_logger;
+        if ($this->_Clay_Logger) {
+            $Clay_Logger = &$this->_Clay_Logger;
         } else {
-            $logger = &$GLOBALS['_PEAR_ERRORSTACK_DEFAULT_LOGGER'];
+            $Clay_Logger = &$GLOBALS['_PEAR_ERRORSTACK_DEFAULT_Clay_Logger'];
         }
-        if (is_a($logger, 'Log')) {
+        if (is_a($Clay_Logger, 'Log')) {
             $levels = array(
                 'exception' => PEAR_LOG_CRIT,
                 'alert' => PEAR_LOG_ALERT,
@@ -648,9 +648,9 @@ class PEAR_ErrorStack {
             } else {
                 $level = PEAR_LOG_INFO;
             }
-            $logger->log($err['message'], $level, $err);
+            $Clay_Logger->log($err['message'], $level, $err);
         } else { // support non-standard logs
-            call_user_func($logger, $err);
+            call_user_func($Clay_Logger, $err);
         }
     }
 

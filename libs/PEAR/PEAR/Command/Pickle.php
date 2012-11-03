@@ -117,7 +117,7 @@ generate both package.xml.
         $a = &new PEAR_PackageFile($config, $debug);
         $common = new PEAR_Common;
         $common->ui = $this->ui;
-        $a->setLogger($common);
+        $a->setClay_Logger($common);
         return $a;
     }
 

@@ -38,7 +38,7 @@ class Clay_Plugin{
 			if(!empty($this->namespace)){
 				$name = $this->namespace.".".$name;
 			}
-			Logger::writeDebug($name." ==> ".number_format(memory_get_usage()));
+			Clay_Logger::writeDebug($name." ==> ".number_format(memory_get_usage()));
 			$names = explode(".", $name);
 			$class = implode("_", $names);
 			$path = implode("/", $names);
@@ -47,10 +47,10 @@ class Clay_Plugin{
 			}
 			if(defined("FRAMEWORK_SITE_HOME")){
 				if(file_exists(FRAMEWORK_SITE_HOME."/".$type."/".$path.".php")){
-					Logger::writeDebug("Loaded File for ".$class." class : ".FRAMEWORK_SITE_HOME."/".$type."/".$path.".php");
+					Clay_Logger::writeDebug("Loaded File for ".$class." class : ".FRAMEWORK_SITE_HOME."/".$type."/".$path.".php");
 					require_once(FRAMEWORK_SITE_HOME."/".$type."/".$path.".php");
 					$cls = new $class($params);
-					Logger::writeDebug("Loading File for ".$class." class : ".FRAMEWORK_SITE_HOME."/".$type."/".$path.".php");
+					Clay_Logger::writeDebug("Loading File for ".$class." class : ".FRAMEWORK_SITE_HOME."/".$type."/".$path.".php");
 					return $cls;
 				}
 			}
@@ -58,16 +58,16 @@ class Clay_Plugin{
 			$names[0] = strtolower($names[0]);
 			$path = "clay_".implode("/", $names);
 			if(file_exists(FRAMEWORK_PLUGIN_HOME."/".$path.".php")){
-				Logger::writeDebug("Loading File for ".$class." class : ".FRAMEWORK_PLUGIN_HOME."/".$path.".php");
+				Clay_Logger::writeDebug("Loading File for ".$class." class : ".FRAMEWORK_PLUGIN_HOME."/".$path.".php");
 				require_once(FRAMEWORK_PLUGIN_HOME."/".$path.".php");
 				$cls = new $class($params);
-				Logger::writeDebug("Loaded File for ".$class." class : ".FRAMEWORK_PLUGIN_HOME."/".$path.".php");
+				Clay_Logger::writeDebug("Loaded File for ".$class." class : ".FRAMEWORK_PLUGIN_HOME."/".$path.".php");
 				return $cls;
 			}
-			Logger::writeDebug("No Plugin File for ".$class." class : ".FRAMEWORK_PLUGIN_HOME."/".$path.".php");
+			Clay_Logger::writeDebug("No Plugin File for ".$class." class : ".FRAMEWORK_PLUGIN_HOME."/".$path.".php");
 			return null;
 		}catch(Exception $e){
-			Logger::writeError("Failed to load plugin", $e);
+			Clay_Logger::writeError("Failed to load plugin", $e);
 		}
 	}
 	
@@ -79,13 +79,13 @@ class Clay_Plugin{
 	function loadSetting(){
 		if(defined("FRAMEWORK_SITE_HOME")){
 			if(file_exists(FRAMEWORK_SITE_HOME."/Setting.php")){
-				Logger::writeDebug("Loaded File for Setting : ".FRAMEWORK_SITE_HOME."/Setting.php");
+				Clay_Logger::writeDebug("Loaded File for Setting : ".FRAMEWORK_SITE_HOME."/Setting.php");
 				require_once(FRAMEWORK_SITE_HOME."/Setting.php");
 				return;
 			}
 		}
 		if(file_exists(FRAMEWORK_PLUGIN_HOME."/Setting.php")){
-			Logger::writeDebug("Loaded File for Setting : ".FRAMEWORK_PLUGIN_HOME."/Setting.php");
+			Clay_Logger::writeDebug("Loaded File for Setting : ".FRAMEWORK_PLUGIN_HOME."/Setting.php");
 			require_once(FRAMEWORK_PLUGIN_HOME."/Setting.php");
 			return;
 		}
