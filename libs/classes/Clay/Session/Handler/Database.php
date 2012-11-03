@@ -6,37 +6,16 @@
  * @copyright Copyright (c) 2010, Naohisa Minagawa
  * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache License, Version 2.0
  * @since PHP 5.3
- * @version   3.0.0
+ * @version   4.0.0
  */
-
-class SessionManager{
-    public static function create($handler){
-        session_set_save_handler(
-            array($handler, "open"),
-            array($handler, "close"),
-            array($handler, "read"),
-            array($handler, "write"),
-            array($handler, "destroy"),
-            array($handler, "clean")
-        );
-    }
-}
-
-abstract class SessionHandler{
-	abstract public function open($savePath, $sesionName);
-	
-	abstract public function close();
-	
-	abstract public function read($id);
-	
-	abstract public function write($id, $data);
-	
-	abstract public function destroy($id);
-	
-	abstract public function clean($maxlifetime);
-}
-
-class DatabaseSessionHandler extends SessionHandler{
+ 
+/**
+ * データベースにセッション情報を持たせるためのハンドラです。
+ *
+ * @package Session
+ * @author Naohisa Minagawa <info@clay-system.jp>
+ */
+class Clay_Session_Handler_Database extends Clay_Session_Handler{
 	private $table;
 	
 	private $id_key;
@@ -167,4 +146,4 @@ class DatabaseSessionHandler extends SessionHandler{
 		}
 	}
 }
-?>
+ 

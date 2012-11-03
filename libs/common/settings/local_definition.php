@@ -20,9 +20,8 @@ switch($_SERVER["CONFIGURE"]->get("SESSION_MANAGER")){
 		break;
 	default:
 		ini_set("session.save_handler", "user");
-		require(FRAMEWORK_CLASS_LIBRARY_HOME."/SessionHandler.php");
-		$manager = $_SERVER["CONFIGURE"]->get("SESSION_MANAGER");
-		SessionManager::create(new $manager());
+		$manager = "Clay_Session_Handler_".str_replace("SessionHandler", "", $_SERVER["CONFIGURE"]->get("SESSION_MANAGER"));
+		Clay_Session_Manager::create(new $manager());
 		break;
 }
 
