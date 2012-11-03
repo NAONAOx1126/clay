@@ -27,7 +27,7 @@ class Clay_Plugin_Table{
 	protected $tableName;
 
 	/**
-	 * @var array[DatabaseColumn] カラムリスト 
+	 * @var array[Clay_Plugin_Table_Column] カラムリスト 
 	 */
 	private $_COLUMNS;
 
@@ -102,7 +102,7 @@ class Clay_Plugin_Table{
 		$this->_COLUMNS = array();
 		$this->_FIELDS = array();
 		foreach($tableConfigure->options as $option){
-			$column = new DatabaseColumn($this, $option);
+			$column = new Clay_Plugin_Table_Column($this, $option);
 			$field = $column->field;
 			$this->_COLUMNS[] = $field;
 			$this->_FIELDS[$field] = $column;
@@ -145,7 +145,7 @@ class Clay_Plugin_Table{
 	/**
 	 * テーブルエイリアス名を設定する。
 	 * @param string $tableName エイリアス名
-	 * @return DatabaseTable テーブルオブジェクト
+	 * @return Clay_Plugin_Table テーブルオブジェクト
 	 */
 	public function setAlias($tableName){
 		// DBの接続を取得する。

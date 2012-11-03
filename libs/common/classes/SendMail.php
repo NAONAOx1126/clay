@@ -257,7 +257,7 @@ class SendMail{
 		$maillogs = $loader->LoadTable("MaillogsTable");
 				
 		// データベースINSERTモデルの読み込み
-		$insert = new DatabaseInsert($maillogs);
+		$insert = new Clay_Query_Insert($maillogs);
 		
 		// 設定するデータ配列を定義
 		$values = array();

@@ -119,7 +119,7 @@ class Clay_Plugin_Model{
 	 * レコードが作成可能な場合に、レコードを作成します。
 	 */
 	public function create(){
-		$insert = new DatabaseInsertIgnore($this->access);
+		$insert = new Clay_Query_InsertIgnore($this->access);
 		$sqlvals = array();
 		foreach($this->columns as $column){
 			if(array_key_exists($column, $this->values) && $this->values[$column] !== null){
@@ -158,7 +158,7 @@ class Clay_Plugin_Model{
 	 * レコードを特定のキーで検索する。
 	 */
 	public function findAllBy($values = array(), $order = "", $reverse = false){
-		$select = new DatabaseSelect($this->access);
+		$select = new Clay_Query_Select($this->access);
 		$select->addColumn($this->access->_W);
 		if(is_array($values)){
 			foreach($values as $key => $value){
@@ -205,7 +205,7 @@ class Clay_Plugin_Model{
 	 * レコードの件数を取得する。
 	 */
 	public function countBy($values = array()){
-		$select = new DatabaseSelect($this->access);
+		$select = new Clay_Query_Select($this->access);
 		$select->addColumn("COUNT(*) AS count");
 		if(is_array($values)){
 			foreach($values as $key => $value){
@@ -222,7 +222,7 @@ class Clay_Plugin_Model{
 	}
 	
 	public function summeryByArray($groups, $targets, $values = array(), $order = "", $columns = array()){
-		$select = new DatabaseSelect($this->access);
+		$select = new Clay_Query_Select($this->access);
 		foreach($groups as $group){
 			if(!empty($group)){
 				if(substr($group, 0, 1) == ":" && substr($group, -1) == ":"){
@@ -454,7 +454,7 @@ class Clay_Plugin_Model{
 		if(!empty($this->primary_keys)){
 			// 現在該当のデータが登録されているか調べる。
 			$pkset = false;
-			$select = new DatabaseSelect($this->access);
+			$select = new Clay_Query_Select($this->access);
 			$select->addColumn($this->access->_W);
 			foreach($this->primary_keys as $key){
 				if(isset($this->values[$key])){
@@ -478,7 +478,7 @@ class Clay_Plugin_Model{
 				$this->create();
 			}else{
 				// 主キーのデータがあった場合は更新する。
-				$update = new DatabaseUpdate($this->access);
+				$update = new Clay_Query_Update($this->access);
 				$updateSet = false;
 				$updateWhere = false;
 				foreach($this->columns as $column){
@@ -511,7 +511,7 @@ class Clay_Plugin_Model{
 	 */
 	public function saveAll($list){
 		// 主キーのデータが無かった場合はInsert
-		$insert = new DatabaseInsertIgnore($this->access);
+		$insert = new Clay_Query_InsertIgnore($this->access);
 		foreach($list as $index => $data){
 			// データ作成日／更新日は自動的に設定する。
 			$data["create_time"] = $data["update_time"] = date("Y-m-d H:i:s");
@@ -531,7 +531,7 @@ class Clay_Plugin_Model{
 	 */
 	public function delete(){
 		if(!empty($this->primary_keys)){
-			$delete = new DatabaseDelete($this->access);
+			$delete = new Clay_Query_Delete($this->access);
 			$deleteWhere = false;
 			foreach($this->columns as $column){
 				if(in_array($column, $this->primary_keys)){

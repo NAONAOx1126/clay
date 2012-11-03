@@ -17,7 +17,7 @@
  */
 class Clay_Plugin_Table_Column{
 	/**
-	 * @var DatabaseTable テーブルのインスタンス 
+	 * @var Clay_Plugin_Table テーブルのインスタンス 
 	 */
 	private $table;
 
@@ -43,7 +43,7 @@ class Clay_Plugin_Table_Column{
 
 	/**
 	 * データベースのフィールドインスタンスを生成する。
-	 * @param DatabaseTable $table フィールドを保有しているテーブルのインスタンス
+	 * @param Clay_Plugin_Table $table フィールドを保有しているテーブルのインスタンス
 	 * @param string $column フィールドのカラム名
 	 */
 	public function __construct(&$table, $column){

@@ -71,7 +71,7 @@ class Clay_Session_Handler_Database extends Clay_Session_Handler{
 		$data_key = $this->data_key;
 		
 		// セッションデータを取得する。
-		$select = new DatabaseSelect($this->table);
+		$select = new Clay_Query_Select($this->table);
 		$select->addColumn($this->table->_W);
 		$select->addWhere($this->table->$id_key." = ?", array($id));
 		$result = $select->execute();
@@ -92,7 +92,7 @@ class Clay_Session_Handler_Database extends Clay_Session_Handler{
 		
 		// セッションに値を設定
 		try{
-			$insert = new DatabaseReplace($this->table);
+			$insert = new Clay_Query_Replace($this->table);
 			$sqlval = array($id_key => $id, $data_key => $sess_data);
 			$sqlval["create_time"] = $sqlval["update_time"] = date("Y-m-d H:i:s");
 			Logger::writeDebug($insert->showQuery($sqlval));
@@ -114,7 +114,7 @@ class Clay_Session_Handler_Database extends Clay_Session_Handler{
 		
 		// セッションに値を設定
 		try{
-			$delete = new DatabaseDelete($this->table);
+			$delete = new Clay_Query_Delete($this->table);
 			$delete->addWhere($this->table->$id_key." = ?", array($id));
 			Logger::writeDebug($delete->showQuery());
 			$delete->execute();
@@ -136,7 +136,7 @@ class Clay_Session_Handler_Database extends Clay_Session_Handler{
 		
 		// セッションに値を設定
 		try{
-			$delete = new DatabaseDelete($this->table);
+			$delete = new Clay_Query_Delete($this->table);
 			$delete->addWhere($this->table->update_time." < ?", array($limit));
 			Logger::writeDebug($delete->showQuery());
 			$delete->execute();

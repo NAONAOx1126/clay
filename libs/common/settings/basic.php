@@ -81,7 +81,6 @@ require(FRAMEWORK_CLASS_LIBRARY_HOME."/ImageFilter.php");
 
 // データベース関連クラスをインクルード
 require(FRAMEWORK_CLASS_LIBRARY_HOME."/DBFactory.php");
-require(FRAMEWORK_CLASS_LIBRARY_HOME."/DatabaseAccess.php");
 
 // メール送信クラスをインクルード
 require(FRAMEWORK_CLASS_LIBRARY_HOME."/SendMail.php");

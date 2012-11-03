@@ -45,7 +45,7 @@ while($row = $prepare->fetch(PDO::FETCH_NUM)){
 	$filePath = $packagePath."/".$className.".php";
 	// ソースデータを生成
 	$source = "<?php\r\n";
-	$source .= 'class '.$packageName.'_'.$className.' extends DatabaseTable{'."\r\n";
+	$source .= 'class '.$packageName.'_'.$className.' extends Clay_Plugin_Table{'."\r\n";
 	$source .= "\t".'function __construct(){'."\r\n";
 	$source .= "\t\t".'$this->db = DBFactory::getConnection("'.$packageCode.'");'."\r\n";
 	$source .= "\t\t".'parent::__construct("'.$tableName.'", "'.$packageCode.'");'."\r\n";

@@ -24,14 +24,14 @@ try{
 	echo "BATCH START : ".time()."<br>\r\n";
 
 	// 郵便番号仮テーブルの内容破棄
-	$truncate = new DatabaseTruncate($zipTemps);
+	$truncate = new Clay_Query_Truncate($zipTemps);
 	$truncate->execute();
 	
 	echo "TEMP DELETED : ".time()."<br>\r\n";
 	
 	// CSVファイルを読み込む
 	if(($fp = fopen(FRAMEWORK_HOME."/install/csvs/KEN_ALL.CSV", "r")) !== FALSE){
-		$insert = new DatabaseInsert($zipTemps);
+		$insert = new Clay_Query_Insert($zipTemps);
 		while(($line = fgets($fp)) !== FALSE){
 			// CSVの内容をDBに登録する。
 			$data = explode(",", str_replace("\"", "", trim(mb_convert_encoding($line, "UTF-8", "Shift_JIS"))));
@@ -58,28 +58,28 @@ try{
 	echo "TEMP INSERTED : ".time()."<br>\r\n";
 
 	// 本番データの削除
-	$truncate = new DatabaseTruncate($zips);
+	$truncate = new Clay_Query_Truncate($zips);
 	$truncate->execute();
 	
 	echo "DATA DELETED : ".time()."<br>\r\n";
 	
 	// 一時データを本番データに反映
-	$insert = new DatabaseInsert($zips);
-	$select = new DatabaseSelect($zipTemps);
+	$insert = new Clay_Query_Insert($zips);
+	$select = new Clay_Query_Select($zipTemps);
 	$select->addColumn($zipTemps->_W);
 	$insert->copy($select);
 	
 	echo "DATA INSERTED : ".time()."<br>\r\n";
 
 	// 都道府県データの削除
-	$truncate = new DatabaseTruncate($prefs);
+	$truncate = new Clay_Query_Truncate($prefs);
 	$truncate->execute();
 	
 	echo "PREF DELETED : ".time()."<br>\r\n";
 	
 	// 都道府県データを郵便番号データから自動生成
-	$insert = new DatabaseInsert($prefs);
-	$select = new DatabaseSelect($zips);
+	$insert = new Clay_Query_Insert($prefs);
+	$select = new Clay_Query_Select($zips);
 	$select->addColumn("SUBSTRING(".$zips->code.", 1, 2)");
 	$select->addColumn($zips->state);
 	$select->addWhere($zips->flg3." = 0");
