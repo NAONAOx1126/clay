@@ -9,9 +9,9 @@
  * @version   3.0.0
  */
 function smarty_function_base($params, $smarty, $template){
-	if(substr(FRAMEWORK_URL_BASE, -1) == "/"){
-		return substr(FRAMEWORK_URL_BASE, 0, -1);
+	if(substr(CLAY_SUBDIR, -1) == "/"){
+		return substr(CLAY_SUBDIR, 0, -1);
 	}
-	return FRAMEWORK_URL_BASE;
+	return CLAY_SUBDIR;
 }
 ?>

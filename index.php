@@ -24,7 +24,6 @@ try{
 	$TEMPLATE_ENGINE = $_SERVER["CONFIGURE"]->TEMPLATE_ENGINE;
 	$_SERVER["TEMPLATE"] = new $TEMPLATE_ENGINE();
 	
-	$_SERVER["TEMPLATE"]->assign("u", FRAMEWORK_URL_BASE);
 	foreach($_SERVER as $name =>$value){
 		$_SERVER["TEMPLATE"]->assign($name, $value);
 	}

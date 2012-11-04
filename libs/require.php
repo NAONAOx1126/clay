@@ -9,39 +9,6 @@
  * @version   3.0.0
  */
 
-// フレームワークのシステムを起動する
-require_once(dirname(__FILE__)."/classes/Clay.php");
-
-// PHP Excelのシステムを読み込む
-require_once(dirname(__FILE__)."/classes/PHPExcel.php");
-
-Clay::startup();
-
-// カスタムクライアントのユーザーエージェントを補正
-if(preg_match("/^CLAY-(.+)-CLIENT\\[(.+)\\]$/", $_SERVER["HTTP_USER_AGENT"], $params) > 0){
-	$_SERVER["HTTP_USER_AGENT"] = "Mozilla/5.0 (Linux; U; Android 1.6; ja-jp; CLAY-ANDROID-CLIENT)";
-	$_SERVER["USER_TEMPLATE"] = "/".strtolower($params[1]);
-	$_SERVER["HTTP_X_DCMGUID"] = $params[2];
-}
-
-// デフォルトのインクルードパスを全て無効にする。
-ini_set("include_path", ".");
-
-// グローバルの定数定義ファイルを読み込み
-require_once(dirname(__FILE__)."/common/settings/global_definition.php");
-
-// 基本設定ファイルを読み込み
-require(FRAMEWORK_COMMON_LIBRARY_HOME."/settings/basic.php");
-
-// パーミッションチェックの実行
-require(FRAMEWORK_COMMON_LIBRARY_HOME."/settings/permissions.php");
-
-// サーバー別設定読み込み
-require(FRAMEWORK_COMMON_LIBRARY_HOME."/settings/configure.php");
-
-// 定数定義設定
-require(FRAMEWORK_COMMON_LIBRARY_HOME."/settings/local_definition.php");
-
 /**
  * エラーページを表示する関数。
  *
@@ -56,10 +23,7 @@ function showHttpError($code, $message, $ex = null){
 	Clay_Logger::writeError($message."(".$code.")", $ex);
 	
 	// カスタムエラーページのパス
-	$path = "";
-	if(defined("MODULE_HOME")){
-		$path = MODULE_HOME.$_SERVER["USER_TEMPLATE"].DS."ERROR_".$code.".html";
-	}
+	$path = $_SERVER["CONFIGURE"]->site_home.$_SERVER["USER_TEMPLATE"].DIRECTORY_SEPARATOR."ERROR_".$code.".html";
 
 	// ファイルがある場合はエラーページを指定ファイルで出力
 	if(file_exists($path)){
@@ -80,4 +44,20 @@ function showHttpError($code, $message, $ex = null){
 	}
 	exit;
 }
-?>
+
+// デフォルトのインクルードパスを全て無効にする。
+ini_set("include_path", ".");
+
+// フレームワークのシステムを起動する
+require_once(dirname(__FILE__)."/classes/Clay.php");
+
+// Zendのライブラリを読み込む
+require_once(dirname(__FILE__)."/classes/PHPExcel.php");
+
+// WURFLのライブラリを読み込む
+require_once(dirname(__FILE__)."/classes/WURFL.php");
+
+// PHP Excelのライブラリを読み込む
+require_once(dirname(__FILE__)."/classes/PHPExcel.php");
+
+Clay::startup();

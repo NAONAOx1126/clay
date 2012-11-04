@@ -33,7 +33,7 @@ class Clay_Template extends Smarty{
 		parent::__construct();
 
 		// テンプレートのディレクトリとコンパイルのディレクトリをフレームワークのパス上に展開
-		$this->template_dir = array(FRAMEWORK_TEMPLATE_HOME."/");
+		$this->template_dir = array($_SERVER["CONFIGURE"]->site_home.$_SERVER["USER_TEMPLATE"]."/");
 		$this->compile_dir = CLAY_ROOT.DIRECTORY_SEPARATOR."cache_smarty".DIRECTORY_SEPARATOR.$_SERVER["CONFIGURE"]->get("site_code").$_SERVER["USER_TEMPLATE"]."/";
 		
 		// プラグインのディレクトリを追加する。
@@ -71,25 +71,14 @@ class Clay_Template extends Smarty{
 		// display template
 		Clay_Logger::writeDebug("Template Dir : ".var_export($this->template_dir, true));
 		Clay_Logger::writeDebug("Template Name : ".$template);
-		if(Net_UserAgent_Mobile::isMobile()){
-			// モバイルユーザーエージェントのインスタンスを取得
-			$agent = Net_UserAgent_Mobile::singleton();
-			
-			// モバイルの画面サイズを取得する。
-			$display = $agent->makeDisplay();
-			if($display->getWidth() >= 480){
-				parent::assign("isVGA", "1");
-			}else{
-				parent::assign("isVGA", "0");
-			}
-			
+		if($_SERVER["CLIENT_DEVICE_TYPE"] == "FuturePhone"){
 			// モバイルの時は出力するHTMLをデータとして取得
 			$content = parent::fetch ($template, $cache_id, $compile_id, $parent, false);
 			// カタカナを半角にする。
 			$content = mb_convert_kana($content, "k");
 			
-			// ソフトバンク3GC以外の場合は、SJISエンコーディングに変換
-			if(!$agent->isSoftbank() || !$agent->isType3GC()){
+			// ソフトバンク以外の場合は、SJISエンコーディングに変換
+			if($_SERVER["CLIENT_DEVICE"]->getCapability("brand_name") != "Access"){
 				header("Content-Type: text/html; charset=Shift_JIS");
 				if(preg_match("/<meta\\s+http-equiv\\s*=\\s*\"Content-Type\"\\s+content\\s*=\\s*\"([^;]+);\\s*charset=utf-8\"\\s*\\/?>/i", $content, $params) > 0){
 					header("Content-Type: ".$params[1]."; charset=Shift_JIS");

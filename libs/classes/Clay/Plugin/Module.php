@@ -27,7 +27,7 @@ abstract class Clay_Plugin_Module{
 	abstract function execute($params);
 	
 	function reload(){
-		header("Location: ".FRAMEWORK_URL_BASE.$_SERVER["TEMPLATE_NAME"]);
+		header("Location: ".CLAY_SUBDIR.$_SERVER["TEMPLATE_NAME"]);
 		exit;
 	}
 }

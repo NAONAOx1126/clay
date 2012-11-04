@@ -16,12 +16,6 @@
  * @author Naohisa Minagawa <info@clay-system.jp>
  */
 class Clay_Cache_Memory extends Clay_Cache_Base{
-	private $server;
-	
-	private $file;
-	
-	private $expires;
-	
 	private $mem;
 	
 	public function __construct($server, $file, $expires){
@@ -29,9 +23,7 @@ class Clay_Cache_Memory extends Clay_Cache_Base{
 	}
 	
 	public function init($server, $file, $expires){
-		$this->server = $server;
-		$this->file = $file;
-		$this->expires = $expires;
+		parent::init($server, $file, $expires);
 		$this->mem = new Memcached($server);
 		$this->mem->addServer("localhost", 11211);
 		$this->mem->setOption(Memcached::OPT_COMPRESSION, false);

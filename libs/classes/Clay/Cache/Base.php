@@ -16,7 +16,17 @@
 abstract class Clay_Cache_Base{
 	protected $values;
 	
-	public abstract function init($server, $file, $expires);
+	protected $server;
+	
+	protected $file;
+	
+	protected $expires;
+	
+	public function init($server, $file, $expires){
+		$this->server = $server;
+		$this->file = $file;
+		$this->expires = $expires;
+	}
 	
 	protected abstract function save();
 	
@@ -45,5 +55,9 @@ abstract class Clay_Cache_Base{
 	
 	public function __set($key, $value){
 		$this->set($key, $value);
+	}
+	
+	public function __isset($name){
+		return isset($this->values[$name]);
 	}
 }

@@ -16,34 +16,29 @@
  * @author Naohisa Minagawa <info@clay-system.jp>
  */
 class Clay_Cache_File extends Clay_Cache_Base{
-	private $server;
-	
-	private $file;
-	
-	private $expires;
+	private $cacheRoot;
 	
 	public function __construct($server, $file, $expires){
+		$this->cacheRoot = realpath(CLAY_ROOT.DIRECTORY_SEPARATOR."cache");
 		$this->init($server, $file, $expires);
 	}
 	
 	public function init($server, $file, $expires){
-		$this->server = $server;
-		$this->file = $file;
-		$this->expires = $expires;
-		$filename = CLAY_CACHE_ROOT.DIRECTORY_SEPARATOR.$this->server.DIRECTORY_SEPARATOR.$this->file.".php";
+		parent::init($server, $file, $expires);
+		$filename = $this->cacheRoot.DIRECTORY_SEPARATOR.$this->server.DIRECTORY_SEPARATOR.$this->file.".php";
 		if(file_exists($filename) && time() < fileatime($filename) + $this->expires){
 			require_once($filename);
 		}
 	}
 	
 	protected function save(){
-		if(!is_dir(CLAY_CACHE_ROOT)){
-			mkdir(CLAY_CACHE_ROOT);
+		if(!is_dir($this->cacheRoot)){
+			mkdir($this->cacheRoot);
 		}
-		if(!is_dir(CLAY_CACHE_ROOT.DIRECTORY_SEPARATOR.$this->server)){
-			mkdir(CLAY_CACHE_ROOT.DIRECTORY_SEPARATOR.$this->server);
+		if(!is_dir($this->cacheRoot.DIRECTORY_SEPARATOR.$this->server)){
+			mkdir($this->cacheRoot.DIRECTORY_SEPARATOR.$this->server);
 		}
-		if(($fp = fopen(CLAY_CACHE_ROOT.DIRECTORY_SEPARATOR.$this->server.DIRECTORY_SEPARATOR.$this->file.".php", "w+")) !== FALSE){
+		if(($fp = fopen($this->cacheRoot.DIRECTORY_SEPARATOR.$this->server.DIRECTORY_SEPARATOR.$this->file.".php", "w+")) !== FALSE){
 			fwrite($fp, "<"."?php\r\n");
 			foreach($this->values as $key => $value){
 				fwrite($fp, '$this->values["'.$key.'"] = '.var_export($value, TRUE).";\r\n");

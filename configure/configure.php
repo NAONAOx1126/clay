@@ -26,5 +26,5 @@ $_SERVER["CONFIGURE"]->connection = array(
 $_SERVER["CONFIGURE"]->TEMPLATE_ENGINE = "Clay_Template";
 
 /* 使用するロガー */
-// $_SERVER["CONFIGURE"]->Clay_Logger = "DatabaseClay_Logger";
+// $_SERVER["CONFIGURE"]->LOGGER = "DatabaseLogger";
 ?>

@@ -35,7 +35,7 @@ while($row = $prepare->fetch(PDO::FETCH_NUM)){
 	$className .= "Table";
 	
 	// パッケージディレクトリが無い場合作成する。
-	$packagePath = FRAMEWORK_PLUGIN_HOME."/".$packageName."/tables";
+	$packagePath = CLAY_PLUGINS_ROOT."/".$packageName."/tables";
 	if(!is_dir($packagePath)){
 		echo "CREATE : ".$packagePath."\r\n";
 		mkdir($packagePath);

@@ -24,34 +24,36 @@ class Clay_Logger{
 	 */
 	private static function writeMessage($prefix, $message, $exception = null){
 		try{
-			if($_SERVER["CONFIGURE"]->Clay_Logger == "DatabaseClay_Logger"){
-				$connection = Clay_Database_Factory::getConnection("base");
-				$sql = "INSERT INTO `base_logs`(`log_type`, `server_name`, `log_time`, `message`, `stacktrace`)";
-				$sql .= " VALUES ('".$connection->escape($prefix)."', '".$connection->escape($_SERVER["SERVER_NAME"])."'";
-				$sql .= ", NOW(), '".$connection->escape($message)."'";
-				if($exception != null){
-					$sql .= ", '".$connection->escape($exception->getMessage()."\r\n".$exception->getTraceAsString())."')";
-				}else{
-					$sql .= ", '')";
-				}
-				$connection->query($sql);
-			}else{
-				// ログディレクトリが無い場合は自動的に作成
-				$logHome = FRAMEWORK_LOGS_HOME."/".$_SERVER["CONFIGURE"]->get("site_code");
-				if(!is_dir($logHome)){
-					mkdir($logHome);
-					@chmod($logHome, 0777);
-				}
-				// ログファイルに記載
-				$logFile = $logHome."/".$prefix.date("Ymd").".log";
-				if(($fp = fopen($logFile, "a+")) !== FALSE){
-					fwrite($fp, "[".$_SERVER["SERVER_NAME"]."][".date("Y-m-d H:i:s")."]".$message."\r\n");
+			if(isset($_SERVER["CONFIGURE"]->LOGGER) && isset($_SERVER["CONFIGURE"]->site_code)){
+				if($_SERVER["CONFIGURE"]->LOGGER == "DatabaseLogger"){
+					$connection = Clay_Database_Factory::getConnection("base");
+					$sql = "INSERT INTO `base_logs`(`log_type`, `server_name`, `log_time`, `message`, `stacktrace`)";
+					$sql .= " VALUES ('".$connection->escape($prefix)."', '".$connection->escape($_SERVER["SERVER_NAME"])."'";
+					$sql .= ", NOW(), '".$connection->escape($message)."'";
 					if($exception != null){
-						fwrite($fp, "[".$_SERVER["SERVER_NAME"]."][".date("Y-m-d H:i:s")."]".$exception->getMessage()."\r\n");
-						fwrite($fp, "[".$_SERVER["SERVER_NAME"]."][".date("Y-m-d H:i:s")."]".$exception->getTraceAsString());
+						$sql .= ", '".$connection->escape($exception->getMessage()."\r\n".$exception->getTraceAsString())."')";
+					}else{
+						$sql .= ", '')";
 					}
-					fclose($fp);
-					@chmod($logFile, 0666);
+					$connection->query($sql);
+				}else{
+					// ログディレクトリが無い場合は自動的に作成
+					$logHome = CLAY_ROOT.DIRECTORY_SEPARATOR."logs".DIRECTORY_SEPARATOR.$_SERVER["CONFIGURE"]->site_code;
+					if(!is_dir($logHome)){
+						mkdir($logHome);
+						@chmod($logHome, 0777);
+					}
+					// ログファイルに記載
+					$logFile = $logHome."/".$prefix.date("Ymd").".log";
+					if(($fp = fopen($logFile, "a+")) !== FALSE){
+						fwrite($fp, "[".$_SERVER["SERVER_NAME"]."][".date("Y-m-d H:i:s")."]".$message."\r\n");
+						if($exception != null){
+							fwrite($fp, "[".$_SERVER["SERVER_NAME"]."][".date("Y-m-d H:i:s")."]".$exception->getMessage()."\r\n");
+							fwrite($fp, "[".$_SERVER["SERVER_NAME"]."][".date("Y-m-d H:i:s")."]".$exception->getTraceAsString());
+						}
+						fclose($fp);
+						@chmod($logFile, 0666);
+					}
 				}
 			}
 		}catch(Exception $e){
