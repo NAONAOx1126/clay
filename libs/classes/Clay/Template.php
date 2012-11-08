@@ -71,14 +71,14 @@ class Clay_Template extends Smarty{
 		// display template
 		Clay_Logger::writeDebug("Template Dir : ".var_export($this->template_dir, true));
 		Clay_Logger::writeDebug("Template Name : ".$template);
-		if($_SERVER["CLIENT_DEVICE_TYPE"] == "FuturePhone"){
+		if($_SERVER["CLIENT_DEVICE"]->isFuturePhone()){
 			// モバイルの時は出力するHTMLをデータとして取得
 			$content = parent::fetch ($template, $cache_id, $compile_id, $parent, false);
 			// カタカナを半角にする。
 			$content = mb_convert_kana($content, "k");
 			
 			// ソフトバンク以外の場合は、SJISエンコーディングに変換
-			if($_SERVER["CLIENT_DEVICE"]->getCapability("brand_name") != "Access"){
+			if($_SERVER["CLIENT_DEVICE"]->getDeviceType() != "Softbank"){
 				header("Content-Type: text/html; charset=Shift_JIS");
 				if(preg_match("/<meta\\s+http-equiv\\s*=\\s*\"Content-Type\"\\s+content\\s*=\\s*\"([^;]+);\\s*charset=utf-8\"\\s*\\/?>/i", $content, $params) > 0){
 					header("Content-Type: ".$params[1]."; charset=Shift_JIS");

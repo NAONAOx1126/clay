@@ -25,29 +25,9 @@ class Clay_Bootstrap_UserAgent{
 		}
 		
 		// UA解析用のライブラリの初期設定
-		$wurflConfig = new WURFL_Configuration_InMemoryConfig();
-		
-		// ライブラリのファイルパスを設定
-		$wurflConfig->wurflFile(CLAY_ROOT.DIRECTORY_SEPARATOR."libs".DIRECTORY_SEPARATOR."data".DIRECTORY_SEPARATOR."WURFL".DIRECTORY_SEPARATOR."wurfl-2.0.27.zip");
-		
-		// 判定モード設定
-		$wurflConfig->matchMode('performance');
-		
-		// データ変更時の再読み込みを許可しない
-		$wurflConfig->allowReload(false);
-		
-		// Setup WURFL Persistence
-		$wurflConfig->persistence('file', array('dir' => CLAY_ROOT.DIRECTORY_SEPARATOR."cache".DIRECTORY_SEPARATOR."WURFLData"));
-		
-		// キャッシュのディレクトリを設定
-		$wurflConfig->cache('file', array('dir' => CLAY_ROOT.DIRECTORY_SEPARATOR."cache".DIRECTORY_SEPARATOR."WURFL", 'expiration' => 36000));
-		
-		// WURFLのインスタンスを作成し、デバイス情報を取得
-		$wurflManagerFactory = new WURFL_WURFLManagerFactory($wurflConfig);
-		$wurflManager = $wurflManagerFactory->create();
-		$requestingDevice = $wurflManager->getDeviceForHttpRequest($_SERVER);
-		$_SERVER["CLIENT_DEVICE"] = $requestingDevice;
-		// print_r($requestingDevice->getAllCapabilities());
+		$mobileInfo = Clay_Mobile::create();
+		$_SERVER["CLIENT_DEVICE"] = $mobileInfo;
+		// print_r($mobileInfo);
 	}
 }
  

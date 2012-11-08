@@ -54,9 +54,6 @@ require_once(dirname(__FILE__)."/classes/Clay.php");
 // Zendのライブラリを読み込む
 require_once(dirname(__FILE__)."/classes/PHPExcel.php");
 
-// WURFLのライブラリを読み込む
-require_once(dirname(__FILE__)."/classes/WURFL.php");
-
 // PHP Excelのライブラリを読み込む
 require_once(dirname(__FILE__)."/classes/PHPExcel.php");
 

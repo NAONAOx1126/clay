@@ -43,20 +43,16 @@ class Clay_Bootstrap_TemplateName{
 		
 		// ユーザーのテンプレートを取得する。
 		if(isset($_SERVER["CLIENT_DEVICE"])){
-			if($_SERVER["CLIENT_DEVICE"]->getCapability("is_wireless_device") == "true"){
-				if($_SERVER["CLIENT_DEVICE"]->getCapability("brand_name") == "Apple" && $_SERVER["CLIENT_DEVICE"]->getCapability("brand_name") == "Android"){
-					$_SERVER["CLIENT_DEVICE_TYPE"] = "SmartPhone";
+			if($_SERVER["CLIENT_DEVICE"]->isMobile()){
+				if($_SERVER["CLIENT_DEVICE"]->isSmartPhone()){
 					$_SERVER["USER_TEMPLATE"] = "/sphone";
 				}else{
-					$_SERVER["CLIENT_DEVICE_TYPE"] = "FuturePhone";
 					$_SERVER["USER_TEMPLATE"] = "/mobile";
 				}
 			}else{
-				$_SERVER["CLIENT_DEVICE_TYPE"] = "PC";
 				$_SERVER["USER_TEMPLATE"] = "/templates";
 			}
 		}else{
-			$_SERVER["CLIENT_DEVICE_TYPE"] = "PC";
 			$_SERVER["USER_TEMPLATE"] = "/templates";
 		}
 		
