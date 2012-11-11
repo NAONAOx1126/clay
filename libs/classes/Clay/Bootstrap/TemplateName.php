@@ -88,6 +88,9 @@ class Clay_Bootstrap_TemplateName{
 				}
 			}
 		}
+		
+		// テンプレートの存在するパスを取得する。
+		define("TEMPLATE_DIRECTORY", dirname($_SERVER["TEMPLATE_NAME"]));
 	}
 }
  
