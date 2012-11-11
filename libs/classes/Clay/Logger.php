@@ -24,7 +24,7 @@ class Clay_Logger{
 	 */
 	private static function writeMessage($prefix, $message, $exception = null){
 		try{
-			if(isset($_SERVER["CONFIGURE"]->LOGGER) && isset($_SERVER["CONFIGURE"]->site_code)){
+			if(isset($_SERVER["CONFIGURE"]->site_code)){
 				if($_SERVER["CONFIGURE"]->LOGGER == "DatabaseLogger"){
 					$connection = Clay_Database_Factory::getConnection("base");
 					$sql = "INSERT INTO `base_logs`(`log_type`, `server_name`, `log_time`, `message`, `stacktrace`)";
