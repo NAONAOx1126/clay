@@ -22,7 +22,7 @@
  * @return string|null
  */
 function smarty_modifier_input($value, $key, $subkey = ""){
-	if(isset($_POST[$key])){
+	if(($_SERVER["REQUEST_METHOD"] == "POST" || empty($value)) && isset($_POST[$key])){
 		if($subkey != "" && is_array($_POST[$key])){
 			return $_POST[$key][$subkey];
 		}else{
