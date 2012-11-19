@@ -16,11 +16,10 @@
  */
 class Clay_Cache_Factory{
 	public static function create($file, $expires = 3600){
-		$server = $_SERVER["SERVER_NAME"];
-		if(class_exists("Memcached")){
-			return new Clay_Cache_Memory($server, $file, $expires);
+		if(class_exists("Memcache") && !empty($_SERVER["CONFIGURE"]->MEMCACHED_SERVER)){
+			return new Clay_Cache_Memory($_SERVER["CONFIGURE"]->MEMCACHED_SERVER, $file, $expires);
 		}else{
-			return new Clay_Cache_File($server, $file, $expires);
+			return new Clay_Cache_File($_SERVER["SERVER_NAME"], $file, $expires);
 		}
 	}
 }

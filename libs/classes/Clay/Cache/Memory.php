@@ -10,7 +10,7 @@
  */
  
 /**
- * memcachedによるデータキャッシュクラスです。
+ * memcacheによるデータキャッシュクラスです。
  *
  * @package Cache
  * @author Naohisa Minagawa <info@clay-system.jp>
@@ -22,16 +22,19 @@ class Clay_Cache_Memory extends Clay_Cache_Base{
 		$this->init($server, $file, $expires);
 	}
 	
-	public function init($server, $file, $expires){
+	public function init($server, $file, $expires = 3600){
 		parent::init($server, $file, $expires);
-		$this->mem = new Memcached($server);
-		$this->mem->addServer("localhost", 11211);
-		$this->mem->setOption(Memcached::OPT_COMPRESSION, false);
-		$this->values = $this->mem->get($server.":".$file);
+		$this->mem = new Memcache($server);
+		list($host, $port) = explode(":", $server);
+		if(!($port > 0)){
+			$port = 11211;
+		}
+		$this->mem->connect($host, $port);
+		$this->values = $this->mem->get($file);
 	}
 	
 	public function save(){
-		$this->mem->set($this->server.":".$this->file, $this->values, $this->expires);
+		$this->mem->set($this->file, $this->values, $this->expires);
 	}
 }
  
