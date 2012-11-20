@@ -25,6 +25,12 @@ $_SERVER["CONFIGURE"]->connection = array(
 /* 使用するテンプレートエンジン */
 $_SERVER["CONFIGURE"]->TEMPLATE_ENGINE = "Clay_Template";
 
+/* キャッシュの接続先 */
+$_SERVER["CONFIGURE"]->MEMCACHED_SERVER = "localhost";
+
+/* キャッシュの接続先 */
+$_SERVER["CONFIGURE"]->USE_ACTIVE_PAGE = false;
+
 /* 使用するロガー */
 // $_SERVER["CONFIGURE"]->LOGGER = "DatabaseLogger";
 ?>

@@ -19,7 +19,7 @@ $_SERVER["CONFIGURE"]->SESSION_MANAGER = "DatabaseSessionHandler";
 
 /* デフォルトのDB接続先 */
 $_SERVER["CONFIGURE"]->connection = array(
-	"default" => array("dbtype" => "mysql", "host" => "127.0.0.1", "user" => "clay", "password" => "clay", "database" => "clay_test", "query" => "SET NAMES utf8")
+	"default" => array("dbtype" => "mysql", "host" => "127.0.0.1", "user" => "clay", "password" => "clay", "database" => "clay_rankerz", "query" => "SET NAMES utf8")
 );
 
 /* 使用するテンプレートエンジン */
@@ -27,6 +27,9 @@ $_SERVER["CONFIGURE"]->TEMPLATE_ENGINE = "Clay_Template";
 
 /* キャッシュの接続先 */
 $_SERVER["CONFIGURE"]->MEMCACHED_SERVER = "localhost";
+
+/* キャッシュの接続先 */
+$_SERVER["CONFIGURE"]->USE_ACTIVE_PAGE = true;
 
 /* 使用するロガー */
 // $_SERVER["CONFIGURE"]->LOGGER = "DatabaseLogger";
