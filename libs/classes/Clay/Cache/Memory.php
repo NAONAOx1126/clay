@@ -24,7 +24,7 @@ class Clay_Cache_Memory extends Clay_Cache_Base{
 	
 	public function init($server, $file, $expires = 3600){
 		parent::init($server, $file, $expires);
-		$this->mem = new Memcache($server);
+		$this->mem = new Memcache();
 		list($host, $port) = explode(":", $server);
 		if(!($port > 0)){
 			$port = 11211;
