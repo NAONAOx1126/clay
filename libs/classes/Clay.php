@@ -30,7 +30,11 @@ class Clay{
 		
 		// システムのルートURLへのサブディレクトリを設定
 		if (!defined('CLAY_SUBDIR')) {
-			define('CLAY_SUBDIR', str_replace($_SERVER["DOCUMENT_ROOT"], "", CLAY_ROOT));
+			if(substr($_SERVER["DOCUMENT_ROOT"], -1) == "/"){
+				define('CLAY_SUBDIR', str_replace(substr($_SERVER["DOCUMENT_ROOT"], 0, -1), "", CLAY_ROOT));
+			}else{
+				define('CLAY_SUBDIR', str_replace($_SERVER["DOCUMENT_ROOT"], "", CLAY_ROOT));
+			}
 		}
 		
 		// システムのルートURLを設定
