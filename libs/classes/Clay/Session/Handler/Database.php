@@ -38,6 +38,10 @@ class Clay_Session_Handler_Database extends Clay_Session_Handler{
 		$this->table = $loader->loadTable($name);
 		$this->id_key = $id_key;
 		$this->data_key = $data_key;
+		
+		// 初期化時にクラスのローディングを行う。
+		$select = new Clay_Query_Select($this->table);
+		$insert = new Clay_Query_Replace($this->table);
 	}
 	
 	/**
