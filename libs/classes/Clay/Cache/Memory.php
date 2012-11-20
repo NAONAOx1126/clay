@@ -35,11 +35,11 @@ class Clay_Cache_Memory extends Clay_Cache_Base{
 			$port = 11211;
 		}
 		$this->mem->connect($host, $port);
-		$this->values = $this->mem->get($file);
+		$this->values = unserialize($this->mem->get($file));
 	}
 	
 	public function save(){
-		$this->mem->set($this->file, $this->values, 0, $this->expires);
+		$this->mem->set($this->file, serialize($this->values), 0, $this->expires);
 	}
 }
  
