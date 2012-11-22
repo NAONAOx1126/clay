@@ -30,6 +30,49 @@ try{
 	try{
 		$_SERVER["TEMPLATE"]->display(substr($_SERVER["TEMPLATE_NAME"], 1));
 	}catch(Exception $ex){
+		if($_SERVER["CONFIGURE"]->USE_ACTIVE_PAGE){
+			$path = $_SERVER["TEMPLATE_NAME"];
+			$loader = new Clay_Plugin("Content");
+			$loader->LoadSetting();
+			$activePage = $loader->loadModel("ActivePageModel");
+			if(preg_match("/^\\/([\\/]+)\\/([\\/]+)\\/([\\/]+)\\/([\\/]+)\\.html$/", $path, $params) > 0){
+				$activePage->findByProductCode($params[1], $params[2], $params[3], $params[4]);
+				if($activePage->entry_id > 0){
+					$_POST["entry_id"] = $activePage->entry_id;
+					$_SERVER["TEMPLATE"]->display("__active_page/detail.html");
+					exit;
+				}
+			}elseif(preg_match("/^\\/([\\/]+)\\/([\\/]+)\\/([\\/]+)/", $path, $params) > 0){
+				$activePages = $activePage->findAllByCategory3($params[1], $params[2], $params[3]);
+				if(count($activePages) > 0){
+					$_POST["category1"] = $params[1];
+					$_POST["category2"] = $params[2];
+					$_POST["category3"] = $params[3];
+					$_SERVER["TEMPLATE"]->display("__active_page/category.html");
+					exit;
+				}
+			}elseif(preg_match("/^\\/([\\/]+)\\/([\\/]+)/", $path, $params) > 0){
+				$activePages = $activePage->findAllByCategory2($params[1], $params[2]);
+				if(count($activePages) > 0){
+					$_POST["category1"] = $params[1];
+					$_POST["category2"] = $params[2];
+					$_SERVER["TEMPLATE"]->display("__active_page/category.html");
+					exit;
+				}
+			}elseif(preg_match("/^\\/([\\/]+)/", $path, $params) > 0){
+				$activePages = $activePage->findAllByCategory1($params[1]);
+				if(count($activePages) > 0){
+					$_POST["category1"] = $params[1];
+					$_SERVER["TEMPLATE"]->display("__active_page/category.html");
+					exit;
+				}elseif($params[1] == "search.html"){
+					$_SERVER["TEMPLATE"]->display("__active_page/search.html");
+				}
+			}elseif($path == "/"){
+				$_SERVER["TEMPLATE"]->display("__active_page/index.html");
+				exit;
+			}
+		}
 		showHttpError("404", "Not Found", $ex);
 	}
 

@@ -72,7 +72,6 @@ class Clay_Bootstrap_TemplateName{
 				}
 			}
 		}
-		
 		if(file_exists($_SERVER["CONFIGURE"]->site_home.$_SERVER["USER_TEMPLATE"].$_SERVER["TEMPLATE_NAME"]) || is_dir($_SERVER["CONFIGURE"]->site_home.$_SERVER["USER_TEMPLATE"].$_SERVER["TEMPLATE_NAME"])){
 			if(is_dir($_SERVER["CONFIGURE"]->site_home.$_SERVER["USER_TEMPLATE"].$_SERVER["TEMPLATE_NAME"]) && substr($_SERVER["TEMPLATE_NAME"], -1) != "/" ){
 				$_SERVER["TEMPLATE_NAME"] .= "/";
