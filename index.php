@@ -31,18 +31,39 @@ try{
 		$_SERVER["TEMPLATE"]->display(substr($_SERVER["TEMPLATE_NAME"], 1));
 	}catch(Exception $ex){
 		if($_SERVER["CONFIGURE"]->USE_ACTIVE_PAGE){
-			$path = $_SERVER["TEMPLATE_NAME"];
+			$path = urldecode($_SERVER["TEMPLATE_NAME"]);
 			$loader = new Clay_Plugin("Content");
 			$loader->LoadSetting();
 			$activePage = $loader->loadModel("ActivePageModel");
-			if(preg_match("/^\\/([\\/]+)\\/([\\/]+)\\/([\\/]+)\\/([\\/]+)\\.html$/", $path, $params) > 0){
+			if(preg_match("/^\\/([^\\/]+)\\/([^\\/]+)\\/([^\\/]+)\\/([^\\/]+)\\.html$/", $path, $params) > 0){
 				$activePage->findByProductCode($params[1], $params[2], $params[3], $params[4]);
 				if($activePage->entry_id > 0){
 					$_POST["entry_id"] = $activePage->entry_id;
 					$_SERVER["TEMPLATE"]->display("__active_page/detail.html");
 					exit;
 				}
-			}elseif(preg_match("/^\\/([\\/]+)\\/([\\/]+)\\/([\\/]+)/", $path, $params) > 0){
+			}elseif(preg_match("/^\\/([^\\/]+)\\/([^\\/]+)\\/([^\\/]+)\\.html$/", $path, $params) > 0){
+				$activePage->findByProductCode($params[1], $params[2], "", $params[3]);
+				if($activePage->entry_id > 0){
+					$_POST["entry_id"] = $activePage->entry_id;
+					$_SERVER["TEMPLATE"]->display("__active_page/detail.html");
+					exit;
+				}
+			}elseif(preg_match("/^\\/([^\\/]+)\\/([^\\/]+)\\.html$/", $path, $params) > 0){
+				$activePage->findByProductCode($params[1], "", "", $params[2]);
+				if($activePage->entry_id > 0){
+					$_POST["entry_id"] = $activePage->entry_id;
+					$_SERVER["TEMPLATE"]->display("__active_page/detail.html");
+					exit;
+				}
+			}elseif(preg_match("/^\\/([^\\/]+)\\.html$/", $path, $params) > 0){
+				$activePage->findByProductCode("", "", "", $params[1]);
+				if($activePage->entry_id > 0){
+					$_POST["entry_id"] = $activePage->entry_id;
+					$_SERVER["TEMPLATE"]->display("__active_page/detail.html");
+					exit;
+				}
+			}elseif(preg_match("/^\\/([^\\/]+)\\/([^\\/]+)\\/([^\\/]+)/", $path, $params) > 0){
 				$activePages = $activePage->findAllByCategory3($params[1], $params[2], $params[3]);
 				if(count($activePages) > 0){
 					$_POST["category1"] = $params[1];
@@ -51,7 +72,7 @@ try{
 					$_SERVER["TEMPLATE"]->display("__active_page/category.html");
 					exit;
 				}
-			}elseif(preg_match("/^\\/([\\/]+)\\/([\\/]+)/", $path, $params) > 0){
+			}elseif(preg_match("/^\\/([^\\/]+)\\/([^\\/]+)/", $path, $params) > 0){
 				$activePages = $activePage->findAllByCategory2($params[1], $params[2]);
 				if(count($activePages) > 0){
 					$_POST["category1"] = $params[1];
@@ -59,16 +80,27 @@ try{
 					$_SERVER["TEMPLATE"]->display("__active_page/category.html");
 					exit;
 				}
-			}elseif(preg_match("/^\\/([\\/]+)/", $path, $params) > 0){
-				$activePages = $activePage->findAllByCategory1($params[1]);
-				if(count($activePages) > 0){
+			}elseif(preg_match("/^\\/([^\\/]+)/", $path, $params) > 0){
+				$activePages = $activePage->countBy(array("category1" => $params[1]));
+				if($activePages > 0){
 					$_POST["category1"] = $params[1];
+					$_POST["category2"] = "";
+					$_POST["category3"] = "";
+					$_POST["product_code"] = "";
 					$_SERVER["TEMPLATE"]->display("__active_page/category.html");
 					exit;
 				}elseif($params[1] == "search.html"){
+					$_POST["category1"] = "";
+					$_POST["category2"] = "";
+					$_POST["category3"] = "";
+					$_POST["product_code"] = "";
 					$_SERVER["TEMPLATE"]->display("__active_page/search.html");
 				}
 			}elseif($path == "/"){
+				$_POST["category1"] = "";
+				$_POST["category2"] = "";
+				$_POST["category3"] = "";
+				$_POST["product_code"] = "";
 				$_SERVER["TEMPLATE"]->display("__active_page/index.html");
 				exit;
 			}
