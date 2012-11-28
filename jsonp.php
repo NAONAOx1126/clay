@@ -16,7 +16,7 @@
 // 共通のライブラリの呼び出し。
 require(dirname(__FILE__)."/libs/require.php");
 
-if(empty($_SERVER["CONFIGURE"]->JSON_API_KEY) || $_SERVER["CONFIGURE"]->JSON_API_KEY == $_POST["k"]){
+if($_SERVER["CONFIGURE"]->JSON_API_KEY == "" || isset($_POST["k"]) && $_SERVER["CONFIGURE"]->JSON_API_KEY == $_POST["k"]){
 	ini_set("memory_limit", -1);
 	
 	if(strpos($_SERVER["REQUEST_URI"], "&callback=") !== FALSE){
