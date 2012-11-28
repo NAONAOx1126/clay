@@ -31,6 +31,9 @@ $_SERVER["CONFIGURE"]->MEMCACHED_SERVER = "localhost";
 /* アクティブページ利用の有無 */
 $_SERVER["CONFIGURE"]->USE_ACTIVE_PAGE = false;
 
+/* JSON API実行時に使用するキー */
+$_SERVER["CONFIGURE"]->JSON_API_KEY = "";
+
 /* 使用するロガー */
 // $_SERVER["CONFIGURE"]->LOGGER = "DatabaseLogger";
 ?>

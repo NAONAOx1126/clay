@@ -16,53 +16,59 @@
 // 共通のライブラリの呼び出し。
 require(dirname(__FILE__)."/libs/require.php");
 
-ini_set("memory_limit", -1);
-
-if(strpos($_SERVER["REQUEST_URI"], "&callback=") !== FALSE){
-	list($requestUri, $dummy) = explode("&callback=", $_SERVER["REQUEST_URI"]);
-}else{
-	$requestUri = $_SERVER["REQUEST_URI"];
-}
-
-// コールバックを取得
-if(isset($_POST["callback"])){
-	$callback = $_POST["callback"];
-	unset($_POST["callback"]);
-}
-unset($_POST["_"]);
-
-// JSONのキャッシュを初期化
-$jsonCache = Clay_Cache_Factory::create("json_".sha1($requestUri));
-
-$loader = new Clay_Plugin($_POST["c"]);
-$json = $loader->loadJson($_POST["p"]);
-unset($_POST["c"]);
-unset($_POST["p"]);
-
-if($jsonCache->json == "" || isset($json->disable_cache) && $json->disable_cache){
-	try{
-		if($json != null){
-			// バッチのモジュールの呼び出し
-			$result = $json->execute();
-
-			// キャッシュファイルを作成
-			$jsonCache->import(array("json" => $result));
-		}
-		
-	}catch(Exception $ex){
-		$result = array("ERROR" => $ex->getMessage());
+if(empty($_SERVER["CONFIGURE"]->JSON_API_KEY) || $_SERVER["CONFIGURE"]->JSON_API_KEY == $_POST["k"]){
+	ini_set("memory_limit", -1);
+	
+	if(strpos($_SERVER["REQUEST_URI"], "&callback=") !== FALSE){
+		list($requestUri, $dummy) = explode("&callback=", $_SERVER["REQUEST_URI"]);
+	}else{
+		$requestUri = $_SERVER["REQUEST_URI"];
 	}
 	
-}
-
-$result = $jsonCache->json;
-$data = json_encode($result);
-
-header("Content-Type: application/json; charset=utf-8");
-
-if(!empty($callback)){
-	echo $callback."(".$data.");";
+	// コールバックを取得
+	if(isset($_POST["callback"])){
+		$callback = $_POST["callback"];
+		unset($_POST["callback"]);
+	}
+	unset($_POST["_"]);
+	
+	// JSONのキャッシュを初期化
+	$jsonCache = Clay_Cache_Factory::create("json_".sha1($requestUri));
+	
+	$loader = new Clay_Plugin($_POST["c"]);
+	$json = $loader->loadJson($_POST["p"]);
+	unset($_POST["c"]);
+	unset($_POST["p"]);
+	
+	if($jsonCache->json == "" || isset($json->disable_cache) && $json->disable_cache){
+		try{
+			if($json != null){
+				// バッチのモジュールの呼び出し
+				$result = $json->execute();
+	
+				// キャッシュファイルを作成
+				$jsonCache->import(array("json" => $result));
+			}
+			
+		}catch(Exception $ex){
+			$result = array("ERROR" => $ex->getMessage());
+		}
+		
+	}
+	
+	$result = $jsonCache->json;
+	$data = json_encode($result);
+	
+	header("Content-Type: application/json; charset=utf-8");
+	
+	if(!empty($callback)){
+		echo $callback."(".$data.");";
+	}else{
+		echo $data;
+	}
 }else{
-	echo $data;
+	header("HTTP/1.0 404 Not Found");
+	exit;
 }
+
 ?>
