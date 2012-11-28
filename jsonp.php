@@ -70,5 +70,3 @@ if($_SERVER["CONFIGURE"]->JSON_API_KEY == "" || isset($_POST["k"]) && $_SERVER["
 	header("HTTP/1.0 404 Not Found");
 	exit;
 }
-
-?>

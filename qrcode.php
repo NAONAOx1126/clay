@@ -642,4 +642,3 @@ if ($qrcode_image_type == "jpeg"){
 } else {
     ImagePng($output_image);
 }
-?>
