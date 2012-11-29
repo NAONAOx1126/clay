@@ -23,9 +23,9 @@ class Clay_Bootstrap_ErrorMessage{
 		}
 		if($_SERVER["CONFIGURE"]->DEBUG){
 			if(defined("E_DEPRECATED")){
-				error_reporting(E_ALL ^ E_DEPRECATED);
+				error_reporting(E_ALL & ~ E_STRICT & ~ E_STRICT);
 			}else{
-				error_reporting(E_ALL);
+				error_reporting(E_ALL & ~ E_STRICT);
 			}
 			ini_set('display_errors', $_SERVER["CONFIGURE"]->DISPLAY_ERROR);
 			ini_set('log_errors', 'On');
