@@ -26,9 +26,19 @@ abstract class Clay_Plugin_Module{
      */
 	abstract function execute($params);
 	
-	function reload(){
-		header("Location: ".CLAY_SUBDIR.$_SERVER["TEMPLATE_NAME"]);
+	function redirect($url){
+		if(is_array($_POST)){
+			$_SESSION["INPUT_DATA"] = array(TEMPLATE_DIRECTORY => array());
+			foreach($_POST as $key => $value){
+				$_SESSION["INPUT_DATA"][TEMPLATE_DIRECTORY][$key] = $value;
+			}
+		}
+		header("Location: ".$url);
 		exit;
+	}
+	
+	function reload(){
+		$this->redirect(CLAY_SUBDIR.$_SERVER["TEMPLATE_NAME"]);
 	}
 }
  

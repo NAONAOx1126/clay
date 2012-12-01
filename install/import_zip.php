@@ -1,6 +1,6 @@
 <?php
 // 共通のライブラリの呼び出し。
-include_once("../common/require.php");
+include_once("../libs/require.php");
 
 // 最大実行時間を無制限に変更
 ini_set("max_execution_time", 0);
