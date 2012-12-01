@@ -36,36 +36,36 @@ try{
 			$loader->LoadSetting();
 			$activePage = $loader->loadModel("ActivePageModel");
 			if(preg_match("/^\\/([^\\/]+)\\/([^\\/]+)\\/([^\\/]+)\\/([^\\/]+)\\.html$/", $path, $params) > 0){
-				$activePage->findByProductCode($params[1], $params[2], $params[3], $params[4]);
+				$activePage->findByProductCode(mb_convert_kana($params[1], "KV"), mb_convert_kana($params[2], "KV"), mb_convert_kana($params[3], "KV"), mb_convert_kana($params[4], "KV"));
 				if($activePage->entry_id > 0){
 					$_POST["entry_id"] = $activePage->entry_id;
 					$_SERVER["TEMPLATE"]->display("__active_page/detail.html");
 					exit;
 				}
 			}elseif(preg_match("/^\\/([^\\/]+)\\/([^\\/]+)\\/([^\\/]+)\\.html$/", $path, $params) > 0){
-				$activePage->findByProductCode($params[1], $params[2], "", $params[3]);
+				$activePage->findByProductCode(mb_convert_kana($params[1], "KV"), mb_convert_kana($params[2], "KV"), "", mb_convert_kana($params[3], "KV"));
 				if($activePage->entry_id > 0){
 					$_POST["entry_id"] = $activePage->entry_id;
 					$_SERVER["TEMPLATE"]->display("__active_page/detail.html");
 					exit;
 				}
 			}elseif(preg_match("/^\\/([^\\/]+)\\/([^\\/]+)\\.html$/", $path, $params) > 0){
-				$activePage->findByProductCode($params[1], "", "", $params[2]);
+				$activePage->findByProductCode(mb_convert_kana($params[1], "KV"), "", "", mb_convert_kana($params[2], "KV"));
 				if($activePage->entry_id > 0){
 					$_POST["entry_id"] = $activePage->entry_id;
 					$_SERVER["TEMPLATE"]->display("__active_page/detail.html");
 					exit;
 				}
 			}elseif(preg_match("/^\\/([^\\/]+)\\.html$/", $path, $params) > 0){
-				$activePage->findByProductCode("", "", "", $params[1]);
+				$activePage->findByProductCode("", "", "", mb_convert_kana($params[1], "KV"));
 				if($activePage->entry_id > 0){
 					$_POST["entry_id"] = $activePage->entry_id;
 					$_SERVER["TEMPLATE"]->display("__active_page/detail.html");
 					exit;
 				}
 			}elseif(preg_match("/^\\/([^\\/]+)\\/([^\\/]+)\\/([^\\/]+)/", $path, $params) > 0){
-				$activePages = $activePage->findAllByCategory3($params[1], $params[2], $params[3]);
-				if(count($activePages) > 0){
+				$activePages = $activePage->countBy(array("category1" => mb_convert_kana($params[1], "KV"), "category2" => mb_convert_kana($params[2], "KV"), "category3" => mb_convert_kana($params[3], "KV")));
+				if($activePages > 0){
 					$_POST["category1"] = $params[1];
 					$_POST["category2"] = $params[2];
 					$_POST["category3"] = $params[3];
@@ -73,15 +73,15 @@ try{
 					exit;
 				}
 			}elseif(preg_match("/^\\/([^\\/]+)\\/([^\\/]+)/", $path, $params) > 0){
-				$activePages = $activePage->findAllByCategory2($params[1], $params[2]);
-				if(count($activePages) > 0){
+				$activePages = $activePage->countBy(array("category1" => mb_convert_kana($params[1], "KV"), "category2" => mb_convert_kana($params[2], "KV")));
+				if($activePages > 0){
 					$_POST["category1"] = $params[1];
 					$_POST["category2"] = $params[2];
 					$_SERVER["TEMPLATE"]->display("__active_page/category.html");
 					exit;
 				}
 			}elseif(preg_match("/^\\/([^\\/]+)/", $path, $params) > 0){
-				$activePages = $activePage->countBy(array("category1" => $params[1]));
+				$activePages = $activePage->countBy(array("category1" => mb_convert_kana($params[1], "KV")));
 				if($activePages > 0){
 					$_POST["category1"] = $params[1];
 					$_POST["category2"] = "";
