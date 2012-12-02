@@ -30,11 +30,15 @@ try{
 	try{
 		$_SERVER["TEMPLATE"]->display(substr($_SERVER["TEMPLATE_NAME"], 1));
 	}catch(Exception $ex){
-		if($_SERVER["CONFIGURE"]->USE_ACTIVE_PAGE){
+		if($_SERVER["CONFIGURE"]->USE_ACTIVE_PAGE && $_SERVER["TEMPLATE_NAME"] != "favicon.ico"){
 			$path = urldecode($_SERVER["TEMPLATE_NAME"]);
 			$loader = new Clay_Plugin("Content");
 			$loader->LoadSetting();
-			$activePage = $loader->loadModel("ActivePageModel");
+			if($_SERVER["CLIENT_DEVICE"]->isMobile()){
+				$activePage = $loader->LoadModel("ActiveMobilePageModel");
+			}else{
+				$activePage = $loader->LoadModel("ActivePageModel");
+			}
 			if(preg_match("/^\\/([^\\/]+)\\/([^\\/]+)\\/([^\\/]+)\\/([^\\/]+)\\.html$/", $path, $params) > 0){
 				$activePage->findByProductCode(mb_convert_kana($params[1], "KV"), mb_convert_kana($params[2], "KV"), mb_convert_kana($params[3], "KV"), mb_convert_kana($params[4], "KV"));
 				if($activePage->entry_id > 0){
@@ -89,6 +93,12 @@ try{
 					$_POST["product_code"] = "";
 					$_SERVER["TEMPLATE"]->display("__active_page/category.html");
 					exit;
+				}elseif(preg_match("/^[0-9]{8}$/", $params[1]) > 0){
+					$_POST["date"] = "";
+					$_POST["category2"] = "";
+					$_POST["category3"] = "";
+					$_POST["product_code"] = "";
+					$_SERVER["TEMPLATE"]->display("__active_page/article.html");
 				}elseif($params[1] == "search.html"){
 					$_POST["category1"] = "";
 					$_POST["category2"] = "";
