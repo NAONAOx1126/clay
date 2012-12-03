@@ -38,6 +38,12 @@ class Clay_Bootstrap_TemplateName{
 				if(!file_exists($_SERVER["CONFIGURE"]->site_home.DIRECTORY_SEPARATOR."sphone")){
 					symlink($_SERVER["CONFIGURE"]->site_home.DIRECTORY_SEPARATOR."templates", $_SERVER["CONFIGURE"]->site_home.DIRECTORY_SEPARATOR."sphone");
 				}
+				if(!file_exists($_SERVER["CONFIGURE"]->site_home.DIRECTORY_SEPARATOR."iphone")){
+					symlink($_SERVER["CONFIGURE"]->site_home.DIRECTORY_SEPARATOR."sphone", $_SERVER["CONFIGURE"]->site_home.DIRECTORY_SEPARATOR."iphone");
+				}
+				if(!file_exists($_SERVER["CONFIGURE"]->site_home.DIRECTORY_SEPARATOR."android")){
+					symlink($_SERVER["CONFIGURE"]->site_home.DIRECTORY_SEPARATOR."sphone", $_SERVER["CONFIGURE"]->site_home.DIRECTORY_SEPARATOR."android");
+				}
 			}
 		}
 		
@@ -45,6 +51,11 @@ class Clay_Bootstrap_TemplateName{
 		if(isset($_SERVER["CLIENT_DEVICE"])){
 			if($_SERVER["CLIENT_DEVICE"]->isMobile()){
 				if($_SERVER["CLIENT_DEVICE"]->isSmartPhone()){
+					if($_SERVER["CLIENT_DEVICE"]->getDeviceType() == "iPhone"){
+						$_SERVER["USER_TEMPLATE"] = "/iphone";
+					}elseif($_SERVER["CLIENT_DEVICE"]->getDeviceType() == "Android"){
+						$_SERVER["USER_TEMPLATE"] = "/android";
+					}
 					$_SERVER["USER_TEMPLATE"] = "/sphone";
 				}else{
 					$_SERVER["USER_TEMPLATE"] = "/mobile";

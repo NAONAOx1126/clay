@@ -34,7 +34,7 @@ try{
 			$path = urldecode($_SERVER["TEMPLATE_NAME"]);
 			$loader = new Clay_Plugin("Content");
 			$loader->LoadSetting();
-			if($_SERVER["CLIENT_DEVICE"]->isMobile()){
+			if($_SERVER["CLIENT_DEVICE"]->isFuturePhone()){
 				$activePage = $loader->LoadModel("ActiveMobilePageModel");
 			}else{
 				$activePage = $loader->LoadModel("ActivePageModel");
