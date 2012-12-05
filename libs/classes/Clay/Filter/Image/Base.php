@@ -44,9 +44,12 @@ abstract class Clay_Filter_Image_Base{
 		if ( ($info[2] == IMAGETYPE_GIF) || ($info[2] == IMAGETYPE_PNG) ) {
 			// 元画像の透過色を取得する。
 			$trnprt_indx = imagecolortransparent($image);
-	
+			
+			// パレットサイズを取得する。
+			$palletsize = imagecolorstotal($image);
+			
 			// 透過色が設定されている場合は透過処理を行う。
-			if ($trnprt_indx >= 0) {
+			if ($trnprt_indx >= 0 && $trnprt_indx < $palletsize) {
 				// カラーインデックスから透過色を取得する。
 				$trnprt_color = imagecolorsforindex($image, $trnprt_indx);
 	
