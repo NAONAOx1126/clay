@@ -37,6 +37,12 @@ class Clay_Database_Mysql_Result{
 		return $result;
 	}
 	
+	public function rewind(){
+		if($this->count() > 0){
+			mysql_data_seek($this->resource, 0);
+		}
+	}
+	
 	public function count(){
 		return mysql_num_rows($this->resource);
 	}
