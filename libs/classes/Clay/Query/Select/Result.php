@@ -40,6 +40,13 @@ class Clay_Query_Select_Result{
 	public function next(){
 		return $this->result->fetch();
 	}
+	
+	/**
+	 * 実行結果の取得位置を巻き戻すメソッド
+	 */
+	public function rewind(){
+		$this->result->rewind();
+	}
 
 	/**
 	 * 次の実行結果レコードの連想配列を取得するメソッド
