@@ -119,9 +119,7 @@ try{
 	}
 
 	// 出力対象のコンテンツを取得	
-	$content = trim(ob_get_contents());
-	ob_end_clean();
-	echo $content;
+	ob_end_flush();
 	Clay_Database_Factory::close();
 	Clay_Logger::writeDebug("TEMPLATE_PAGE : ".$_SERVER["TEMPLATE_NAME"]." Finished.");
 }catch(Exception $ex){
