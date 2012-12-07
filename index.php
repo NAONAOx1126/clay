@@ -8,13 +8,18 @@
  * @since PHP 5.3
  * @version   3.0.0
  */
-
+ 
 /**
  * WEBからのアクセスを受け取るためのメインPHPです。
  */
 
+// 出力バッファをフィルタするための関数です。
+function filterOutputBuffer($content){
+	return trim($content);
+}
+
 // 出力を抑制
-ob_start(trim);
+ob_start("filterOutputBuffer");
 
 try{
 	// 共通のライブラリの呼び出し。
@@ -127,4 +132,3 @@ try{
 	// キャッシュ無効にするヘッダを送信
 	echo $ex->getMessage();
 }
-?>
