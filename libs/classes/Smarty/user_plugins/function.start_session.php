@@ -26,6 +26,11 @@ function smarty_function_start_session($params, $smarty, $template){
 	session_start();
 	header("HTTP/1.1 200 OK");
 	
+	// POSTにINPUT=NEWが渡った場合は、入力をクリアする。
+	if(isset($_POST["INPUT"]) && $_POST["INPUT"] == "NEW"){
+		unset($_SESSION["INPUT_DATA"][TEMPLATE_DIRECTORY]);
+	}
+		
 	// INPUT_DATAのセッションの内容をPOSTに戻す。（POST優先）
 	if(is_array($_SESSION["INPUT_DATA"][TEMPLATE_DIRECTORY])){
 		foreach($_SESSION["INPUT_DATA"][TEMPLATE_DIRECTORY] as $key => $value){
@@ -34,7 +39,6 @@ function smarty_function_start_session($params, $smarty, $template){
 			}
 		}
 	}
-	$_SERVER["POST"] = $_POST;
 	Clay_Logger::writeDebug("Page Session Started.");
 }
 ?>
