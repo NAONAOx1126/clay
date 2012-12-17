@@ -13,6 +13,6 @@
 if (!defined('Zend_ROOT')) {
 	define('Zend_ROOT', realpath(dirname(__FILE__)));
 	require(Zend_ROOT.DIRECTORY_SEPARATOR.'Zend'.DIRECTORY_SEPARATOR.'Loader.php');
-	ZendLoader::registerAutoload();
+	Zend_Loader::registerAutoload();
 }
  

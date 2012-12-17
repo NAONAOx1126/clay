@@ -52,7 +52,10 @@ ini_set("include_path", ".");
 require_once(dirname(__FILE__)."/classes/Clay.php");
 
 // Zendのライブラリを読み込む
-require_once(dirname(__FILE__)."/classes/PHPExcel.php");
+require_once(dirname(__FILE__)."/classes/Zend.php");
+
+// PHPTALのライブラリを読み込む
+require_once(dirname(__FILE__)."/classes/PHPTAL.php");
 
 // PHP Excelのライブラリを読み込む
 require_once(dirname(__FILE__)."/classes/PHPExcel.php");

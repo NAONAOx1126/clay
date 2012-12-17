@@ -8,39 +8,46 @@
  * @since PHP 5.3
  * @version   4.0.0
  */
- 
+
 /**
  * ページ表示用のテンプレートクラスです。
+ * Smartyを継承して基本的な設定を行っています。
  *
  * @package Common
  * @author Naohisa Minagawa <info@clay-system.jp>
  * @since PHP 5.2
  * @version 1.0.0
  */
-abstract class Clay_Template{
-	protected $template_dir;
-	
-	protected $core;
-	
-	/**
-	 * ページに変数を割り当てるメソッドです。
-	 */
-	public abstract function assign($tpl_var, $value = null, $nocache = false, $scope = SMARTY_LOCAL_SCOPE);
+class Clay_Template extends PHPTAL{
+    /**
+	 * コンストラクタです。ページテンプレートを初期化します。
+	 *
+     * @access public
+     */
+	public function __construct(){
+		parent::__construct();
 
-	/**
-	 * ページ割り当てられた変数を削除するメソッドです。
-	 */
-    public abstract function clearAssign($tpl_var);
-	
-	/**
-	 * ページテンプレートを適用し、結果をテキストデータとして取得するメソッドです。
-	 */
-    public abstract function fetch($template, $cache_id = null, $compile_id = null, $parent = null, $display = false);
-	
-    public abstract function loadPlugin($plugin_name, $check = true);
+		// テンプレートのディレクトリとコンパイルのディレクトリをフレームワークのパス上に展開
+		$this->template_dir = array($_SERVER["CONFIGURE"]->site_home.$_SERVER["USER_TEMPLATE"]."/");
+		$this->compile_dir = CLAY_ROOT.DIRECTORY_SEPARATOR."cache_smarty".DIRECTORY_SEPARATOR.$_SERVER["CONFIGURE"]->get("site_code").$_SERVER["USER_TEMPLATE"]."/";
+		
+		// プラグインのディレクトリを追加する。
+		$smartyPath = CLAY_CLASSES_ROOT.DIRECTORY_SEPARATOR."Smarty";
+		$this->plugins_dir[] = $smartyPath.DIRECTORY_SEPARATOR."plugins".DIRECTORY_SEPARATOR;
+		$this->plugins_dir[] = $smartyPath.DIRECTORY_SEPARATOR."sysplugins".DIRECTORY_SEPARATOR;
+		$this->plugins_dir[] = $smartyPath.DIRECTORY_SEPARATOR."user_plugins".DIRECTORY_SEPARATOR;
 
-    public abstract function setExceptionHandler($handler);
+		// デリミタを変更する。
+		$this->left_delimiter = "<!--{";
+		$this->right_delimiter = "}-->";
 
+		// モジュール呼び出し用のフィルタを設定する。
+		if(!isset($this->autoload_filters["pre"])){
+			$this->autoload_filters["pre"] = array();
+		}
+		$this->autoload_filters["pre"][] = "loadmodule";
+	}
+	
     /**
 	 * ページ出力用のメソッドをオーバーライドしています。
 	 * 携帯のページについて、SJISに変換し、カナを半角にしています。
@@ -81,7 +88,7 @@ abstract class Clay_Template{
 			}
 		}else{
 			header("Content-Type: text/html; charset=UTF-8");
-			$this->fetch($template, $cache_id, $compile_id, $parent, true);
+			parent::fetch ($template, $cache_id, $compile_id, $parent, true);
 		}
     } 
 }
