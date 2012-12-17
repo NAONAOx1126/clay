@@ -227,10 +227,10 @@ class Zend_Loader
         /**
          * Security check
          */
-        if (preg_match('/[^a-z0-9\\/\\\\_.-]/i', $filename)) {
-            require_once 'Zend/Exception.php';
+    	if (preg_match('/[^a-z0-9\\/\\\\_.-]/i', $filename) || substr($filename, 0, 5) !== "Zend_") {
+            require_once dirname(__FILE__).'/Exception.php';
             throw new Zend_Exception('Security check: Illegal character in filename');
-        }
+       	}
     }
 
     /**
