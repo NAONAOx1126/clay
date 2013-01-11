@@ -92,8 +92,9 @@ class Clay_Plugin{
 	 * @params string $name モジュール呼び出し名
 	 */
 	function loadSetting(){
+		$names = explode(".", $this->namespace);
 		if(isset($_SERVER["CONFIGURE"]->site_home)){
-			$pluginPath = $_SERVER["CONFIGURE"]->site_home;
+			$pluginPath = $_SERVER["CONFIGURE"]->site_home.DIRECTORY_SEPARATOR.$names[0];
 			if(!empty($pluginPath)){
 				if(file_exists($pluginPath."/Setting.php")){
 					Clay_Logger::writeDebug("Loaded File for Setting : ".$pluginPath."/Setting.php");
@@ -102,9 +103,10 @@ class Clay_Plugin{
 				}
 			}
 		}
-		if(file_exists(CLAY_PLUGINS_ROOT."/Setting.php")){
-			Clay_Logger::writeDebug("Loaded File for Setting : ".CLAY_PLUGINS_ROOT."/Setting.php");
-			require_once(CLAY_PLUGINS_ROOT."/Setting.php");
+		$names[0] = strtolower($names[0]);
+		if(file_exists(CLAY_PLUGINS_ROOT.DIRECTORY_SEPARATOR."clay_".$names[0]."/Setting.php")){
+			Clay_Logger::writeDebug("Loaded File for Setting : ".CLAY_PLUGINS_ROOT.DIRECTORY_SEPARATOR."clay_".$names[0]."/Setting.php");
+			require_once(CLAY_PLUGINS_ROOT.DIRECTORY_SEPARATOR."clay_".$names[0]."/Setting.php");
 			return;
 		}
 	}

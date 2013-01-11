@@ -105,6 +105,12 @@ class Clay_Plugin_Table{
 
 			// テーブルの主キーを取得
 			$keys = $connection->keys($this->_T);
+
+			// テーブルのインデックスを取得
+			$indexes = $connection->indexes($this->_T);
+				
+			// テーブルのリレーションを取得
+			$relations = $connection->relations($this->_T);
 			
 			// テーブルの設定をデータキャッシュに登録する。
 			$tableConfigure->import(array("options" => $options, "keys" => $keys));
