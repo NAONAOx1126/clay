@@ -65,7 +65,20 @@ class Clay_Database_Mysql_Connection{
 		$result = $this->query("SHOW INDEXES FROM ".$table);
 		$indexes = array();
 		while($index = $result->fetch()){
-			if(!is_array($indexes[$index["Key_name"]])){
+			if(!isset($indexes[$index["Key_name"]]) || !is_array($indexes[$index["Key_name"]])){
+				$indexes[$index["Key_name"]] = array();
+			}
+			$indexes[$index["Key_name"]][] = $index["Column_name"];
+		}
+		$result->close();
+		return $indexes;
+	}
+	
+	public function relations($table){
+		$result = $this->query("SHOW INDEXES FROM ".$table);
+		$indexes = array();
+		while($index = $result->fetch()){
+			if(!isset($indexes[$index["Key_name"]]) || !is_array($indexes[$index["Key_name"]])){
 				$indexes[$index["Key_name"]] = array();
 			}
 			$indexes[$index["Key_name"]][] = $index["Column_name"];
