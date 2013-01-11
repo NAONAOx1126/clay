@@ -55,6 +55,32 @@ try{
 		}
 	}
 	
+	// CSVファイルを読み込む
+	if(($fp = fopen(CLAY_ROOT."/install/csvs/JIGYOSYO.CSV", "r")) !== FALSE){
+		$insert = new Clay_Query_Insert($zipTemps);
+		while(($line = fgets($fp)) !== FALSE){
+			// CSVの内容をDBに登録する。
+			$data = explode(",", str_replace("\"", "", trim(mb_convert_encoding($line, "UTF-8", "Shift_JIS"))));
+			$sqlval = array();
+			$sqlval["code"] = $data[0];
+			$sqlval["old_zipcode"] = $data[8];
+			$sqlval["zipcode"] = $data[7];
+			$sqlval["state_kana"] = "";
+			$sqlval["city_kana"] = "";
+			$sqlval["town_kana"] = "";
+			$sqlval["state"] = $data[3];
+			$sqlval["city"] = $data[4];
+			$sqlval["town"] = $data[5].$data[6];
+			$sqlval["flg1"] = $data[9];
+			$sqlval["flg2"] = $data[10];
+			$sqlval["flg3"] = $data[11];
+			$sqlval["flg4"] = $data[12];
+			$sqlval["flg5"] = $data[13];
+			$sqlval["flg6"] = $data[14];
+			$result = $insert->execute($sqlval);
+		}
+	}
+	
 	echo "TEMP INSERTED : ".time()."<br>\r\n";
 
 	// 本番データの削除
