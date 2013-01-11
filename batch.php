@@ -37,6 +37,7 @@ if($argc < 2){
 	$_SERVER["SERVER_NAME"] = $argv[2];
 	$_SERVER["REQUEST_URI"] = "/";
 	$_SERVER["QUERY_STRING"] = "";
+	$_SERVER["HTTP_USER_AGENT"] = "PHP/Clay-Batch Engine/1.0";
 	$argv = array_slice($argv, 3);
 }
 
