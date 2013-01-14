@@ -100,9 +100,15 @@ class Clay_Plugin_Table{
 		// テーブル構成のキャッシュがある場合にはキャッシュからテーブル情報を取得
 		$tableConfigure = Clay_Cache_Factory::create("table_".$this->tableName);
 		if($tableConfigure->options == ""){
-			// テーブルの定義を取得
-			$options = $connection->columns($this->_T);
-
+			try{
+				// テーブルの定義を取得
+				$options = $connection->columns($this->_T);
+			}catch(Exception $e){
+				$this->install($connection);
+				// テーブルの定義を再取得
+				$options = $connection->columns($this->_T);
+			}
+				
 			// テーブルの主キーを取得
 			$keys = $connection->keys($this->_T);
 
@@ -202,6 +208,77 @@ class Clay_Plugin_Table{
 	
 	public function __wakeup(){
 		$this->initialize();
+	}
+	
+	protected function createTable($connection, $columns, $keys, $uniques, $indexes, $datas = array()){
+		$sql = "CREATE TABLE IF NOT EXISTS ".$this->_T."(";
+		foreach($columns as $index => $column){
+			if($index > 0){
+				$sql .= ", ";
+			}
+			if(!isset($column["auto"])) $column["auto"] = false;
+			if(!isset($column["null"])) $column["null"] = false;
+			$sql .= "`".$column["name"]."` ".$column["type"].(!empty($column["size"])?"(".$column["size"].")":"");
+			$sql .= " COLLATE utf8_unicode_ci".($column["auto"]?" NOT NULL AUTO_INCREMENT":(($column["null"])?" DEFAULT NULL":" NOT NULL".((isset($column["default"])?" DEFAULT ".$column["default"]:""))));
+		}
+		if(is_array($keys) && !empty($keys)){
+			$sql .= ", PRIMARY KEY(`".implode("`, `", $keys)."`)";
+		}
+		foreach($uniques as $name => $ukeys){
+			if(!empty($name) && is_array($ukeys) && !empty($ukeys)){
+				$sql .= ", UNIQUE KEY `".$name."` (`".implode("`, `", $ukeys)."`)";
+			}
+		}
+		foreach($indexes as $name => $ukeys){
+			if(!empty($name) && is_array($ukeys) && !empty($ukeys)){
+				$sql .= ", KEY `".$name."` (`".implode("`, `", $ukeys)."`)";
+			}
+		}
+		$sql .= ") ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
+		$connection->query($sql);
+		
+		$cols = array();
+		foreach($columns as $index => $column){
+			$cols[] = $column["name"];
+		}
+		foreach($datas as $data){
+			$keys = array();
+			$values = array();
+			foreach($cols as $col){
+				if($col == "create_time" || $col == "update_time"){
+					$keys[] = $connection->escape_identifier($col);
+					$values[] = "NOW()";
+				}else{
+					if(isset($data[$col])){
+						$keys[] = $connection->escape_identifier($col);
+						$values[] .= "'".$connection->escape($data[$col])."'";
+					}
+				}
+			}
+			$sql = "INSERT INTO ".$this->_T."(".implode(", ", $keys).") VALUES (".implode(", ", $values).")";
+			$connection->query($sql);
+		}
+	}
+	
+	protected function createConstraints($connection, $relations){
+		$sql = "ALTER TABLE ".$this->_T;
+		$index = 0;
+		foreach($relations as $name => $relation){
+			$rels = implode(".", $relation);
+			if(!empty($relation) && is_array($rels) && count($rels) == 2){
+				if($index > 0){
+					$sql .= ", ";
+				}
+				$sql .= " ADD CONSTRAINT `fk_".$this->tableName."_".$name."` FOREIGN KEY (`".$name."`) ";
+				$sql .= "REFERENCES `".$rels[0]."` (`".$rels[1]."`) ON DELETE CASCADE ON UPDATE CASCADE";
+				$index ++;
+			}
+		}
+		$connection->query($sql);
+	}
+	
+	public function install($connection){
+		throw new Clay_Exception_System("Can't install table".$this->_T);
 	}
 }
  

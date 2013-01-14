@@ -42,7 +42,9 @@ class Clay_Database_Mysql_Connection{
 	
 	public function columns($table){
 		// テーブルの定義を取得
-		$result = $this->query("SHOW COLUMNS FROM ".$table);
+		if(($result = $this->query("SHOW COLUMNS FROM ".$table)) === FALSE){
+			throw new Clay_Exception_System("カラムの取得に失敗しました。");
+		}
 		$columns = array();
 		while($column = $result->fetch()){
 			$columns[] = $column;
