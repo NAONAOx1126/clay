@@ -68,6 +68,14 @@ function smarty_function_loadmodule($params, $smarty, $template)
 		$object = $loader->loadModule($name);
 		if(method_exists($object, "execute")){
 			Clay_Logger::writeDebug("MODULE : ".$name." start");
+			// 検索条件と並べ替えキー以外を無効化する。
+			if(isset($params["clear"]) && $params["clear"] == "1"){
+				if(isset($params["sort_key"]) && !empty($params["sort_key"])){
+					$_POST = array("search" => $_POST["search"], $params["sort_key"] => $_POST[$params["sort_key"]]);
+				}else{
+					$_POST = array("search" => $_POST["search"]);
+				}
+			}
 			$object->execute(new LoadModuleParams($params));
 			Clay_Logger::writeDebug("MODULE : ".$name." end");
 		}else{
