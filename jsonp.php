@@ -47,36 +47,41 @@ if($_SERVER["CONFIGURE"]->JSON_API_KEY == "" || isset($_POST["k"]) && $_SERVER["
 	// JSONのキャッシュを初期化
 	$jsonCache = Clay_Cache_Factory::create("json_".sha1($requestUri));
 	
-	$loader = new Clay_Plugin($_POST["c"]);
-	$json = $loader->loadJson($_POST["p"]);
-	unset($_POST["c"]);
-	unset($_POST["p"]);
-	
-	if($jsonCache->json == "" || isset($json->disable_cache) && $json->disable_cache){
-		try{
-			if($json != null){
-				// バッチのモジュールの呼び出し
-				$result = $json->execute();
-	
-				// キャッシュファイルを作成
-				$jsonCache->import(array("json" => $result));
+	if(isset($_POST["c"]) && !empty($_POST["c"]) && isset($_POST["p"]) && !empty($_POST["p"])){
+		$loader = new Clay_Plugin($_POST["c"]);
+		$json = $loader->loadJson($_POST["p"]);
+		unset($_POST["c"]);
+		unset($_POST["p"]);
+		
+		if($jsonCache->json == "" || isset($json->disable_cache) && $json->disable_cache){
+			try{
+				if($json != null){
+					// バッチのモジュールの呼び出し
+					$result = $json->execute();
+		
+					// キャッシュファイルを作成
+					$jsonCache->import(array("json" => $result));
+				}
+					
+			}catch(Exception $ex){
+				$result = array("ERROR" => $ex->getMessage());
 			}
-			
-		}catch(Exception $ex){
-			$result = array("ERROR" => $ex->getMessage());
+		
 		}
 		
-	}
-	
-	$result = $jsonCache->json;
-	$data = json_encode($result);
-	
-	header("Content-Type: application/json; charset=utf-8");
-	
-	if(!empty($callback)){
-		echo $callback."(".$data.");";
+		$result = $jsonCache->json;
+		$data = json_encode($result);
+		
+		header("Content-Type: application/json; charset=utf-8");
+		
+		if(!empty($callback)){
+			echo $callback."(".$data.");";
+		}else{
+			echo $data;
+		}
 	}else{
-		echo $data;
+		header("HTTP/1.0 404 Not Found");
+		exit;
 	}
 }else{
 	header("HTTP/1.0 404 Not Found");

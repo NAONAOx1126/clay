@@ -47,6 +47,16 @@ try{
 	try{
 		$_SERVER["TEMPLATE"]->display(substr($_SERVER["TEMPLATE_NAME"], 1));
 	}catch(Exception $ex){
+		// 短縮URLの設定を取得し、存在している場合はリダイレクト
+		$loader = new Clay_Plugin("Content");
+		$loader->LoadSetting();
+		$shortcut = $loader->LoadModel("ShortcutModel");
+		$shortcut->findByCode(substr($_SERVER["TEMPLATE_NAME"], 1));
+		if($shortcut->shortcut_id > 0){
+			header("Location: ".$shortcut->redirect_url);
+			exit;
+		}
+		
 		if($_SERVER["CONFIGURE"]->USE_ACTIVE_PAGE && $_SERVER["TEMPLATE_NAME"] != "favicon.ico"){
 			$path = urldecode($_SERVER["TEMPLATE_NAME"]);
 			$loader = new Clay_Plugin("Content");
