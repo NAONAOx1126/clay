@@ -41,110 +41,34 @@ try{
 	$TEMPLATE_ENGINE = $_SERVER["CONFIGURE"]->TEMPLATE_ENGINE;
 	$_SERVER["TEMPLATE"] = new $TEMPLATE_ENGINE();
 	
+	// プレフィルタを実行する。
+	foreach($_SERVER["CONFIGURE"]->prefilters as $filter){
+		$loader = new Clay_Plugin($filter["type"]);
+		$loader->LoadSetting();
+		$filter = $loader->loadFilter($filter["name"]);
+		$filter->execute();
+	}
+	
+	// テンプレートにサーバー変数を渡す。
 	foreach($_SERVER as $name =>$value){
 		$_SERVER["TEMPLATE"]->assign($name, $value);
 	}
+	
+	// テンプレートの出力処理を実行
 	try{
 		$_SERVER["TEMPLATE"]->display(substr($_SERVER["TEMPLATE_NAME"], 1));
 	}catch(Exception $ex){
-		// 短縮URLの設定を取得し、存在している場合はリダイレクト
-		$loader = new Clay_Plugin("Content");
-		$loader->LoadSetting();
-		$shortcut = $loader->LoadModel("ShortcutModel");
-		$shortcut->findByCode(substr($_SERVER["TEMPLATE_NAME"], 1));
-		if($shortcut->shortcut_id > 0){
-			header("Location: ".$shortcut->redirect_url);
-			exit;
-		}
-		
-		if($_SERVER["CONFIGURE"]->USE_ACTIVE_PAGE && $_SERVER["TEMPLATE_NAME"] != "favicon.ico"){
-			$path = urldecode($_SERVER["TEMPLATE_NAME"]);
-			$loader = new Clay_Plugin("Content");
-			$loader->LoadSetting();
-			if($_SERVER["CLIENT_DEVICE"]->isFuturePhone()){
-				$activePage = $loader->LoadModel("ActiveMobilePageModel");
-			}else{
-				$activePage = $loader->LoadModel("ActivePageModel");
-			}
-			if(preg_match("/^\\/([^\\/]+)\\/([^\\/]+)\\/([^\\/]+)\\/([^\\/]+)\\.html$/", $path, $params) > 0){
-				$activePage->findByProductCode(mb_convert_kana($params[1], "KV"), mb_convert_kana($params[2], "KV"), mb_convert_kana($params[3], "KV"), mb_convert_kana($params[4], "KV"));
-				if($activePage->entry_id > 0){
-					$_POST["entry_id"] = $activePage->entry_id;
-					$_SERVER["TEMPLATE"]->display("__active_page/detail.html");
-					exit;
-				}
-			}elseif(preg_match("/^\\/([^\\/]+)\\/([^\\/]+)\\/([^\\/]+)\\.html$/", $path, $params) > 0){
-				$activePage->findByProductCode(mb_convert_kana($params[1], "KV"), mb_convert_kana($params[2], "KV"), "", mb_convert_kana($params[3], "KV"));
-				if($activePage->entry_id > 0){
-					$_POST["entry_id"] = $activePage->entry_id;
-					$_SERVER["TEMPLATE"]->display("__active_page/detail.html");
-					exit;
-				}
-			}elseif(preg_match("/^\\/([^\\/]+)\\/([^\\/]+)\\.html$/", $path, $params) > 0){
-				$activePage->findByProductCode(mb_convert_kana($params[1], "KV"), "", "", mb_convert_kana($params[2], "KV"));
-				if($activePage->entry_id > 0){
-					$_POST["entry_id"] = $activePage->entry_id;
-					$_SERVER["TEMPLATE"]->display("__active_page/detail.html");
-					exit;
-				}
-			}elseif(preg_match("/^\\/([^\\/]+)\\.html$/", $path, $params) > 0){
-				$activePage->findByProductCode("", "", "", mb_convert_kana($params[1], "KV"));
-				if($activePage->entry_id > 0){
-					$_POST["entry_id"] = $activePage->entry_id;
-					$_SERVER["TEMPLATE"]->display("__active_page/detail.html");
-					exit;
-				}
-			}elseif(preg_match("/^\\/([^\\/]+)\\/([^\\/]+)\\/([^\\/]+)/", $path, $params) > 0){
-				$activePages = $activePage->countBy(array("category1" => mb_convert_kana($params[1], "KV"), "category2" => mb_convert_kana($params[2], "KV"), "category3" => mb_convert_kana($params[3], "KV")));
-				if($activePages > 0){
-					$_POST["category1"] = $params[1];
-					$_POST["category2"] = $params[2];
-					$_POST["category3"] = $params[3];
-					$_SERVER["TEMPLATE"]->display("__active_page/category.html");
-					exit;
-				}
-			}elseif(preg_match("/^\\/([^\\/]+)\\/([^\\/]+)/", $path, $params) > 0){
-				$activePages = $activePage->countBy(array("category1" => mb_convert_kana($params[1], "KV"), "category2" => mb_convert_kana($params[2], "KV")));
-				if($activePages > 0){
-					$_POST["category1"] = $params[1];
-					$_POST["category2"] = $params[2];
-					$_SERVER["TEMPLATE"]->display("__active_page/category.html");
-					exit;
-				}
-			}elseif(preg_match("/^\\/([^\\/]+)/", $path, $params) > 0){
-				$activePages = $activePage->countBy(array("category1" => mb_convert_kana($params[1], "KV")));
-				if($activePages > 0){
-					$_POST["category1"] = $params[1];
-					$_POST["category2"] = "";
-					$_POST["category3"] = "";
-					$_POST["product_code"] = "";
-					$_SERVER["TEMPLATE"]->display("__active_page/category.html");
-					exit;
-				}elseif(preg_match("/^[0-9]{8}$/", $params[1]) > 0){
-					$_POST["date"] = "";
-					$_POST["category2"] = "";
-					$_POST["category3"] = "";
-					$_POST["product_code"] = "";
-					$_SERVER["TEMPLATE"]->display("__active_page/article.html");
-				}elseif($params[1] == "search.html"){
-					$_POST["category1"] = "";
-					$_POST["category2"] = "";
-					$_POST["category3"] = "";
-					$_POST["product_code"] = "";
-					$_SERVER["TEMPLATE"]->display("__active_page/search.html");
-				}
-			}elseif($path == "/"){
-				$_POST["category1"] = "";
-				$_POST["category2"] = "";
-				$_POST["category3"] = "";
-				$_POST["product_code"] = "";
-				$_SERVER["TEMPLATE"]->display("__active_page/index.html");
-				exit;
-			}
-		}
 		showHttpError("404", "Not Found", $ex);
 	}
 
+	// ポストフィルタを実行する。
+	foreach($_SERVER["CONFIGURE"]->postfilters as $filter){
+		$loader = new Clay_Plugin($filter["type"]);
+		$loader->LoadSetting();
+		$filter = $loader->loadFilter($filter["name"]);
+		$filter->execute();
+	}
+	
 	// 出力対象のコンテンツを取得	
 	ob_end_flush();
 	Clay_Database_Factory::close();

@@ -55,15 +55,6 @@ class Clay{
 		}
 
 		// クラスライブラリのディレクトリを設定
-		if (!defined('CLAY_PLUGINS_ROOT')) {
-			if(is_dir(realpath(CLAY_ROOT.DIRECTORY_SEPARATOR."plugins".DIRECTORY_SEPARATOR))){
-				define('CLAY_PLUGINS_ROOT', realpath(CLAY_ROOT.DIRECTORY_SEPARATOR."plugins".DIRECTORY_SEPARATOR));
-			}else{
-				define('CLAY_PLUGINS_ROOT', realpath(CLAY_ROOT.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."clay_plugins".DIRECTORY_SEPARATOR));
-			}
-		}
-
-		// クラスライブラリのディレクトリを設定
 		if (!defined('CLAY_CLASSES_ROOT')) {
 			define('CLAY_CLASSES_ROOT', realpath(dirname(__FILE__)));
 		}
@@ -74,14 +65,13 @@ class Clay{
 		
 		// 後起動処理を追加
 		Clay_Bootstrap_PhpVersion::start();
-		Clay_Bootstrap_CommonConfigure::start();
+		Clay_Bootstrap_Configure::start();
 		Clay_Bootstrap_ErrorMessage::start();
 		Clay_Bootstrap_Timezone::start();
 		Clay_Bootstrap_Locale::start();
 		Clay_Bootstrap_UserAgent::start();
 		Clay_Bootstrap_SessionId::start();
 		Clay_Bootstrap_Parameter::start();
-		Clay_Bootstrap_Configure::start();
 		Clay_Bootstrap_Session::start();
 		Clay_Bootstrap_TemplateName::start();
 		Clay_Bootstrap_CheckPermission::start();

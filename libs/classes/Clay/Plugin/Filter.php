@@ -22,24 +22,19 @@
  */
  
 /**
- * 共通設定読み込み用の起動処理です。
- * 
- * @package Bootstrap
+ * このシステムにおける全てのフィルタの基底クラスになります。
+ * 必ず拡張する必要があり、executeメソッドを実装する必要があります。
+ *
+ * @package Plugin
  * @author Naohisa Minagawa <info@clay-system.jp>
  */
-class Clay_Bootstrap_CommonConfigure{
-	public static function start(){
-		// SERVER_NAMEが未設定の場合はlocalhostを割当
-		if(!isset($_SERVER["SERVER_NAME"])){
-			$_SERVER["SERVER_NAME"] = "localhost";
-		}
-		
-		// 共通設定ファイルを読み込み
-		if(file_exists(CLAY_ROOT.DIRECTORY_SEPARATOR."configure".DIRECTORY_SEPARATOR."configure_".$_SERVER["SERVER_NAME"].".php")){
-			require(CLAY_ROOT.DIRECTORY_SEPARATOR."configure".DIRECTORY_SEPARATOR."configure_".$_SERVER["SERVER_NAME"].".php");
-		}else{
-			require(CLAY_ROOT.DIRECTORY_SEPARATOR."configure".DIRECTORY_SEPARATOR."configure.php");
-		}
-	}
+abstract class Clay_Plugin_Filter{
+    /**
+	 * デフォルト実行のメソッドになります。
+	 * このメソッド以外がモジュールとして呼ばれることはありません。
+     *
+     * @access public
+     */
+	abstract function execute();
 }
  

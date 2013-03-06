@@ -27,62 +27,59 @@
  * @package Plugin
  * @author Naohisa Minagawa <info@clay-system.jp>
  */
-abstract class Clay_Plugin_Module_Page extends Clay_Plugin_Module_List{
-	public function execute($params){
-		// 検索に使用するプラグインローダーを取得する。
-		$loader = $this->getLoader();
+abstract class Clay_Plugin_Module_Page extends Clay_Plugin_Module{
+	protected function executeImpl($params, $type, $name, $result, $defaultSortKey = "create_time"){
+		$loader = new Clay_Plugin($type);
 		$loader->LoadSetting();
 
 		// ページャの初期化
-		$pager = new Clay_Pager($params->get("_pager_mode", Clay_Pager::PAGE_SLIDE), $params->get("_pager_dispmode", Clay_Pager::DISPLAY_ATTR), $params->get("_pager_per_page", 20), $params->get("_pager_displays", 3));
+		$pagerMode = $params->get("_pager_mode", Clay_Pager::PAGE_SLIDE);
+		$pagerDisplay = $params->get("_pager_dispmode", Clay_Pager::DISPLAY_ATTR);
+		if($params->check("_pager_per_page_key")){
+			$pagerCount = $_POST[$params->get("_pager_per_page_key")];
+		}else{
+			$pagerCount = $params->get("_pager_per_page", 20);
+		}
+		if($params->check("_pager_displays_key")){
+			$pagerNumbers = $_POST[$params->get("_pager_displays_key")];
+		}else{
+			$pagerNumbers = $params->get("_pager_displays", 3);
+		}
+		$pager = new Clay_Pager($pagerMode, $pagerDisplay, $pagerCount, $pagerNumbers);
 		$pager->importTemplates($params);
 		
-		// 検索条件を構築する。
+		// カテゴリが選択された場合、カテゴリの商品IDのリストを使う
 		$conditions = array();
-		
-		// 拡張の検索条件を設定する。
-		$condition = $this->getExtendedCondition($condition, $params);
-		
-		// タグのパラメータから検索条件を抽出
-		$keys = $this->getSearchKeys();
-		foreach($keys as $key){
-			if($this->getDefaultByKey($key) != null || $params->check($key)){
-				$condition[$this->getColumnByKey($key)] = $params->get($key, $this->getDefaultByKey($key));
-			}
-		}
-		
-		// HTTPのリクエストデータから検索条件を抽出
-		foreach($keys as $key){
-			if(isset($_POST["search"][$key])){
-				$condition[$this->getColumnByKey($key)] = $_POST["search"][$key];
+		if(is_array($_POST["search"])){
+			foreach($_POST["search"] as $key => $value){
+				if(!empty($value)){
+					$conditions[$key] = $value;
+				}
 			}
 		}
 		
 		// 並べ替え順序が指定されている場合に適用
 		$sortOrder = "";
 		$sortReverse = false;
-		if($params->check("_sort_key")){
-			$sortOrder = $params->get("_sort_key");
-		}
-		if(isset($_POST["_sort_key"])){
-			$sortOrder = $_POST["_sort_key"];
-		}
-		if(empty($sortOrder)){
-			$sortOrder = "create_time";
-			$sortReverse = true;
-		}elseif(preg_match("/^rev@/", $sortOrder) > 0){
-			list($dummy, $sortOrder) = explode("@", $sortOrder);
-			$sortReverse = true;
+		if($params->check("sort_key")){
+			$sortOrder = $_POST[$params->get("sort_key")];
+			if(empty($sortOrder)){
+				$sortOrder = $defaultSortKey;
+				$sortReverse = true;
+			}elseif(preg_match("/^rev@/", $sortOrder) > 0){
+				list($dummy, $sortOrder) = explode("@", $sortOrder);
+				$sortReverse = true;
+			}
 		}
 		
-		// 商品データを検索する。
-		$model = $loader->LoadModel($this->getModelName());
+		// 顧客データを検索する。
+		$model = $loader->LoadModel($name);
 		$pager->setDataSize($model->countBy($conditions));
 		$model->limit($pager->getPageSize(), $pager->getCurrentFirstOffset());
-		$result = $model->findAllBy($conditions, $sortOrder, $sortReverse);
+		$models = $model->findAllBy($conditions, $sortOrder, $sortReverse);
 		
-		$_SERVER["ATTRIBUTES"][$params->get("_result", $this->getDefaultResultKey())."_pager"] = $pager;
-		$_SERVER["ATTRIBUTES"][$params->get("_result", $this->getDefaultResultKey())] = $result;
+		$_SERVER["ATTRIBUTES"][$result."_pager"] = $pager;
+		$_SERVER["ATTRIBUTES"][$result] = $models;
 	}
 }
  

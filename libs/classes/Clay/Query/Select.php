@@ -233,6 +233,21 @@ class Clay_Query_Select{
 
 		return new Clay_Query_Select_Result($result);
 	}
+	
+	public function count($limit = null, $offset = null){
+		// 結果オブジェクトを取得
+		$result = $this->fetch($limit, $offset);
+		
+		// 結果を全て取得
+		$data = $result->count();
+		
+		// 結果オブジェクトを解放
+		$result->close();
+		$result = null;
+		
+		// クエリの実行結果を返す。
+		return $data;
+	}
 
 	public function execute($limit = null, $offset = null){
 		// 結果オブジェクトを取得

@@ -46,9 +46,11 @@ class Clay_Cache_File extends Clay_Cache_Base{
 	protected function save(){
 		if(!is_dir($this->cacheRoot)){
 			mkdir($this->cacheRoot);
+			chmod($this->cacheRoot, 0777);
 		}
 		if(!is_dir($this->cacheRoot.DIRECTORY_SEPARATOR.$this->server)){
 			mkdir($this->cacheRoot.DIRECTORY_SEPARATOR.$this->server);
+			chmod($this->cacheRoot.DIRECTORY_SEPARATOR.$this->server, 0777);
 		}
 		if(($fp = fopen($this->cacheRoot.DIRECTORY_SEPARATOR.$this->server.DIRECTORY_SEPARATOR.$this->file.".php", "w+")) !== FALSE){
 			fwrite($fp, "<"."?php\r\n");
@@ -57,6 +59,7 @@ class Clay_Cache_File extends Clay_Cache_Base{
 			}
 			fwrite($fp, "?".">\r\n");
 			fclose($fp);
+			chmod($this->cacheRoot.DIRECTORY_SEPARATOR.$this->server.DIRECTORY_SEPARATOR.$this->file.".php", 0666);
 		}
 	}
 }

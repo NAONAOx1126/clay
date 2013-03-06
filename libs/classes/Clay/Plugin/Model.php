@@ -214,6 +214,20 @@ class Clay_Plugin_Model{
 	}
 	
 	/**
+	 * レコードを特定のキーで検索する。
+	 */
+	public function queryAllBy($select){
+		$result = $select->execute($this->limit, $this->offset);
+		
+		$thisClass = get_class($this);
+		foreach($result as $i => $data){
+			$result[$i] = new $thisClass($data);
+		}
+		
+		return $result;
+	}
+	
+	/**
 	 * レコードの件数を取得する。
 	 */
 	public function countBy($values = array()){

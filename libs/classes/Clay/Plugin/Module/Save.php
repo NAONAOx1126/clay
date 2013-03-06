@@ -27,14 +27,34 @@
  * @package Plugin
  * @author Naohisa Minagawa <info@clay-system.jp>
  */
-abstract class Clay_Plugin_Module_Detail extends Clay_Plugin_Module{
-	protected function executeImpl($type, $name, $value, $result){
-		// サイトデータを取得する。
-		$loader = new Clay_Plugin($type);
-		$model = $loader->loadModel($name);
-		$model->findByPrimaryKey($value);
-		
-		$_SERVER["ATTRIBUTES"][$result] = $model;
+abstract class Clay_Plugin_Module_Save extends Clay_Plugin_Module{
+	protected function executeImpl($type, $name, $key){
+		if($_POST["add"] || $_POST["save"]){
+			// サイトデータを取得する。
+			$loader = new Clay_Plugin($type);
+			$model = $loader->loadModel($name);
+			$model->findByPrimaryKey($_POST[$key]);
+			foreach($_POST as $key => $value){
+				$model->$key = $value;
+			}
+			
+			// トランザクションの開始
+			Clay_Database_Factory::begin(strtolower($type));
+			
+			try{
+				$model->save();
+				$_POST[$key] = $model->$key;
+	
+				// エラーが無かった場合、処理をコミットする。
+				Clay_Database_Factory::commit(strtolower($type));
+				$this->removeInput("add");
+				$this->removeInput("save");
+				$this->reload();
+			}catch(Exception $e){
+				Clay_Database_Factory::rollBack(strtolower($type));
+				throw $e;
+			}
+		}
 	}
 }
  

@@ -35,8 +35,17 @@ class Clay_Bootstrap_Session{
 				ini_set("session.save_handler", "files");
 				break;
 			case "memcached":
+				if(strpos($_SERVER["CONFIGURE"]->MEMCACHED_SERVER, ":") > 0){
+					list($host, $port) = explode(":", $_SERVER["CONFIGURE"]->MEMCACHED_SERVER);
+				}else{
+					$host = $_SERVER["CONFIGURE"]->MEMCACHED_SERVER;
+					$port = 0;
+				}
+				if(!($port > 0)){
+					$port = 11211;
+				}
 				ini_set("session.save_handler", "memcache");
-				ini_set("session.save_path", "localhost:11211");	
+				ini_set("session.save_path", $host.":".$port);	
 				break;
 			default:
 				ini_set("session.save_handler", "user");

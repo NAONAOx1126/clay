@@ -38,7 +38,16 @@ abstract class Clay_Plugin_Module{
      */
 	abstract function execute($params);
 	
-	function redirect($url){
+	protected function encryptPassword($login_id, $plain_password){
+		return sha1($login_id.":".$plain_password);
+	}
+	
+	protected function removeInput($key){
+		unset($_SESSION["INPUT_DATA"][TEMPLATE_DIRECTORY][$key]);
+		unset($_POST[$key]);
+	}
+	
+	protected function redirect($url){
 		if(is_array($_POST)){
 			$_SESSION["INPUT_DATA"] = array(TEMPLATE_DIRECTORY => array());
 			foreach($_POST as $key => $value){
@@ -49,7 +58,7 @@ abstract class Clay_Plugin_Module{
 		exit;
 	}
 	
-	function reload(){
+	protected function reload(){
 		$this->redirect(CLAY_SUBDIR.$_SERVER["TEMPLATE_NAME"]);
 	}
 }

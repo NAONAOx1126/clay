@@ -29,6 +29,11 @@
  */
 class Clay_Database_Factory{
 	/**
+	 * @var array[string] データベースのモジュール接続情報を保持するインスタンス属性
+	 */
+	private static $modules;
+	
+	/**
 	 * @var array[string] データベースの接続情報を保持するインスタンス属性
 	 */
 	private static $configures;
@@ -42,8 +47,9 @@ class Clay_Database_Factory{
 	 * データベースファクトリクラスを初期化します。
 	 * @param array[string] $configures データベースの接続情報
 	 */
-	public static function initialize($configures){
+	public static function initialize($configures, $modules = array()){
 		Clay_Database_Factory::$configures = $configures;
+		Clay_Database_Factory::$modules = $modules;
 		Clay_Database_Factory::refresh();
 	}
 	
@@ -57,7 +63,11 @@ class Clay_Database_Factory{
 	 * @return array[string] データベースの接続情報
 	 */
 	public static function getConfigure($code = "default"){
-		return Clay_Database_Factory::$configures[$code];
+		$connectionName = "default";
+		if(isset(Clay_Database_Factory::$modules[$code]) && !empty(Clay_Database_Factory::$modules[$code])){
+			$connectionName = Clay_Database_Factory::$modules[$code];
+		}
+		return Clay_Database_Factory::$configures[$connectionName];
 	}
 	
 	/**
@@ -66,19 +76,10 @@ class Clay_Database_Factory{
 	 * @return array[PDOConnection] データベースの接続
 	 */
 	public static function getConnection($code = "default", $readonly = false){
-		// 指定された設定が無い場合はデフォルトの設定を有効にする。
-		if(!isset(Clay_Database_Factory::$configures[$code])){
-			$code = "default";
-		}
-		
-		// 読み込み専用で読み込み用の定義がある場合には、読み込み定義に変更
-		if($readonly && isset(Clay_Database_Factory::$configures["read:".$code])){
-			$code = "read:".$code;
-		}
 		
 		// DBのコネクションが設定されていない場合は接続する。
 		if(!isset(Clay_Database_Factory::$connections[$code])){
-			$conf = Clay_Database_Factory::$configures[$code];
+			$conf = Clay_Database_Factory::getConfigure($code);
 
 			try{
 				// 設定に応じてDBに接続

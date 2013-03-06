@@ -28,76 +28,39 @@
  * @author Naohisa Minagawa <info@clay-system.jp>
  */
 abstract class Clay_Plugin_Module_List extends Clay_Plugin_Module{
-	abstract protected function getModelName();
-	
-	abstract protected function getDefaultResultKey();
-
-	protected function getLoader(){
-		return new Clay_Plugin();
-	}
-	
-	protected function getExtendedCondition($condition, $params){
-		return $condition;
-	}
-	
-	protected function getSearchKeys(){
-		return array();
-	}
-	
-	protected function getColumnByKey($key){
-		return $key;
-	}
-	
-	protected function getDefaultByKey($key){
-		return null;
-	}
-	
-	public function execute($params){
-		// 検索に使用するプラグインローダーを取得する。
-		$loader = $this->getLoader();
-		$loader->LoadSetting();
-
-		// 検索条件を構築する。
+	protected function executeImpl($params, $type, $name, $result, $defaultSortKey = "create_time"){
+		// サイトデータを取得する。
+		$loader = new Clay_Plugin($type);
+		$model = $loader->loadModel($name);
+		
+		// カテゴリが選択された場合、カテゴリの商品IDのリストを使う
 		$conditions = array();
-		
-		// 拡張の検索条件を設定する。
-		$condition = $this->getExtendedCondition($condition, $params);
-		
-		// タグのパラメータから検索条件を抽出
-		$keys = $this->getSearchKeys();
-		foreach($keys as $key){
-			if($this->getDefaultByKey($key) != null || $params->check($key)){
-				$condition[$this->getColumnByKey($key)] = $params->get($key, $this->getDefaultByKey($key));
+		if(is_array($_POST["search"])){
+			foreach($_POST["search"] as $key => $value){
+				if(!empty($value)){
+					if($params->get("mode", "list") != "select" || !$params->check("select") || $key != substr($params->get("select"), 0, strpos($params->get("select"), "|"))){
+						$conditions[$key] = $value;
+					}
+				}
 			}
 		}
 		
-		// HTTPのリクエストデータから検索条件を抽出
-		foreach($_POST["search"] as $key => $value){
-			$condition[$this->getColumnByKey($key)] = $value;
+		if(is_array($_SERVER["FILE_CSV_DOWNLOAD"]) && $_SERVER["FILE_CSV_DOWNLOAD"]["LIMIT"] > 0){
+			$model->limit($_SERVER["FILE_CSV_DOWNLOAD"]["LIMIT"], $_SERVER["FILE_CSV_DOWNLOAD"]["OFFSET"]);
+			$_SERVER["FILE_CSV_DOWNLOAD"]["OFFSET"] += $_SERVER["FILE_CSV_DOWNLOAD"]["LIMIT"];
 		}
-		
-		// 並べ替え順序が指定されている場合に適用
-		$sortOrder = "";
-		$sortReverse = false;
-		if($params->check("_sort_key")){
-			$sortOrder = $params->get("_sort_key");
+		$models = $model->findAllBy($conditions);
+		if($params->get("mode", "list") == "list"){
+			$_SERVER["ATTRIBUTES"][$result] = $models;
+		}elseif($params->get("mode", "list") == "select"){
+			$_SERVER["ATTRIBUTES"][$result] = array();
+			if($params->check("select")){
+				list($select_key, $select_value) = explode("|", $params->get("select"));
+				foreach($models as $model){
+					$_SERVER["ATTRIBUTES"][$result][$model->$select_key] = $model->$select_value;
+				}
+			}
 		}
-		if(isset($_POST["_sort_key"])){
-			$sortOrder = $_POST["_sort_key"];
-		}
-		if(empty($sortOrder)){
-			$sortOrder = "create_time";
-			$sortReverse = true;
-		}elseif(preg_match("/^rev@/", $sortOrder) > 0){
-			list($dummy, $sortOrder) = explode("@", $sortOrder);
-			$sortReverse = true;
-		}
-		
-		// 商品データを検索する。
-		$model = $loader->LoadModel($this->getModelName());
-		$result = $model->findAllBy($conditions, $sortOrder, $sortReverse);
-		
-		$_SERVER["ATTRIBUTES"][$params->get("_result", $this->getDefaultResultKey())] = $result;
 	}
 }
  

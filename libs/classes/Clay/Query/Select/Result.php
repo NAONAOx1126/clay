@@ -61,6 +61,13 @@ class Clay_Query_Select_Result{
 	}
 
 	/**
+	 * 実行結果の件数を取得するメソッド
+	 */
+	public function count(){
+		return $this->result->count();
+	}
+
+	/**
 	 * 次の実行結果レコードの連想配列を取得するメソッド
 	 *
 	 * @return array 次の実行結果レコードの連想配列、次のレコードが無い場合はFALSE

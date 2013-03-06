@@ -22,69 +22,47 @@
  */
  
 /**
- * ローカル設定ファイル読み込み処理の起動処理です。
+ * 設定読み込み用の起動処理です。
  * 
  * @package Bootstrap
  * @author Naohisa Minagawa <info@clay-system.jp>
  */
 class Clay_Bootstrap_Configure{
 	public static function start(){
+		// SERVER_NAMEが未設定の場合はlocalhostを割当
+		if(!isset($_SERVER["SERVER_NAME"])){
+			$_SERVER["SERVER_NAME"] = "localhost";
+		}
+		
 		// サイトの設定を取得
 		$configure = Clay_Cache_Factory::create("site_configure");
 		
-		// サイトIDが取れない場合は基本設定を再取得
-		if($configure->site_id == ""){
-			// グローバルの設定を読み込みデータを反映
-			$configure->import($_SERVER["CONFIGURE"]);
-			$_SERVER["CONFIGURE"] = $configure;
-			
-			// データベースファクトリクラスを初期化
-			$base_connections = $_SERVER["CONFIGURE"]->connection;
-			$defaultDatabase = $base_connections["default"];
-			Clay_Database_Factory::initialize(array("default" => $defaultDatabase));
-		
-			// サイト情報を取得する。
-			$loader = new Clay_Plugin();
-			$site = $loader->loadModel("SiteModel");
-			if($site->findByHostName()){
-				$siteArray = $site->toArray();
-				// サイトの接続設定を取得する。
-				$connections = $site->connections();
-				$siteArray["connection"] = $_SERVER["CONFIGURE"]->connection;
-				foreach($connections as $connection){
-					if($connection->connection_code != "default"){
-						$dbconf = array();
-						if($connection->dbtype != ""){ $dbconf["dbtype"] = $connection->dbtype; }
-						if($connection->host != ""){ $dbconf["host"] = $connection->host; }
-						if($connection->port != ""){ $dbconf["port"] = $connection->port; }
-						if($connection->user != ""){ $dbconf["user"] = $connection->user; }
-						if($connection->password != ""){ $dbconf["password"] = $connection->password; }
-						if($connection->database != ""){ $dbconf["database"] = $connection->database; }
-						if($connection->query != ""){ $dbconf["query"] = $connection->query; }
-						$siteArray["connection"][$connection->connection_code] = $dbconf;
-					}
-				}
-		
-				// サイトオプション設定を取得する。
-				$configures = $site->configures();
-				foreach($configures as $configure){
-					if($configure->name != "connection"){
-						$siteArray[$configure->name] = $configure->value;
-					}
-				}
-				
-				// サイトデータをキャッシュに保存
-				$_SERVER["CONFIGURE"]->import($siteArray);
+		// ドメイン名が取れない場合は設定ファイルを読み込み
+		if($configure->domain_name == ""){
+			// 共通設定ファイルを読み込み
+			if(file_exists(CLAY_ROOT.DIRECTORY_SEPARATOR."configure".DIRECTORY_SEPARATOR."configure_".$_SERVER["SERVER_NAME"].".php")){
+				require(CLAY_ROOT.DIRECTORY_SEPARATOR."configure".DIRECTORY_SEPARATOR."configure_".$_SERVER["SERVER_NAME"].".php");
+			}else{
+				require(CLAY_ROOT.DIRECTORY_SEPARATOR."configure".DIRECTORY_SEPARATOR."configure.php");
 			}
-		}else{
-			$_SERVER["CONFIGURE"] = $configure;
+			
+			// 設定をキャッシュにインポート
+			$configure->import($_SERVER["CONFIGURE"]);
+		}
+		$_SERVER["CONFIGURE"] = $configure;
+		
+		// プラグインライブラリのディレクトリを設定
+		if (!defined('CLAY_PLUGINS_ROOT')) {
+			if($_SERVER["CONFIGURE"]->plugins_root){
+				define("CLAY_PLUGINS_ROOT", $_SERVER["CONFIGURE"]->plugins_root);
+			}else{
+				define('CLAY_PLUGINS_ROOT', realpath(CLAY_ROOT.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."clay_plugins".DIRECTORY_SEPARATOR));
+			}
 		}
 		
-		// サイトIDを定数にする。
-		define("SITE_ID", $_SERVER["CONFIGURE"]->site_id);
 		
-		// データベースの設定をリロード
-		Clay_Database_Factory::initialize($_SERVER["CONFIGURE"]->connection);
+		// データベースを初期化する。
+		Clay_Database_Factory::initialize($_SERVER["CONFIGURE"]->connections, $_SERVER["CONFIGURE"]->connection_modules);
 	}
 }
  

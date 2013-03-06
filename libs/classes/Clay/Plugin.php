@@ -87,7 +87,7 @@ class Clay_Plugin{
 	}
 	
 	/**
-	 * モジュールクラスのファイルを読み込む
+	 * 設定のファイルを読み込む
 	 *
 	 * @params string $name モジュール呼び出し名
 	 */
@@ -107,6 +107,31 @@ class Clay_Plugin{
 		if(file_exists(CLAY_PLUGINS_ROOT.DIRECTORY_SEPARATOR."clay_".$names[0]."/Setting.php")){
 			Clay_Logger::writeDebug("Loaded File for Setting : ".CLAY_PLUGINS_ROOT.DIRECTORY_SEPARATOR."clay_".$names[0]."/Setting.php");
 			require_once(CLAY_PLUGINS_ROOT.DIRECTORY_SEPARATOR."clay_".$names[0]."/Setting.php");
+			return;
+		}
+	}
+	
+	/**
+	 * 共通クラスのファイルを読み込む
+	 *
+	 * @params string $name モジュール呼び出し名
+	 */
+	function loadCommon($name){
+		$names = explode(".", $this->namespace);
+		if(isset($_SERVER["CONFIGURE"]->site_home)){
+			$pluginPath = $_SERVER["CONFIGURE"]->site_home.DIRECTORY_SEPARATOR.$names[0];
+			if(!empty($pluginPath)){
+				if(file_exists($pluginPath."/common/".$name.".php")){
+					Clay_Logger::writeDebug("Loaded File for Setting : ".$pluginPath."/common/".$name.".php");
+					require_once($pluginPath."/common/".$name.".php");
+					return;
+				}
+			}
+		}
+		$names[0] = strtolower($names[0]);
+		if(file_exists(CLAY_PLUGINS_ROOT.DIRECTORY_SEPARATOR."clay_".$names[0]."/common/".$name.".php")){
+			Clay_Logger::writeDebug("Loaded File for Setting : ".CLAY_PLUGINS_ROOT.DIRECTORY_SEPARATOR."clay_".$names[0]."/common/".$name.".php");
+			require_once(CLAY_PLUGINS_ROOT.DIRECTORY_SEPARATOR."clay_".$names[0]."/common/".$name.".php");
 			return;
 		}
 	}
@@ -154,6 +179,15 @@ class Clay_Plugin{
 	 */
 	function loadJson($name){
 		return $this->load("json", $name);
+	}
+	
+	/**
+	 * フィルタクラスのファイルを読み込む
+	 *
+	 * @params string $name フィルタ呼び出し名
+	 */
+	function loadFilter($name){
+		return $this->load("filter", $name);
 	}
 	
 	/**
