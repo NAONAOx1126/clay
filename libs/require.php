@@ -72,4 +72,7 @@ require_once(dirname(__FILE__)."/classes/PHPTAL.php");
 // PHP Excelのライブラリを読み込む
 require_once(dirname(__FILE__)."/classes/PHPExcel.php");
 
+// PHP Wordのライブラリを読み込む
+require_once(dirname(__FILE__)."/classes/PHPWord.php");
+
 Clay::startup();
