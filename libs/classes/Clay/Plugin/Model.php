@@ -43,6 +43,9 @@ class Clay_Plugin_Model{
 	// 設定値リスト
 	protected $values;
 	
+	// 結果のグループ化
+	protected $groupBy;
+	
 	// 出力レコード数
 	protected $limit;
 	
@@ -65,6 +68,7 @@ class Clay_Plugin_Model{
 			$this->values[$column] = "";
 		}
 		$this->setValues($values);
+		$this->setGroupBy();
 		$this->limit();
 	}
 	
@@ -108,6 +112,10 @@ class Clay_Plugin_Model{
 	 */
 	public function __toString(){
 		return var_export($this->values, true);
+	}
+	
+	public function setGroupBy($groupBy = null){
+		$this->groupBy = $groupBy;
 	}
 	
 	/**
@@ -177,6 +185,11 @@ class Clay_Plugin_Model{
 				$select = $this->appendWhere($select, $key, $value);
 			}
 		}
+
+		if($this->groupBy != null){
+			$select->addGroupBy($this->groupBy);
+		}
+		
 		if(!empty($order)){
 			if(is_array($order)){
 				foreach($order as $index => $ord){

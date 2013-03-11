@@ -34,10 +34,9 @@ class Clay_Database_Mysql_Connection{
 		if(!isset($configure["port"])){
 			$configure["port"] = "3306";
 		}
-		$this->connection = mysql_connect($configure["host"].":".$configure["port"], $configure["user"], $configure["password"], true);
-		mysql_select_db($configure["database"], $this->connection);
-		mysql_set_charset("UTF-8", $this->connection);
-		mysql_query($configure["query"], $this->connection);
+		$this->connection = mysqli_connect($configure["host"], $configure["user"], $configure["password"], $configure["database"], $configure["port"]);
+		mysqli_set_charset($this->connection, "UTF-8");
+		mysqli_query($this->connection, $configure["query"]);
 	}
 	
 	public function columns($table){
@@ -103,7 +102,7 @@ class Clay_Database_Mysql_Connection{
 	
 	public function escape($value){
 		if($this->connection != null){
-			return mysql_real_escape_string($value, $this->connection);
+			return mysqli_real_escape_string($this->connection, $value);
 		}
 		return null;
 	}
@@ -114,26 +113,26 @@ class Clay_Database_Mysql_Connection{
 	
 	public function query($query){
 		if($this->connection != null){
-			mysql_ping($this->connection);
-			$result = mysql_query($query, $this->connection);
+			mysqli_ping($this->connection);
+			$result = mysqli_query($this->connection, $query);
 			if($result === FALSE){
 				return FALSE;
 			}elseif($result !== TRUE){
 				return new Clay_Database_Mysql_Result($result);
 			}else{
-				return mysql_affected_rows($this->connection);
+				return mysqli_affected_rows($this->connection);
 			}
 		}
 		return null;
 	}
 	
 	public function auto_increment(){
-		return mysql_insert_id($this->connection);
+		return mysqli_insert_id($this->connection);
 	}
 	
 	public function close(){
 		if($this->connection != null){
-			mysql_close($this->connection);
+			mysqli_close($this->connection);
 			$this->connection = null;
 		}
 	}

@@ -36,14 +36,15 @@ class Clay_Database_Mysql_Result{
 	
 	public function fetch(){
 		if($this->resource != null){
-			return mysql_fetch_assoc($this->resource);
+			$result = mysqli_fetch_assoc($this->resource);
+			return $result;
 		}
-		return FALSE;
+		return NULL;
 	}
 	
 	public function fetchAll(){
 		$result = array();
-		while(($data = $this->fetch()) !== FALSE){
+		while($data = $this->fetch()){
 			$result[] = $data;
 		}
 		return $result;
@@ -51,16 +52,16 @@ class Clay_Database_Mysql_Result{
 	
 	public function rewind(){
 		if($this->count() > 0){
-			mysql_data_seek($this->resource, 0);
+			mysqli_field_seek($this->resource, 0);
 		}
 	}
 	
 	public function count(){
-		return mysql_num_rows($this->resource);
+		return mysqli_num_rows($this->resource);
 	}
 	
 	public function close(){
-		mysql_free_result($this->resource);
+		mysqli_free_result($this->resource);
 		$this->resource = null;
 	}
 }
