@@ -37,6 +37,25 @@ abstract class Clay_Template{
 	protected $template_dir;
 	
 	/**
+	 * 共通のアサイン処理
+	 */
+	protected function initialAssign(){
+		// 月のセレクタのアサイン処理
+		$monthSelect = array();
+		for($i = 1; $i <= 12; $i ++){
+			$monthSelect[sprintf("%02d", $i)] = $i."月";
+		}
+		$this->assign("SelectionMonth", $monthSelect);
+
+		// 日のセレクタのアサイン処理
+		$daySelect = array();
+		for($i = 1; $i <= 31; $i ++){
+			$daySelect[sprintf("%02d", $i)] = $i."日";
+		}
+		$this->assign("SelectionDay", $daySelect);
+	}
+	
+	/**
 	 * ページに変数を割り当てるメソッドです。
 	 */
 	public abstract function assign($tpl_var, $value = null, $nocache = false, $scope = SMARTY_LOCAL_SCOPE);

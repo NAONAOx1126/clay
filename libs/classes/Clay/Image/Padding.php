@@ -27,46 +27,48 @@
  * @package Filter
  * @author Naohisa Minagawa <info@clay-system.jp>
  */
-class Clay_Filter_Image_Resize extends Clay_Filter_Image_Base{
-	function __construct($width, $height){
+class Clay_Image_Padding extends Clay_Image_Base{
+	var $background;
+	
+	function __construct($width, $height, $background = array(255, 255, 255)){
 		$this->width = $width;
 		$this->height = $height;
-	}
-	
-	function calculateSize($info){
-		// 一方の辺指定が0の場合、比率を維持した時のサイズを設定する。
-		if($this->width == 0){
-			$this->width = floor($info[0] * $this->height / $info[1]);
-		}
-		if($this->height == 0){
-			$this->height = floor($info[1] * $this->width / $info[0]);
-		}
-		
-		// 幅が規定値より大きい場合は調整する。
-		if($this->width < $info[0] && floor($this->width * $info[1] / $info[0]) < $this->height){
-			$this->height = floor($this->width * $info[1] / $info[0]);
-		}
-		
-		// 高さが規定値より大きい場合は調整する。
-		if($this->height < $info[1] && floor($this->height * $info[0] / $info[1]) < $this->width){
-			$this->width = floor($this->height * $info[0] / $info[1]);
-		}
-		if($info[0] < $this->width && $info[1] < $this->height){
-			$this->width = $info[0];
-			$this->height = $info[1];
-		}
+		$this->background = $background;
 	}
 	
 	function filter($image, $info){
 		if($this->width > 0 || $this->height > 0){
+			// 調整前の幅と高さを取得する
+			$baseWidth = $this->width;
+			$baseHeight = $this->height;
+			
 			// 変形後の幅と高さを計算する。
-			$this->calculateSize();
+			$this->calculateSize($info);
+			
+			// 調整後の幅と高さを取得する
+			$targetWidth = $this->width;
+			$targetHeight = $this->height;
+			
+			// 調整前の幅と高さが0の時は調整後の値を使う
+			if($baseWidth == 0){
+				$baseWidth = $targetWidth;
+			}
+			if($baseHeight == 0){
+				$baseHeight = $targetHeight;
+			}
+			
+			// 画像は調整前の高さで作成するため、置き換える
+			$this->width = $baseWidth;
+			$this->height = $baseHeight;
 			
 			// 透過処理済みの新しい画像オブジェクトを生成
 			$newImage = $this->transparent($image, $info);
+			
+			// 背景部分を指定色で塗りつぶし
+			imagefill($newImage, 0, 0, imagecolorallocate($newImage, $this->background[0], $this->background[1], $this->background[2]));
 	
 			// 画像縮小処理
-			imagecopyresampled($newImage, $image, 0, 0, 0, 0, $this->width, $this->height, $info[0], $info[1]);
+			imagecopyresampled($newImage, $image, floor(($baseWidth - $targetWidth) / 2), floor(($baseHeight - $targetHeight) / 2), 0, 0, $targetWidth, $targetHeight, $info[0], $info[1]);
 			imagedestroy($image);
 			$image = $newImage;
 		}else{

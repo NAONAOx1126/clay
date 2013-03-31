@@ -27,7 +27,7 @@
  * @package Filter
  * @author Naohisa Minagawa <info@clay-system.jp>
  */
-abstract class Clay_Filter_Image_Base{
+abstract class Clay_Image_Base{
 	var $width;
 	
 	var $height;

@@ -76,6 +76,16 @@ function smarty_function_loadmodule($params, $smarty, $template)
 					$_POST = array("search" => $_POST["search"]);
 				}
 			}
+			if(!empty($params["key_prefix"])){
+				$object->key_prefix = $params["key_prefix"];
+			}else{
+				$object->key_prefix = "";
+			}
+			if(!empty($params["continue"])){
+				$object->continue = $params["continue"];
+			}else{
+				$object->continue = "";
+			}
 			$object->execute(new LoadModuleParams($params));
 			Clay_Logger::writeDebug("MODULE : ".$name." end");
 		}else{

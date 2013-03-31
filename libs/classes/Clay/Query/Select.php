@@ -83,11 +83,15 @@ class Clay_Query_Select{
 	
 	private $offset;
 
-	public function __construct($table){
+	public function __construct($table, $from = null){
 		$this->module = $table->getModuleName();
 		$this->distinct = false;
 		$this->columns = array();
-		$this->tables = $table->_T;
+		if($from == null){
+			$this->tables = $table->_T;
+		}else{
+			$this->tables = $from;
+		}
 		$this->wheres = array();
 		$this->groups = array();
 		$this->having = array();
@@ -111,7 +115,11 @@ class Clay_Query_Select{
 	}
 
 	public function joinInner($table, $conditions = array(), $values = array()){
-		$this->tables .= " INNER JOIN ".$table->_T.(!empty($conditions)?" ON ".implode(" AND ", $conditions):"");
+		$tableName = $table->_T;
+		if(is_string($table)){
+			$tableName = $table;
+		}
+		$this->tables .= " INNER JOIN ".$tableName.(!empty($conditions)?" ON ".implode(" AND ", $conditions):"");
 		foreach($values as $v){
 			$this->tableValues[] = (is_string($v)?trim($v):$v);
 		}
@@ -119,7 +127,11 @@ class Clay_Query_Select{
 	}
 
 	public function joinLeft($table, $conditions = array(), $values = array()){
-		$this->tables .= " LEFT JOIN ".$table->_T.(!empty($conditions)?" ON ".implode(" AND ", $conditions):"");
+		$tableName = $table->_T;
+		if(is_string($table)){
+			$tableName = $table;
+		}
+		$this->tables .= " LEFT JOIN ".$tableName.(!empty($conditions)?" ON ".implode(" AND ", $conditions):"");
 		foreach($values as $v){
 			$this->tableValues[] = (is_string($v)?trim($v):$v);
 		}

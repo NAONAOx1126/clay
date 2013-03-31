@@ -89,7 +89,7 @@ class Clay_Plugin_Model{
 	public function __set($name, $value){
 		// 主キー以外のカラムとして存在した場合は変更を行う。
 		if(!in_array($name, $this->primary_keys)){
-			if($name == "create_time"){
+			if($name == "create_role_id" || $name == "create_operator_id" || $name == "create_time"){
 				if(empty($this->values[$name])){
 					// データ登録日は未設定の場合のみ設定する。
 					$this->values[$name] = $value;
@@ -260,107 +260,6 @@ class Clay_Plugin_Model{
 		}
 	}
 	
-	public function summeryByArray($groups, $targets, $values = array(), $order = "", $columns = array()){
-		$select = new Clay_Query_Select($this->access);
-		foreach($groups as $group){
-			if(!empty($group)){
-				if(substr($group, 0, 1) == ":" && substr($group, -1) == ":"){
-					$group = str_replace(";",",", $group);
-					$arrGroup = explode(":", substr($group, 1, -1));
-					$group_name = array_pop($arrGroup);
-					$group = "";
-					for($i = 0; $i < count($arrGroup); $i ++){
-						if($i % 2 == 0){
-							$group .= $arrGroup[$i];
-						}else{
-							$name = $arrGroup[$i];
-							$group .= $this->access->$name;
-						}
-					}
-					$select->addColumn($group, $group_name);
-					$select->addGroupBy($group);				
-				}else{
-					$select->addColumn($this->access->$group);
-					$select->addGroupBy($this->access->$group);
-				}
-			}
-		}
-		foreach($columns as $column){
-			if(!empty($column)){
-				if(substr($column, 0, 1) == ":" && substr($column, -1) == ":"){
-					$column = str_replace(";",",", $column);
-					$arrColumn = explode(":", substr($column, 1, -1));
-					$column_name = array_pop($arrColumn);
-					$column = "";
-					for($i = 0; $i < count($arrColumn); $i ++){
-						if($i % 2 == 0){
-							$column .= $arrColumn[$i];
-						}else{
-							$name = $arrColumn[$i];
-							$column .= $this->access->$name;
-						}
-					}
-					$select->addColumn($column, $column_name);
-				}else{
-					$select->addColumn($this->access->$column);
-				}
-			}
-		}
-		if(is_array($this->primary_keys) && !empty($this->primary_keys)){
-			$primary_key = $this->primary_keys[0];
-			$select->addColumn("COUNT(".$this->access->$primary_key.")", "count");
-		}else{
-			$select->addColumn("COUNT(*)", "count");
-		}
-		foreach($targets as $target){
-			if(!empty($target)){
-				if(substr($target, 0, 1) == ":" && substr($target, -1) == ":"){
-					$target = str_replace(";",",", $target);
-					$arrTarget = explode(":", substr($target, 1, -1));
-					$target_name = array_pop($arrTarget);
-					$target = "";
-					for($i = 0; $i < count($arrTarget); $i ++){
-						if($i % 2 == 0){
-							$target .= $arrTarget[$i];
-						}else{
-							$name = $arrTarget[$i];
-							$target .= $this->access->$name;
-						}
-					}
-					$select->addColumn("SUM(".$target.")", $target_name);
-				}else{
-					$select->addColumn("SUM(".$this->access->$target.")", $target);
-				}
-			}
-		}
-		foreach($values as $key => $value){
-			$select = $this->appendWhere($select, $key, $value);
-		}
-		if(!empty($order)){
-			if(preg_match("/^rev@/", $order) > 0){
-				$select->addOrder(substr($order, 4), true);
-			}else{
-				$select->addOrder($order, false);			
-			}
-		}else{
-			$select->addOrder("count", true);
-		}
-		$result = $select->execute($this->limit, $this->offset);
-		
-		return $result;
-	}
-	
-	public function summeryBy($groups, $targets, $values = array(), $order = "", $columns = array()){
-		$result = $this->summeryByArray($groups, $targets, $values, $order, $columns);
-		
-		$thisClass = get_class($this);
-		foreach($result as $i => $data){
-			$result[$i] = new $thisClass($data);
-		}
-		
-		return $result;
-	}
-	
 	/**
 	 * パラメータの値により、WHERE句を構築する。
 	 * 
@@ -393,6 +292,14 @@ class Clay_Plugin_Model{
 			}
 		}
 		if(in_array($key, $this->columns)){
+			if(is_array($value)){
+				foreach($value as $item){
+					if(empty($item)){
+						return $select;
+					}
+				}
+				$value = implode("-", $value);
+			}
 			switch($op){
 				case "eq":
 					if($value == null){
@@ -497,9 +404,10 @@ class Clay_Plugin_Model{
 			$select->addColumn($this->access->_W);
 			foreach($this->primary_keys as $key){
 				if(isset($this->values[$key])){
-					$select->addWhere($key." = ?", array($this->values[$key]));
+					$select->addWhere($this->access->$key." = ?", array($this->values[$key]));
 				}else{
-					$select->addWhere($key." IS NULL", array());
+					$pkset = false;
+					break;
 				}
 				$pkset = true;
 			}
@@ -510,6 +418,10 @@ class Clay_Plugin_Model{
 			}
 			
 			// データ作成日／更新日は自動的に設定する。
+			if(array_key_exists("OPERATOR", $_SESSION) && $_SESSION["OPERATOR"]["operator_id"] > 0){
+				$this->create_role_id = $this->update_role_id = $_SESSION["OPERATOR"]["role_id"];
+				$this->create_operator_id = $this->update_operator_id = $_SESSION["OPERATOR"]["operator_id"];
+			}
 			$this->create_time = $this->update_time = date("Y-m-d H:i:s");
 			
 			if(!is_array($result) || empty($result)){

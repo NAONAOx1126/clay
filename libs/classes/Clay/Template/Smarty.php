@@ -66,13 +66,16 @@ class Clay_Template_Smarty extends Clay_Template{
 			$this->core->autoload_filters["pre"] = array();
 		}
 		$this->core->autoload_filters["pre"][] = "loadmodule";
+		
+		// デフォルトのアサインを設定
+		$this->initialAssign();
 	}
 	
 	public function assign($tpl_var, $value = null, $nocache = false, $scope = SMARTY_LOCAL_SCOPE){
-		$this->core->assign($tpl_var, $value, $nocache, $scope);
+		return $this->core->assign($tpl_var, $value, $nocache, $scope);
 	}
 	
 	public function fetch($template, $cache_id = null, $compile_id = null, $parent = null, $display = false){
-		$this->core->fetch($template, $cache_id, $compile_id, $parent, $display);
+		return $this->core->fetch($template, $cache_id, $compile_id, $parent, $display);
 	}
 }

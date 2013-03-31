@@ -29,6 +29,10 @@
  * @author Naohisa Minagawa <info@clay-system.jp>
  */
 abstract class Clay_Plugin_Module{
+	public $key_prefix;
+	
+	public $continue;
+	
     /**
 	 * デフォルト実行のメソッドになります。
 	 * このメソッド以外がモジュールとして呼ばれることはありません。

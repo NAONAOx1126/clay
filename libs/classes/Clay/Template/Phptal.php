@@ -41,6 +41,9 @@ class Clay_Template_Phptal extends Clay_Template{
 
 		// テンプレートのディレクトリとコンパイルのディレクトリをフレームワークのパス上に展開
 		$this->template_dir = array($_SERVER["CONFIGURE"]->site_home.$_SERVER["USER_TEMPLATE"]."/");
+
+		// デフォルトのアサインを設定
+		$this->initialAssign();
 	}
 	
 	

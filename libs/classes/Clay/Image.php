@@ -27,7 +27,7 @@
  * @package Filter
  * @author Naohisa Minagawa <info@clay-system.jp>
  */
-class Clay_Filter_Image
+class Clay_Image
 {
 	var $info = null;
 

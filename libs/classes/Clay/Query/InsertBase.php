@@ -89,7 +89,7 @@ abstract class Clay_Query_InsertBase{
 		$connection = Clay_Database_Factory::getConnection($this->module, true);
 		foreach($values as $key => $value){
 			if(isset($this->table->$key)){
-				$cols[] = $this->table->$key;
+				$cols[] = $key;
 				$vals[] = "'".$connection->escape(trim($value))."'";
 			}
 		}

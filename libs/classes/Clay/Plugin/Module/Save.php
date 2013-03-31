@@ -33,11 +33,21 @@ abstract class Clay_Plugin_Module_Save extends Clay_Plugin_Module{
 			// サイトデータを取得する。
 			$loader = new Clay_Plugin($type);
 			$model = $loader->loadModel($name);
+			if(!empty($this->key_prefix)){
+				$key = $this->key_prefix.$key;
+			}
 			$model->findByPrimaryKey($_POST[$key]);
 			foreach($_POST as $key => $value){
-				$model->$key = $value;
+				if(!empty($this->key_prefix)){
+					if(substr($key, 0, strlen($this->key_prefix)) == $this->key_prefix){
+						$key = preg_replace("/^".$this->key_prefix."/", "", $key);
+						$model->$key = $value;
+					}
+				}else{
+					$model->$key = $value;
+				}
 			}
-			
+							
 			// トランザクションの開始
 			Clay_Database_Factory::begin(strtolower($type));
 			
@@ -47,9 +57,11 @@ abstract class Clay_Plugin_Module_Save extends Clay_Plugin_Module{
 	
 				// エラーが無かった場合、処理をコミットする。
 				Clay_Database_Factory::commit(strtolower($type));
-				$this->removeInput("add");
-				$this->removeInput("save");
-				$this->reload();
+				if($this->continue != "1"){
+					$this->removeInput("add");
+					$this->removeInput("save");
+					$this->reload();
+				}
 			}catch(Exception $e){
 				Clay_Database_Factory::rollBack(strtolower($type));
 				throw $e;

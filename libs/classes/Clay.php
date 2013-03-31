@@ -75,7 +75,8 @@ class Clay{
 		Clay_Bootstrap_Session::start();
 		Clay_Bootstrap_TemplateName::start();
 		Clay_Bootstrap_CheckPermission::start();
-			
+		Clay_Bootstrap_Filter::start();
+		
 		register_shutdown_function(array("Clay", "shutdown"));
 	}
 	

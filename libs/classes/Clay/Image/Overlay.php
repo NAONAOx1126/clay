@@ -28,7 +28,7 @@
  * @package Filter
  * @author Naohisa Minagawa <info@clay-system.jp>
  */
-class Clay_Filter_Image_Overlay extends Clay_Filter_Image_Base{
+class Clay_Image_Overlay extends Clay_Image_Base{
 	var $resize;
 	
 	var $info;
