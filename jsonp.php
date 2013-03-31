@@ -25,6 +25,11 @@
  * JSONP形式によるデータの取得を行うためのメインPHPです。
  */
 
+// UserAgentが未設定の場合はダミーを設定
+if(!isset($_SERVER["HTTP_USER_AGENT"])){
+	$_SERVER["HTTP_USER_AGENT"] = "Mozilla/5.0 (Unknown; Server OS) PHP/5.3";
+}
+
 // 共通のライブラリの呼び出し。
 require(dirname(__FILE__)."/libs/require.php");
 
