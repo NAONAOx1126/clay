@@ -22,18 +22,24 @@
  */
  
 /**
- * SJISからUTF8に変換するためのストリームフィルタ。
+ * ファイルをダウンロードするためのヘルパクラスです。
  *
- * @package Filter
+ * @package Download
  * @author Naohisa Minagawa <info@clay-system.jp>
  */
-class Clay_Filter_Utf8ToSjis extends php_user_filter{
-	function filter($in, $out, &$consumed, $closing){
-		while ($bucket = stream_bucket_make_writeable($in)) {
-			$bucket->data = mb_convert_encoding($bucket->data, "UTF8", "SJIS");
-			$consumed += $bucket->datalen;
-			stream_bucket_append($out, $bucket);
-		}
-		return PSFS_PASS_ON;
+class Clay_Download_Csv extends Clay_Download_File{
+	/**
+	 * ダウンロードファイルを初期化します。
+	 */
+	public function __construct(){
+		parent::__construct("application/csv");
+	}
+	
+	/**
+	 * ダウンロードファイルにデータを追加する。
+	 */
+	public function write($data){
+		fputcsv($this->file, $data);
 	}
 }
+ 

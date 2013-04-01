@@ -22,14 +22,13 @@
  */
 
 /**
- * ロケール設定用の起動処理です。
+ * ストリームフィルタ用の起動処理です。
  * 
  * @package Bootstrap
  * @author Naohisa Minagawa <info@clay-system.jp>
  */
 class Clay_Bootstrap_Filter{
 	public static function start(){
-		// CSV出力用のUTF8 -> SJIS変換フィルタを追加
-		stream_filter_register("clay.utf8_to_sjis", "Clay_Filter_Utf8ToSjis");
+		// ストリームフィルタの登録処理を記述
 	}
 }

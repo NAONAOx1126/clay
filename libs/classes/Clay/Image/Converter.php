@@ -22,12 +22,12 @@
  */
  
 /**
- * 画像の処理を行うクラスです。
+ * 画像変換の処理を行うクラスです。
  *
  * @package Filter
  * @author Naohisa Minagawa <info@clay-system.jp>
  */
-class Clay_Image
+class Clay_Image_Converter
 {
 	var $info = null;
 
