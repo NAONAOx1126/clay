@@ -34,21 +34,11 @@ class Clay_Bootstrap_Configure{
 			$_SERVER["SERVER_NAME"] = "localhost";
 		}
 		
-		// サイトの設定を取得
-		$configure = Clay_Cache_Factory::create("site_configure");
-		
-		// ドメイン名が取れない場合は設定ファイルを読み込み
-		if($configure->domain_name == ""){
-			// 共通設定ファイルを読み込み
-			require(CLAY_ROOT.DIRECTORY_SEPARATOR."_configure".DIRECTORY_SEPARATOR."configure.default.php");
-			if(file_exists(CLAY_ROOT.DIRECTORY_SEPARATOR."_configure".DIRECTORY_SEPARATOR."configure_".$_SERVER["SERVER_NAME"].".php")){
-				require(CLAY_ROOT.DIRECTORY_SEPARATOR."_configure".DIRECTORY_SEPARATOR."configure_".$_SERVER["SERVER_NAME"].".php");
-			}
-			
-			// 設定をキャッシュにインポート
-			$configure->import($_SERVER["CONFIGURE"]);
+		// 共通設定ファイルを読み込み
+		require(CLAY_ROOT.DIRECTORY_SEPARATOR."_configure".DIRECTORY_SEPARATOR."configure.default.php");
+		if(file_exists(CLAY_ROOT.DIRECTORY_SEPARATOR."_configure".DIRECTORY_SEPARATOR."configure_".$_SERVER["SERVER_NAME"].".php")){
+			require(CLAY_ROOT.DIRECTORY_SEPARATOR."_configure".DIRECTORY_SEPARATOR."configure_".$_SERVER["SERVER_NAME"].".php");
 		}
-		$_SERVER["CONFIGURE"] = $configure;
 		
 		// プラグインライブラリのディレクトリを設定
 		if (!defined('CLAY_PLUGINS_ROOT')) {
@@ -58,7 +48,6 @@ class Clay_Bootstrap_Configure{
 				define('CLAY_PLUGINS_ROOT', realpath(CLAY_ROOT.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."clay_plugins".DIRECTORY_SEPARATOR));
 			}
 		}
-		
 		
 		// データベースを初期化する。
 		Clay_Database_Factory::initialize($_SERVER["CONFIGURE"]->connections, $_SERVER["CONFIGURE"]->connection_modules);

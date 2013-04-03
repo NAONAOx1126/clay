@@ -30,7 +30,7 @@
 class Clay_Bootstrap_Session{
 	public static function start(){
 		// セッション管理クラスをインクルード
-		switch($_SERVER["CONFIGURE"]->get("SESSION_MANAGER")){
+		switch($_SERVER["CONFIGURE"]->SESSION_MANAGER){
 			case "":
 				ini_set("session.save_handler", "files");
 				break;
