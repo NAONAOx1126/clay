@@ -34,25 +34,84 @@ class Clay_Bootstrap_CheckPermission{
 			echo "\"".CLAY_ROOT."\"に書き込み許可を与えてください。";
 			exit;
 		}
-		// configureに書き込み権限が必要です。
-		if(!is_writable(CLAY_ROOT.DIRECTORY_SEPARATOR."configure")){
-			echo "\"".CLAY_ROOT.DIRECTORY_SEPARATOR."configure"."\"に書き込み許可を与えてください。";
-			exit;
-		}
 		// cacheに書き込み権限が必要です。
-		if(!is_writable(CLAY_ROOT.DIRECTORY_SEPARATOR."cache")){
-			echo "\"".CLAY_ROOT.DIRECTORY_SEPARATOR."cache"."\"に書き込み許可を与えてください。";
+		if(!file_exists(CLAY_ROOT.DIRECTORY_SEPARATOR."_cache")){
+			mkdir(CLAY_ROOT.DIRECTORY_SEPARATOR."_cache");
+			chmod(CLAY_ROOT.DIRECTORY_SEPARATOR."_cache", 0777);
+		}
+		if(!is_writable(CLAY_ROOT.DIRECTORY_SEPARATOR."_cache")){
+			echo "\"".CLAY_ROOT.DIRECTORY_SEPARATOR."_cache"."\"に書き込み許可を与えてください。";
 			exit;
+		}elseif(!file_exists(CLAY_ROOT.DIRECTORY_SEPARATOR."_cache".DIRECTORY_SEPARATOR.".htaccess")){
+			if(($fp = fopen(CLAY_ROOT.DIRECTORY_SEPARATOR."_cache".DIRECTORY_SEPARATOR.".htaccess", "w+")) !== FALSE){
+				fwrite($fp, "Order allow,deny\r\n");
+				fwrite($fp, "Deny from all\r\n");
+				fclose($fp);
+			}
+		}
+		// cache_smartyに書き込み権限が必要です。
+		if(!file_exists(CLAY_ROOT.DIRECTORY_SEPARATOR."_cache_smarty")){
+			mkdir(CLAY_ROOT.DIRECTORY_SEPARATOR."_cache_smarty");
+			chmod(CLAY_ROOT.DIRECTORY_SEPARATOR."_cache_smarty", 0777);
+		}
+		if(!is_writable(CLAY_ROOT.DIRECTORY_SEPARATOR."_cache_smarty")){
+			echo "\"".CLAY_ROOT.DIRECTORY_SEPARATOR."_cache_smarty"."\"に書き込み許可を与えてください。";
+			exit;
+		}elseif(!file_exists(CLAY_ROOT.DIRECTORY_SEPARATOR."_cache_smarty".DIRECTORY_SEPARATOR.".htaccess")){
+			if(($fp = fopen(CLAY_ROOT.DIRECTORY_SEPARATOR."_cache_smarty".DIRECTORY_SEPARATOR.".htaccess", "w+")) !== FALSE){
+				fwrite($fp, "Order allow,deny\r\n");
+				fwrite($fp, "Deny from all\r\n");
+				fclose($fp);
+			}
 		}
 		// contentsに書き込み権限が必要です。
-		if(!is_writable(CLAY_ROOT.DIRECTORY_SEPARATOR."contents")){
-			echo "\"".CLAY_ROOT.DIRECTORY_SEPARATOR."contents"."\"に書き込み許可を与えてください。";
+		if(!file_exists(CLAY_ROOT.DIRECTORY_SEPARATOR."_contents")){
+			mkdir(CLAY_ROOT.DIRECTORY_SEPARATOR."_contents");
+			chmod(CLAY_ROOT.DIRECTORY_SEPARATOR."_contents", 0777);
+		}
+		if(!is_writable(CLAY_ROOT.DIRECTORY_SEPARATOR."_contents")){
+			echo "\"".CLAY_ROOT.DIRECTORY_SEPARATOR."_contents"."\"に書き込み許可を与えてください。";
 			exit;
+		}elseif(!file_exists(CLAY_ROOT.DIRECTORY_SEPARATOR."_contents".DIRECTORY_SEPARATOR.".htaccess")){
+			if(($fp = fopen(CLAY_ROOT.DIRECTORY_SEPARATOR."_contents".DIRECTORY_SEPARATOR.".htaccess", "w+")) !== FALSE){
+				fwrite($fp, "DirectoryIndex index.php\r\n");
+				fwrite($fp, "RewriteEngine off\r\n");
+				fwrite($fp, "<Files ~ \"\.(html?|xml)$\">\r\n");
+				fwrite($fp, "Order deny,allow\r\n");
+				fwrite($fp, "Deny from all\r\n");
+				fwrite($fp, "</Files>\r\n");
+				fclose($fp);
+			}
 		}
 		// logsに書き込み権限が必要です。
-		if(!is_writable(CLAY_ROOT.DIRECTORY_SEPARATOR."logs")){
-			echo "\"".CLAY_ROOT.DIRECTORY_SEPARATOR."logs"."\"に書き込み許可を与えてください。";
+		if(!file_exists(CLAY_ROOT.DIRECTORY_SEPARATOR."_logs")){
+			mkdir(CLAY_ROOT.DIRECTORY_SEPARATOR."_logs");
+			chmod(CLAY_ROOT.DIRECTORY_SEPARATOR."_logs", 0777);
+		}
+		if(!is_writable(CLAY_ROOT.DIRECTORY_SEPARATOR."_logs")){
+			echo "\"".CLAY_ROOT.DIRECTORY_SEPARATOR."_logs"."\"に書き込み許可を与えてください。";
 			exit;
+		}elseif(!file_exists(CLAY_ROOT.DIRECTORY_SEPARATOR."_logs".DIRECTORY_SEPARATOR.".htaccess")){
+			if(($fp = fopen(CLAY_ROOT.DIRECTORY_SEPARATOR."_logs".DIRECTORY_SEPARATOR.".htaccess", "w+")) !== FALSE){
+				fwrite($fp, "Order allow,deny\r\n");
+				fwrite($fp, "Deny from all\r\n");
+				fclose($fp);
+			}
+		}
+		// uploadに書き込み権限が必要です。
+		if(!file_exists(CLAY_ROOT.DIRECTORY_SEPARATOR."_uploads")){
+			mkdir(CLAY_ROOT.DIRECTORY_SEPARATOR."_uploads");
+			chmod(CLAY_ROOT.DIRECTORY_SEPARATOR."_uploads", 0777);
+		}
+		if(!is_writable(CLAY_ROOT.DIRECTORY_SEPARATOR."_uploads")){
+			echo "\"".CLAY_ROOT.DIRECTORY_SEPARATOR."_uploads"."\"に書き込み許可を与えてください。";
+			exit;
+		}elseif(!file_exists(CLAY_ROOT.DIRECTORY_SEPARATOR."_uploads".DIRECTORY_SEPARATOR.".htaccess")){
+			if(($fp = fopen(CLAY_ROOT.DIRECTORY_SEPARATOR."_uploads".DIRECTORY_SEPARATOR.".htaccess", "w+")) !== FALSE){
+				fwrite($fp, "Order allow,deny\r\n");
+				fwrite($fp, "Deny from all\r\n");
+				fclose($fp);
+			}
 		}
 	}
 }

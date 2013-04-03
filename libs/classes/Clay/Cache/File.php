@@ -31,7 +31,7 @@ class Clay_Cache_File extends Clay_Cache_Base{
 	private $cacheRoot;
 	
 	public function __construct($server, $file, $expires){
-		$this->cacheRoot = realpath(CLAY_ROOT.DIRECTORY_SEPARATOR."cache");
+		$this->cacheRoot = realpath(CLAY_ROOT.DIRECTORY_SEPARATOR."_cache");
 		$this->init($server, $file, $expires);
 	}
 	

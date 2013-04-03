@@ -65,6 +65,7 @@ class Clay{
 		
 		// 後起動処理を追加
 		Clay_Bootstrap_PhpVersion::start();
+		Clay_Bootstrap_CheckPermission::start();
 		Clay_Bootstrap_Configure::start();
 		Clay_Bootstrap_ErrorMessage::start();
 		Clay_Bootstrap_Timezone::start();
@@ -74,7 +75,6 @@ class Clay{
 		Clay_Bootstrap_Parameter::start();
 		Clay_Bootstrap_Session::start();
 		Clay_Bootstrap_TemplateName::start();
-		Clay_Bootstrap_CheckPermission::start();
 		Clay_Bootstrap_Filter::start();
 		
 		register_shutdown_function(array("Clay", "shutdown"));

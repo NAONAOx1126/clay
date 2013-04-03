@@ -1,9 +1,0 @@
-# DirectoryIndex‚Ì–³Œø‰»
-DirectoryIndex index.php
-
-# Rewrite‚Ì—LŒø‰»
-RewriteEngine off
-
-# HTML‚¨‚æ‚ÑXML‚Ì’¼ÚQÆ‚Í‹–‰Â‚µ‚È‚¢
-<Files ~ "€.(html?|xml)$">	Order deny,allow	Deny from all
-</Files>

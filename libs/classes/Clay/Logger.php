@@ -38,7 +38,7 @@ class Clay_Logger{
 		try{
 			if(isset($_SERVER["CONFIGURE"]->site_code)){
 				// ログディレクトリが無い場合は自動的に作成
-				$logHome = CLAY_ROOT.DIRECTORY_SEPARATOR."logs".DIRECTORY_SEPARATOR.$_SERVER["CONFIGURE"]->site_code;
+				$logHome = CLAY_ROOT.DIRECTORY_SEPARATOR."_logs".DIRECTORY_SEPARATOR.$_SERVER["CONFIGURE"]->site_code;
 				if(!is_dir($logHome)){
 					mkdir($logHome);
 					@chmod($logHome, 0777);

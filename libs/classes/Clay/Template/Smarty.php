@@ -49,7 +49,7 @@ class Clay_Template_Smarty extends Clay_Template{
 		
 		// テンプレートのディレクトリとコンパイルのディレクトリをフレームワークのパス上に展開
 		$this->template_dir = $this->core->template_dir = array($_SERVER["CONFIGURE"]->site_home.$_SERVER["USER_TEMPLATE"]."/");
-		$this->core->compile_dir = CLAY_ROOT.DIRECTORY_SEPARATOR."cache_smarty".DIRECTORY_SEPARATOR.$_SERVER["CONFIGURE"]->get("site_code").$_SERVER["USER_TEMPLATE"]."/";
+		$this->core->compile_dir = CLAY_ROOT.DIRECTORY_SEPARATOR."_cache_smarty".DIRECTORY_SEPARATOR.$_SERVER["CONFIGURE"]->get("site_code").$_SERVER["USER_TEMPLATE"]."/";
 		
 		// プラグインのディレクトリを追加する。
 		$smartyPath = CLAY_CLASSES_ROOT.DIRECTORY_SEPARATOR."Smarty";

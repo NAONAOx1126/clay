@@ -40,10 +40,9 @@ class Clay_Bootstrap_Configure{
 		// ドメイン名が取れない場合は設定ファイルを読み込み
 		if($configure->domain_name == ""){
 			// 共通設定ファイルを読み込み
-			if(file_exists(CLAY_ROOT.DIRECTORY_SEPARATOR."configure".DIRECTORY_SEPARATOR."configure_".$_SERVER["SERVER_NAME"].".php")){
-				require(CLAY_ROOT.DIRECTORY_SEPARATOR."configure".DIRECTORY_SEPARATOR."configure_".$_SERVER["SERVER_NAME"].".php");
-			}else{
-				require(CLAY_ROOT.DIRECTORY_SEPARATOR."configure".DIRECTORY_SEPARATOR."configure.php");
+			require(CLAY_ROOT.DIRECTORY_SEPARATOR."_configure".DIRECTORY_SEPARATOR."configure.default.php");
+			if(file_exists(CLAY_ROOT.DIRECTORY_SEPARATOR."_configure".DIRECTORY_SEPARATOR."configure_".$_SERVER["SERVER_NAME"].".php")){
+				require(CLAY_ROOT.DIRECTORY_SEPARATOR."_configure".DIRECTORY_SEPARATOR."configure_".$_SERVER["SERVER_NAME"].".php");
 			}
 			
 			// 設定をキャッシュにインポート
