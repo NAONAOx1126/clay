@@ -29,35 +29,37 @@
  */
 abstract class Clay_Plugin_Module_List extends Clay_Plugin_Module{
 	protected function executeImpl($params, $type, $name, $result, $defaultSortKey = "create_time"){
-		// サイトデータを取得する。
-		$loader = new Clay_Plugin($type);
-		$model = $loader->loadModel($name);
-		
-		// カテゴリが選択された場合、カテゴリの商品IDのリストを使う
-		$conditions = array();
-		if(is_array($_POST["search"])){
-			foreach($_POST["search"] as $key => $value){
-				if(!empty($value)){
-					if($params->get("mode", "list") != "select" || !$params->check("select") || $key != substr($params->get("select"), 0, strpos($params->get("select"), "|"))){
-						$conditions[$key] = $value;
+		if(!$params->check("search") || isset($_POST[$params->get("search")])){
+			// サイトデータを取得する。
+			$loader = new Clay_Plugin($type);
+			$model = $loader->loadModel($name);
+			
+			// カテゴリが選択された場合、カテゴリの商品IDのリストを使う
+			$conditions = array();
+			if(is_array($_POST["search"])){
+				foreach($_POST["search"] as $key => $value){
+					if(!empty($value)){
+						if($params->get("mode", "list") != "select" || !$params->check("select") || $key != substr($params->get("select"), 0, strpos($params->get("select"), "|"))){
+							$conditions[$key] = $value;
+						}
 					}
 				}
 			}
-		}
-		
-		if(is_array($_SERVER["FILE_CSV_DOWNLOAD"]) && $_SERVER["FILE_CSV_DOWNLOAD"]["LIMIT"] > 0){
-			$model->limit($_SERVER["FILE_CSV_DOWNLOAD"]["LIMIT"], $_SERVER["FILE_CSV_DOWNLOAD"]["OFFSET"]);
-			$_SERVER["FILE_CSV_DOWNLOAD"]["OFFSET"] += $_SERVER["FILE_CSV_DOWNLOAD"]["LIMIT"];
-		}
-		$models = $model->findAllBy($conditions);
-		if($params->get("mode", "list") == "list"){
-			$_SERVER["ATTRIBUTES"][$result] = $models;
-		}elseif($params->get("mode", "list") == "select"){
-			$_SERVER["ATTRIBUTES"][$result] = array();
-			if($params->check("select")){
-				list($select_key, $select_value) = explode("|", $params->get("select"));
-				foreach($models as $model){
-					$_SERVER["ATTRIBUTES"][$result][$model->$select_key] = $model->$select_value;
+			
+			if(is_array($_SERVER["FILE_CSV_DOWNLOAD"]) && $_SERVER["FILE_CSV_DOWNLOAD"]["LIMIT"] > 0){
+				$model->limit($_SERVER["FILE_CSV_DOWNLOAD"]["LIMIT"], $_SERVER["FILE_CSV_DOWNLOAD"]["OFFSET"]);
+				$_SERVER["FILE_CSV_DOWNLOAD"]["OFFSET"] += $_SERVER["FILE_CSV_DOWNLOAD"]["LIMIT"];
+			}
+			$models = $model->findAllBy($conditions);
+			if($params->get("mode", "list") == "list"){
+				$_SERVER["ATTRIBUTES"][$result] = $models;
+			}elseif($params->get("mode", "list") == "select"){
+				$_SERVER["ATTRIBUTES"][$result] = array();
+				if($params->check("select")){
+					list($select_key, $select_value) = explode("|", $params->get("select"));
+					foreach($models as $model){
+						$_SERVER["ATTRIBUTES"][$result][$model->$select_key] = $model->$select_value;
+					}
 				}
 			}
 		}

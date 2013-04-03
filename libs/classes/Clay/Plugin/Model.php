@@ -177,7 +177,7 @@ class Clay_Plugin_Model{
 	/**
 	 * レコードを特定のキーで検索する。
 	 */
-	public function findAllBy($values = array(), $order = "", $reverse = false){
+	public function findAllBy($values = array(), $order = "", $reverse = false, $callback = null){
 		$select = new Clay_Query_Select($this->access);
 		$select->addColumn($this->access->_W);
 		if(is_array($values)){
@@ -216,11 +216,15 @@ class Clay_Plugin_Model{
 			}
 		}
 		$select->setLimit($this->limit, $this->offset);
-		$result = $select->execute($this->limit, $this->offset);
-		
+		$sqlResult = $select->fetch($this->limit, $this->offset);
+		$result = array();
 		$thisClass = get_class($this);
-		foreach($result as $i => $data){
-			$result[$i] = new $thisClass($data);
+		while($data = $sqlResult->next()){
+			if($callback != null){
+				call_user_func($callback, new $thisClass($data));
+			}else{
+				$result[] = new $thisClass($data);
+			}
 		}
 		
 		return $result;

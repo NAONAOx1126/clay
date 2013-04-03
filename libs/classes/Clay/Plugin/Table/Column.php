@@ -29,7 +29,12 @@
  */
 class Clay_Plugin_Table_Column{
 	/**
-	 * @var Clay_Plugin_Table テーブルのインスタンス 
+	 * @var string テーブルのモジュール名 
+	 */
+	private $module;
+
+	/**
+	 * @var string テーブルの名称 
 	 */
 	private $table;
 
@@ -58,8 +63,9 @@ class Clay_Plugin_Table_Column{
 	 * @param Clay_Plugin_Table $table フィールドを保有しているテーブルのインスタンス
 	 * @param string $column フィールドのカラム名
 	 */
-	public function __construct(&$table, $column){
-		$this->table =& $table;
+	public function __construct($table, $column){
+		$this->module = $table->getModuleName();
+		$this->table = $table->_C;
 		$this->field = $column["Field"];
 		$this->canNull = (($column["Null"] == "YES")?true:false);
 		$this->isKey = (($column["Key"] == "PRI")?true:false);
@@ -84,10 +90,10 @@ class Clay_Plugin_Table_Column{
 	 */
 	public function __toString(){
 		// DBの接続を取得する。
-		$connection = Clay_Database_Factory::getConnection($this->table->getModuleName(), true);
+		$connection = Clay_Database_Factory::getConnection($this->module, true);
 		
 		// カラム名をエスケープする。
-		return $this->table->_C.".".$connection->escape_identifier($this->field);
+		return $this->table.".".$connection->escape_identifier($this->field);
 	}
 }
  
