@@ -36,6 +36,13 @@ class Clay_Upload_Csv extends Clay_Upload_File{
 	}
 	
 	/**
+	 * アップロードファイルを取り込み、ローカルファイルとして処理できるようにします。
+	 */
+	public function initialize($key, $encode = ""){
+		return parent::initialize($key, $encode).".csv";
+	}
+	
+	/**
 	 * アップロードファイルの全ての行データに処理を実行する。
 	 */
 	public function read($callback){

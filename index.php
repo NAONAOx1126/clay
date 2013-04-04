@@ -74,7 +74,10 @@ try{
 	Clay_Database_Factory::close();
 	Clay_Logger::writeDebug("TEMPLATE_PAGE : ".$_SERVER["TEMPLATE_NAME"]." Finished.");
 }catch(Exception $ex){
-	ob_end_clean();
-	// キャッシュ無効にするヘッダを送信
+	// ダウンロードの際は、よけいなバッファリングをクリア
+	while(ob_get_level() > 0){
+		ob_end_clean();
+	}
+		// キャッシュ無効にするヘッダを送信
 	echo $ex->getMessage();
 }

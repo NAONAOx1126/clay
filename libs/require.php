@@ -29,8 +29,11 @@
  * @params Exception $ex エラーの原因となった例外オブジェクト
  */
 function showHttpError($code, $message, $ex = null){
-	ob_end_clean();
-	
+	// ダウンロードの際は、よけいなバッファリングをクリア
+	while(ob_get_level() > 0){
+		ob_end_clean();
+	}
+		
 	// エラーログに書き込み
 	Clay_Logger::writeError($message."(".$code.")", $ex);
 	

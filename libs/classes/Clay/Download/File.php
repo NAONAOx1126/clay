@@ -65,8 +65,10 @@ class Clay_Download_File{
 		header("Content-Disposition: attachment; filename=\"".$filename."\"");
 		
 		// ダウンロードの際は、よけいなバッファリングをクリア
-		ob_end_clean();
-		
+		while(ob_get_level() > 0){
+			ob_end_clean();
+		}
+				
 		if(!empty($encode)){
 			// エンコードを指定した場合は行単位で処理する。
 			while(($buffer = fgets($this->file)) !== FALSE){
