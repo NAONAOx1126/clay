@@ -41,13 +41,20 @@ class Clay_Upload_File{
 	}
 	
 	/**
+	 * アップロードしたファイルを保存する際のファイル名を生成する。
+	 */
+	protected function getFileName(){
+		return CLAY_ROOT.DIRECTORY_SEPARATOR."_upload".DIRECTORY_SEPARATOR.uniqid($key);
+	}
+	
+	/**
 	 * アップロードファイルを取り込み、ローカルファイルとして処理できるようにします。
 	 */
 	public function initialize($key, $encode = ""){
 		if($_FILES[$key]["error"] == 0){
 			if(($fp = fopen($_FILES[$key]["tmp_name"], "r")) !== FALSE){
 				// エラーで無い場合のみ、データを展開
-				$filename = CLAY_ROOT.DIRECTORY_SEPARATOR."_upload".DIRECTORY_SEPARATOR.uniqid($key);
+				$filename = $this->getFileName();
 				
 				if(($fp2 = fopen($filename, "w+")) !== FALSE){
 					if(!empty($encode)){
