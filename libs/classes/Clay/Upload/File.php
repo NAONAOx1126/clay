@@ -44,7 +44,7 @@ class Clay_Upload_File{
 	 * アップロードしたファイルを保存する際のファイル名を生成する。
 	 */
 	protected function getFileName(){
-		return CLAY_ROOT.DIRECTORY_SEPARATOR."_upload".DIRECTORY_SEPARATOR.uniqid($key);
+		return CLAY_ROOT.DIRECTORY_SEPARATOR."_uploads".DIRECTORY_SEPARATOR.uniqid($key);
 	}
 	
 	/**
