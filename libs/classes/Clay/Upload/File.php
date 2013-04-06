@@ -46,7 +46,7 @@ class Clay_Upload_File{
 	 * アップロードしたファイルを保存する際のコードを生成する。
 	 */
 	public function getFileCode(){
-		$this->code;
+		return $this->code;
 	}
 	
 	/**
