@@ -38,7 +38,7 @@ class Clay_Upload_Csv extends Clay_Upload_File{
 	/**
 	 * アップロードしたファイルを保存する際のファイル名を生成する。
 	 */
-	protected function getFileName(){
+	public function getFileName(){
 		return parent::getFileName().".csv";
 	}
 	
