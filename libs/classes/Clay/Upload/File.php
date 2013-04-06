@@ -30,6 +30,8 @@
 class Clay_Upload_File{
 	protected $line;
 	
+	protected $code;
+	
 	protected $file;
 	
 	/**
@@ -41,10 +43,17 @@ class Clay_Upload_File{
 	}
 	
 	/**
+	 * アップロードしたファイルを保存する際のコードを生成する。
+	 */
+	public function getFileCode(){
+		$this->code;
+	}
+	
+	/**
 	 * アップロードしたファイルを保存する際のファイル名を生成する。
 	 */
-	protected function getFileName(){
-		return CLAY_ROOT.DIRECTORY_SEPARATOR."_uploads".DIRECTORY_SEPARATOR.uniqid($key);
+	public function getFileName(){
+		return CLAY_ROOT.DIRECTORY_SEPARATOR."_uploads".DIRECTORY_SEPARATOR.$this->getFileCode();
 	}
 	
 	/**
@@ -52,6 +61,7 @@ class Clay_Upload_File{
 	 */
 	public function initialize($key, $encode = ""){
 		if($_FILES[$key]["error"] == 0){
+			$this->code = uniqid($key);
 			if(($fp = fopen($_FILES[$key]["tmp_name"], "r")) !== FALSE){
 				// エラーで無い場合のみ、データを展開
 				$filename = $this->getFileName();
