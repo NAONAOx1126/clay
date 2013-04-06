@@ -67,7 +67,7 @@ function smarty_function_loadmodule($params, $smarty, $template)
 		$loader = new Clay_Plugin("");
 		$object = $loader->loadModule($name);
 		if(method_exists($object, "execute")){
-			Clay_Logger::writeDebug("MODULE : ".$name." start");
+			Clay_Logger::writeDebug("=========== ".$name." start ===========");
 			// 検索条件と並べ替えキー以外を無効化する。
 			if(isset($params["clear"]) && $params["clear"] == "1"){
 				if(isset($params["sort_key"]) && !empty($params["sort_key"])){
@@ -87,7 +87,7 @@ function smarty_function_loadmodule($params, $smarty, $template)
 				$object->continue = "";
 			}
 			$object->execute(new LoadModuleParams($params));
-			Clay_Logger::writeDebug("MODULE : ".$name." end");
+			Clay_Logger::writeDebug("=========== ".$name." end ===========");
 		}else{
 			Clay_Logger::writeAlert($name." is not plugin module.");
 		}

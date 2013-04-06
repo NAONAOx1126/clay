@@ -50,7 +50,6 @@ class Clay_Plugin{
 			if(!empty($this->namespace)){
 				$name = $this->namespace.".".$name;
 			}
-			Clay_Logger::writeDebug($name." ==> ".number_format(memory_get_usage()));
 			$names = explode(".", $name);
 			$class = implode("_", $names);
 			$path = implode(DIRECTORY_SEPARATOR, $names);
@@ -61,10 +60,11 @@ class Clay_Plugin{
 				$pluginPath = $_SERVER["CONFIGURE"]->site_home;
 				if(!empty($pluginPath)){
 					if(file_exists($pluginPath.DIRECTORY_SEPARATOR.$type.DIRECTORY_SEPARATOR.$path.".php")){
-						Clay_Logger::writeDebug("Loaded File for ".$class." class : ".$pluginPath.DIRECTORY_SEPARATOR.$type.DIRECTORY_SEPARATOR.$path.".php");
+						Clay_Logger::writeDebug($class." => ".$pluginPath.DIRECTORY_SEPARATOR.$type.DIRECTORY_SEPARATOR.$path.".php");
 						require_once($pluginPath.DIRECTORY_SEPARATOR.$type.DIRECTORY_SEPARATOR.$path.".php");
+						Clay_Logger::writeDebug("Start: ".$class."(".memory_get_usage().")");
 						$cls = new $class($params);
-						Clay_Logger::writeDebug("Loading File for ".$class." class : ".$pluginPath.DIRECTORY_SEPARATOR.$type.DIRECTORY_SEPARATOR.$path.".php");
+						Clay_Logger::writeDebug("End: ".$class."(".memory_get_usage().")");
 						return $cls;
 					}
 				}
@@ -73,10 +73,11 @@ class Clay_Plugin{
 			$names[0] = strtolower($names[0]);
 			$path = "clay_".implode(DIRECTORY_SEPARATOR, $names);
 			if(file_exists(CLAY_PLUGINS_ROOT.DIRECTORY_SEPARATOR.$path.".php")){
-				Clay_Logger::writeDebug("Loading File for ".$class." class : ".CLAY_PLUGINS_ROOT.DIRECTORY_SEPARATOR.$path.".php");
+				Clay_Logger::writeDebug($class." => ".CLAY_PLUGINS_ROOT.DIRECTORY_SEPARATOR.$path.".php");
 				require_once(CLAY_PLUGINS_ROOT.DIRECTORY_SEPARATOR.$path.".php");
+				Clay_Logger::writeDebug("Start: ".$class."(".memory_get_usage().")");
 				$cls = new $class($params);
-				Clay_Logger::writeDebug("Loaded File for ".$class." class : ".CLAY_PLUGINS_ROOT.DIRECTORY_SEPARATOR.$path.".php");
+				Clay_Logger::writeDebug("End: ".$class."(".memory_get_usage().")");
 				return $cls;
 			}
 			Clay_Logger::writeDebug("No Plugin File for ".$class." class : ".CLAY_PLUGINS_ROOT.DIRECTORY_SEPARATOR.$path.".php");
@@ -97,7 +98,7 @@ class Clay_Plugin{
 			$pluginPath = $_SERVER["CONFIGURE"]->site_home.DIRECTORY_SEPARATOR.$names[0];
 			if(!empty($pluginPath)){
 				if(file_exists($pluginPath."/Setting.php")){
-					Clay_Logger::writeDebug("Loaded File for Setting : ".$pluginPath."/Setting.php");
+					Clay_Logger::writeDebug("Loading : ".$pluginPath."/Setting.php");
 					require_once($pluginPath."/Setting.php");
 					return;
 				}
@@ -105,7 +106,7 @@ class Clay_Plugin{
 		}
 		$names[0] = strtolower($names[0]);
 		if(file_exists(CLAY_PLUGINS_ROOT.DIRECTORY_SEPARATOR."clay_".$names[0]."/Setting.php")){
-			Clay_Logger::writeDebug("Loaded File for Setting : ".CLAY_PLUGINS_ROOT.DIRECTORY_SEPARATOR."clay_".$names[0]."/Setting.php");
+			Clay_Logger::writeDebug("Loading: ".CLAY_PLUGINS_ROOT.DIRECTORY_SEPARATOR."clay_".$names[0]."/Setting.php");
 			require_once(CLAY_PLUGINS_ROOT.DIRECTORY_SEPARATOR."clay_".$names[0]."/Setting.php");
 			return;
 		}
