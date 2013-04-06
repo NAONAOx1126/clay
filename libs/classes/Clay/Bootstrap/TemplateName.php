@@ -40,7 +40,7 @@ class Clay_Bootstrap_TemplateName{
 		// テンプレートにシンボリックリンクを作成する。
 		if(isset($_SERVER["CONFIGURE"]->site_home) && $_SERVER["CONFIGURE"]->site_home != ""){
 			if(!file_exists(CLAY_ROOT.DIRECTORY_SEPARATOR."_contents".DIRECTORY_SEPARATOR.$_SERVER["SERVER_NAME"])){
-				Clay_Logger::writeDebug("CREATE SYMBOLIC LINK : ".CLAY_ROOT.DIRECTORY_SEPARATOR."_contents".DIRECTORY_SEPARATOR.$_SERVER["SERVER_NAME"]." => ".$_SERVER["CONFIGURE"]->get("site_home"));
+				Clay_Logger::writeDebug("CREATE SYMBOLIC LINK : ".CLAY_ROOT.DIRECTORY_SEPARATOR."_contents".DIRECTORY_SEPARATOR.$_SERVER["SERVER_NAME"]." => ".$_SERVER["CONFIGURE"]->site_home);
 				symlink($_SERVER["CONFIGURE"]->site_home, CLAY_ROOT.DIRECTORY_SEPARATOR."_contents".DIRECTORY_SEPARATOR.$_SERVER["SERVER_NAME"]);
 			}
 			if(is_writable($_SERVER["CONFIGURE"]->site_home)){
