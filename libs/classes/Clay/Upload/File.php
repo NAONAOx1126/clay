@@ -70,7 +70,8 @@ class Clay_Upload_File{
 					if(!empty($encode)){
 						// エンコードを指定した場合は行単位で処理する。
 						while(($buffer = fgets($fp)) !== FALSE){
-							fwrite($fp2, trim(mb_convert_encoding($buffer, "UTF-8", $encode))."\r\n");
+							$buffer = str_replace("\n", "\r\n", str_replace("\r", "\n", str_replace("\r\n", "\n", $buffer)));
+							fwrite($fp2, mb_convert_encoding($buffer, "UTF-8", $encode));
 						}
 					}else{
 						// エンコードが指定されない場合はバイト単位で処理する。
