@@ -274,7 +274,7 @@ class Clay_Plugin_Model{
 	 */
 	protected function appendWhere($select, $key, $value){
 		if(strpos($key, ":") > 0){
-			list($op, $key, $default) = explode(":", $key, 3);
+			list($op, $key, $default) = array_pad(explode(":", $key, 3), 3, "");
 		}else{
 			$op = "eq";
 		}
