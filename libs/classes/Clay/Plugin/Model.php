@@ -422,7 +422,7 @@ class Clay_Plugin_Model{
 			}
 			
 			// データ作成日／更新日は自動的に設定する。
-			if(array_key_exists("OPERATOR", $_SESSION) && $_SESSION["OPERATOR"]["operator_id"] > 0){
+			if(is_array($_SESSION) && array_key_exists("OPERATOR", $_SESSION) && $_SESSION["OPERATOR"]["operator_id"] > 0){
 				$this->create_role_id = $this->update_role_id = $_SESSION["OPERATOR"]["role_id"];
 				$this->create_operator_id = $this->update_operator_id = $_SESSION["OPERATOR"]["operator_id"];
 			}
