@@ -180,7 +180,7 @@ class Clay_Plugin_Model_View extends Clay_Plugin_Model{
 			$fullkey = "CONCAT(".implode(", ", $keys).")";
 		}else{
 			$fullkey = $this->getRealKey($key);
-			if($default != null){
+			if(isset($default) && $default != null){
 				if(is_numeric($default) && (substr($default, 0, 1) != "0" || strlen($default) == 1)){
 					// 全て数字で先頭が0でない、もしくは1桁のみの場合は数値データとして扱う
 					$fullkey = "COALESCE(".$fullkey.", ".$default.")";
