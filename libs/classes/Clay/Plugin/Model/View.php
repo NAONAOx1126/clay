@@ -163,7 +163,12 @@ class Clay_Plugin_Model_View extends Clay_Plugin_Model{
 	 */
 	protected function appendWhere($select, $key, $value){
 		if(strpos($key, ":") > 0){
-			list($op, $key, $default) = array_pad(explode(":", $key, 3), 3, null);
+			if(count(explode(":", $key, 3)) > 2){
+				list($op, $key, $default) = explode(":", $key, 3);
+			}else{
+				list($op, $key) = explode(":", $key, 3);
+				$default = null;
+			}
 		}else{
 			$op = "eq";
 		}
