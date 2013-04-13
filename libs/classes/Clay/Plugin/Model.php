@@ -274,7 +274,7 @@ class Clay_Plugin_Model{
 	 */
 	protected function appendWhere($select, $key, $value){
 		if(strpos($key, ":") > 0){
-			list($op, $key, $default) = array_pad(explode(":", $key, 3), 3, "");
+			list($op, $key, $default) = array_pad(explode(":", $key, 3), 3, null);
 		}else{
 			$op = "eq";
 		}
@@ -286,7 +286,7 @@ class Clay_Plugin_Model{
 			$fullkey = "CONCAT(".implode(", ", $keys).")";
 		}else{
 			$fullkey = $this->access->$key;
-			if(isset($default)){
+			if($default != null){
 				if(is_numeric($default) && (substr($default, 0, 1) != "0" || strlen($default) == 1)){
 					// 全て数字で先頭が0でない、もしくは1桁のみの場合は数値データとして扱う
 					$fullkey = "COALESCE(".$fullkey.", ".$default.")";
