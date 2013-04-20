@@ -28,6 +28,12 @@
  * @author Naohisa Minagawa <info@clay-system.jp>
  */
 abstract class Clay_Plugin_Module_Page extends Clay_Plugin_Module{
+	private $countColumn = "";
+	
+	protected function setCountColumn($countColumn){
+		$this->countColumn = $countColumn;
+	}
+	
 	protected function executeImpl($params, $type, $name, $result, $defaultSortKey = "create_time"){
 		if(!$params->check("search") || isset($_POST[$params->get("search")])){
 			$loader = new Clay_Plugin($type);
@@ -75,7 +81,11 @@ abstract class Clay_Plugin_Module_Page extends Clay_Plugin_Module{
 			
 			// 顧客データを検索する。
 			$model = $loader->LoadModel($name);
-			$pager->setDataSize($model->countBy($conditions));
+			if(!empty($this->countColumn)){
+				$pager->setDataSize($model->countBy($conditions, $this->countColumn));
+			}else{
+				$pager->setDataSize($model->countBy($conditions));
+			}
 			$model->limit($pager->getPageSize(), $pager->getCurrentFirstOffset());
 			$models = $model->findAllBy($conditions, $sortOrder, $sortReverse);
 			
