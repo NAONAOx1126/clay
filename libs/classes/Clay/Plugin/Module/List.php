@@ -28,6 +28,12 @@
  * @author Naohisa Minagawa <info@clay-system.jp>
  */
 abstract class Clay_Plugin_Module_List extends Clay_Plugin_Module{
+	private $groupBy = "";
+	
+	protected function setGroupBy($groupBy){
+		$this->groupBy = $groupBy;
+	}
+	
 	protected function executeImpl($params, $type, $name, $result, $defaultSortKey = "create_time"){
 		if(!$params->check("search") || isset($_POST[$params->get("search")])){
 			// サイトデータを取得する。
@@ -49,6 +55,9 @@ abstract class Clay_Plugin_Module_List extends Clay_Plugin_Module{
 			if(is_array($_SERVER["FILE_CSV_DOWNLOAD"]) && $_SERVER["FILE_CSV_DOWNLOAD"]["LIMIT"] > 0){
 				$model->limit($_SERVER["FILE_CSV_DOWNLOAD"]["LIMIT"], $_SERVER["FILE_CSV_DOWNLOAD"]["OFFSET"]);
 				$_SERVER["FILE_CSV_DOWNLOAD"]["OFFSET"] += $_SERVER["FILE_CSV_DOWNLOAD"]["LIMIT"];
+			}
+			if($this->groupBy){
+				$model->setGroupBy($this->groupBy);
 			}
 			$models = $model->findAllBy($conditions);
 			if($params->get("mode", "list") == "list"){

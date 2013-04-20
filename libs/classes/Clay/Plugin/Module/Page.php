@@ -29,9 +29,14 @@
  */
 abstract class Clay_Plugin_Module_Page extends Clay_Plugin_Module{
 	private $countColumn = "";
+	private $groupBy = "";
 	
 	protected function setCountColumn($countColumn){
 		$this->countColumn = $countColumn;
+	}
+	
+	protected function setGroupBy($groupBy){
+		$this->groupBy = $groupBy;
 	}
 	
 	protected function executeImpl($params, $type, $name, $result, $defaultSortKey = "create_time"){
@@ -85,6 +90,9 @@ abstract class Clay_Plugin_Module_Page extends Clay_Plugin_Module{
 				$pager->setDataSize($model->countBy($conditions, $this->countColumn));
 			}else{
 				$pager->setDataSize($model->countBy($conditions));
+			}
+			if($this->groupBy){
+				$model->setGroupBy($this->groupBy);
 			}
 			$model->limit($pager->getPageSize(), $pager->getCurrentFirstOffset());
 			$models = $model->findAllBy($conditions, $sortOrder, $sortReverse);
