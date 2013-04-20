@@ -136,9 +136,9 @@ class Clay_Plugin_Model_View extends Clay_Plugin_Model{
 	/**
 	 * レコードの件数を取得する。
 	 */
-	public function countBy($values = array()){
+	public function countBy($values = array(), $columns = "*"){
 		$select = new Clay_Query_Select($this->access, $this->viewTable);
-		$select->addColumn("COUNT(*) AS count");
+		$select->addColumn("COUNT(".$columns.") AS count");
 		if(is_array($values)){
 			foreach($values as $key => $value){
 				$select = $this->appendWhere($select, $key, $value);
