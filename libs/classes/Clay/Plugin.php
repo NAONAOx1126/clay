@@ -34,10 +34,16 @@ class Clay_Plugin{
 	private $namespace;
 	
 	/**
+	 * テーブルキャッシュ
+	 */
+	private $tables;
+	
+	/**
 	 * コンストラクタです。
 	 */
 	public function __construct($namespace = DEFAULT_PACKAGE_NAME){
 		$this->namespace = $namespace;
+		$this->tables = array();
 	}
 		
 	/**
@@ -161,7 +167,10 @@ class Clay_Plugin{
 	 * @params string $name テーブル呼び出し名
 	 */
 	function loadTable($name){
-		return $this->load("tables", $name);
+		if(!isset($this->tables[$this->namespace][$name])){
+			$this->tables[$this->namespace][$name] = $this->load("tables", $name);
+		}
+		return $this->tables[$this->namespace][$name];
 	}
 	
 	/**
