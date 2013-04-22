@@ -63,7 +63,7 @@ class Clay_Plugin_Table_Column{
 	 * @param Clay_Plugin_Table $table フィールドを保有しているテーブルのインスタンス
 	 * @param string $column フィールドのカラム名
 	 */
-	public function __construct($table, $column){
+	public function __construct(&$table, $column){
 		$this->module = $table->getModuleName();
 		$this->table = $table->_C;
 		$this->field = $column["Field"];
