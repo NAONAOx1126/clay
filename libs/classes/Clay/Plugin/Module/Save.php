@@ -36,7 +36,7 @@ abstract class Clay_Plugin_Module_Save extends Clay_Plugin_Module{
 			if(!empty($this->key_prefix)){
 				$key = $this->key_prefix.$key;
 			}
-			$model->findByPrimaryKey($_POST[$primary_key]);
+			$model->findByPrimaryKey($_POST[$this->key_prefix.$primary_key]);
 			foreach($_POST as $key => $value){
 				if(!empty($this->key_prefix)){
 					if(substr($key, 0, strlen($this->key_prefix)) == $this->key_prefix){
@@ -53,7 +53,11 @@ abstract class Clay_Plugin_Module_Save extends Clay_Plugin_Module{
 			
 			try{
 				$model->save();
-				$_POST[$primary_key] = $model->$primary_key;
+				if(!empty($this->key_prefix)){
+					$_POST[$this->key_prefix.$primary_key] = $model->$primary_key;
+				}else{
+					$_POST[$primary_key] = $model->$primary_key;
+				}
 	
 				// エラーが無かった場合、処理をコミットする。
 				Clay_Database_Factory::commit(strtolower($type));
