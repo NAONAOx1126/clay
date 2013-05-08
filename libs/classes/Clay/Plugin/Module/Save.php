@@ -53,7 +53,7 @@ abstract class Clay_Plugin_Module_Save extends Clay_Plugin_Module{
 			
 			try{
 				$model->save();
-				$_POST[$key] = $model->$primary_key;
+				$_POST[$primary_key] = $model->$primary_key;
 	
 				// エラーが無かった場合、処理をコミットする。
 				Clay_Database_Factory::commit(strtolower($type));
