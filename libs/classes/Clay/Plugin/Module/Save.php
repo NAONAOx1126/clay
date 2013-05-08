@@ -28,7 +28,7 @@
  * @author Naohisa Minagawa <info@clay-system.jp>
  */
 abstract class Clay_Plugin_Module_Save extends Clay_Plugin_Module{
-	protected function executeImpl($type, $name, $key){
+	protected function executeImpl($type, $name, $primary_key){
 		if($_POST["add"] || $_POST["save"]){
 			// サイトデータを取得する。
 			$loader = new Clay_Plugin($type);
@@ -36,7 +36,7 @@ abstract class Clay_Plugin_Module_Save extends Clay_Plugin_Module{
 			if(!empty($this->key_prefix)){
 				$key = $this->key_prefix.$key;
 			}
-			$model->findByPrimaryKey($_POST[$key]);
+			$model->findByPrimaryKey($_POST[$primary_key]);
 			foreach($_POST as $key => $value){
 				if(!empty($this->key_prefix)){
 					if(substr($key, 0, strlen($this->key_prefix)) == $this->key_prefix){
@@ -53,7 +53,7 @@ abstract class Clay_Plugin_Module_Save extends Clay_Plugin_Module{
 			
 			try{
 				$model->save();
-				$_POST[$key] = $model->$key;
+				$_POST[$key] = $model->$primary_key;
 	
 				// エラーが無かった場合、処理をコミットする。
 				Clay_Database_Factory::commit(strtolower($type));
