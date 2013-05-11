@@ -22,6 +22,9 @@
  * @return string|null
  */
 function smarty_modifier_zeroday($value){
+	if($value == "0000-00-00"){
+		return "";
+	}
 	if($value == "0000-00-00 00:00:00"){
 		return "";
 	}
