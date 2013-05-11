@@ -49,6 +49,14 @@ function smarty_function_loadmodule($params, $smarty, $template)
         trigger_error("loadmodule: missing name parameter", E_USER_WARNING);
         return;
     }
+    
+    if(!empty($params["if"])){
+    	$result = true;
+    	eval('$result = '.$params["if"].';');
+    	if(!$result){
+    		return;
+    	}
+    }
 	
 	// パラメータを変数にコピー
     $name = $params['name'];
