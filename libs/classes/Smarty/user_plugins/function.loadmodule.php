@@ -51,8 +51,9 @@ function smarty_function_loadmodule($params, $smarty, $template)
     }
     
     if(!empty($params["if"])){
-    	$result = true;
-    	eval('$result = '.$params["if"].';');
+        $result = true;
+		$expression = '$result = '.str_replace('_POST', '$_POST', $params["if"]).';';
+    	eval($expression);
     	if(!$result){
     		return;
     	}
