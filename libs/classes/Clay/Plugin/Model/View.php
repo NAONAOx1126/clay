@@ -31,6 +31,9 @@ class Clay_Plugin_Model_View extends Clay_Plugin_Model{
 	// ビューとして扱うためのSelect文
 	private $viewTable;
 	
+	// 取得カラムを設定するためのマップ
+	private $columnMap;
+	
 	// 条件を設定するためのマップ
 	private $conditionMap;
 	
@@ -41,11 +44,16 @@ class Clay_Plugin_Model_View extends Clay_Plugin_Model{
 	public function __construct($accessTable, $values = array()){
 		parent::__construct($accessTable, $values);
 		$this->setViewTable($accessTable);
+		$this->columnMap = array();
 		$this->conditionMap = array();
 	}
 	
 	protected function setViewTable($viewTable){
 		$this->viewTable = $viewTable;
+	}
+
+	protected function addColumnItem($key, $value){
+		$this->columnMap[$key] = $value;
 	}
 	
 	protected function addConditionItem($key, $value){
@@ -80,6 +88,9 @@ class Clay_Plugin_Model_View extends Clay_Plugin_Model{
 	public function findAllBy($values = array(), $order = "", $reverse = false){
 		$select = new Clay_Query_Select($this->access, $this->viewTable);
 		$select->addColumn($this->access->_W);
+		foreach($this->columnMap as $key => $value){
+			$select->addColumn($value, $key);
+		}
 		if(is_array($values)){
 			foreach($values as $key => $value){
 				$select = $this->appendWhere($select, $key, $value);
@@ -189,7 +200,7 @@ class Clay_Plugin_Model_View extends Clay_Plugin_Model{
 				}
 			}
 		}
-		if(is_array($value)){
+		if($op != "in" && $op != "nin" && is_array($value)){
 			foreach($value as $item){
 				if(empty($item)){
 					return $select;

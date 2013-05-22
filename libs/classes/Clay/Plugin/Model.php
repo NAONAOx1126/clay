@@ -300,6 +300,14 @@ class Clay_Plugin_Model{
 				}
 			}
 		}
+		if($op != "in" && $op != "nin" && is_array($value)){
+			foreach($value as $item){
+				if(empty($item)){
+					return $select;
+				}
+			}
+			$value = implode("-", $value);
+		}
 		if(in_array($key, $this->columns)){
 			if(is_array($value)){
 				foreach($value as $item){
