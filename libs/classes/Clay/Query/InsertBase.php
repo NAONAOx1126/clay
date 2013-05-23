@@ -66,11 +66,12 @@ abstract class Clay_Query_InsertBase{
 		$cols = array();
 		$phs = array();
 		$this->vals = array();
+		$connection = Clay_Database_Factory::getConnection($this->module, true);
 		foreach($values as $key => $value){
 			if(isset($this->table->$key)){
-				$cols[] = $key;
+				$cols[] = $connection->escape_identifier($key);
 				$phs[] = "?";
-				$this->vals[] = trim($value);
+				$this->vals[] = trim($connection->escape($value));
 			}
 		}
 
@@ -89,7 +90,7 @@ abstract class Clay_Query_InsertBase{
 		$connection = Clay_Database_Factory::getConnection($this->module, true);
 		foreach($values as $key => $value){
 			if(isset($this->table->$key)){
-				$cols[] = $key;
+				$cols[] = $connection->escape_identifier($key);
 				$vals[] = "'".$connection->escape(trim($value))."'";
 			}
 		}
