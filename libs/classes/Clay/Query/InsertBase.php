@@ -71,7 +71,7 @@ abstract class Clay_Query_InsertBase{
 			if(isset($this->table->$key)){
 				$cols[] = $connection->escape_identifier($key);
 				$phs[] = "?";
-				$this->vals[] = trim($connection->escape($value));
+				$this->vals[] = trim($value);
 			}
 		}
 
