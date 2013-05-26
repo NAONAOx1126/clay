@@ -112,6 +112,7 @@ class Clay_Upload_File{
 	 */
 	public function rewind(){
 		fseek($this->file, 0);
+		$this->line = 0;
 	}
 }
  
