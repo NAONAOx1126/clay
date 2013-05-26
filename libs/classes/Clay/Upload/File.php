@@ -106,5 +106,12 @@ class Clay_Upload_File{
 			call_user_func($callback, $this->line ++, $data);
 		}
 	}
+	
+	/**
+	 * ファイルを先頭位置に戻す。
+	 */
+	public function rewind(){
+		fseek($this->file, 0);
+	}
 }
  
