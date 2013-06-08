@@ -53,6 +53,13 @@ abstract class Clay_Template{
 			$daySelect[sprintf("%02d", $i)] = $i."日";
 		}
 		$this->assign("SelectionDay", $daySelect);
+
+		// 時間のセレクタのアサイン処理
+		$hourSelect = array();
+		for($i = 0; $i <= 23; $i ++){
+			$hourSelect[sprintf("%02d", $i).":00"] = $i.":00";
+		}
+		$this->assign("SelectionHour", $hourSelect);
 	}
 	
 	/**
