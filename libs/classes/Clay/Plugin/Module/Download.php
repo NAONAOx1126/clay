@@ -61,6 +61,7 @@ abstract class Clay_Plugin_Module_Download extends Clay_Plugin_Module_Page{
 				$_POST["page"] ++;
 				parent::executeImpl($params, $type, $name, $result, $defaultSortKey);
 			}
+			exit;
 		}
 	}
 }
