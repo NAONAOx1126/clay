@@ -60,6 +60,14 @@ abstract class Clay_Template{
 			$hourSelect[sprintf("%02d", $i).":00"] = $i.":00";
 		}
 		$this->assign("SelectionHour", $hourSelect);
+
+		// 30分単位時間のセレクタのアサイン処理
+		$halfHourSelect = array();
+		for($i = 0; $i <= 23; $i ++){
+			$halfHourSelect[sprintf("%02d", $i).":00"] = $i.":00";
+			$halfHourSelect[sprintf("%02d", $i).":30"] = $i.":30";
+		}
+		$this->assign("HalfSelectionHour", $halfHourSelect);
 	}
 	
 	/**

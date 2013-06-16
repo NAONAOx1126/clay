@@ -32,6 +32,7 @@ function smarty_function_start_session($params, $smarty, $template){
 	}
 		
 	// INPUT_DATAのセッションの内容をPOSTに戻す。（POST優先）
+	print_r($_POST);
 	if(is_array($_SESSION["INPUT_DATA"][TEMPLATE_DIRECTORY])){
 		foreach($_SESSION["INPUT_DATA"][TEMPLATE_DIRECTORY] as $key => $value){
 			if(!isset($_POST[$key])){
@@ -39,6 +40,7 @@ function smarty_function_start_session($params, $smarty, $template){
 			}
 		}
 	}
+	print_r($_POST);
 	Clay_Logger::writeDebug("Page Session Started.");
 }
 ?>

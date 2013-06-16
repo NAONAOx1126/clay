@@ -99,6 +99,9 @@ abstract class Clay_Plugin_Module_Page extends Clay_Plugin_Module{
 			
 			$_SERVER["ATTRIBUTES"][$result."_pager"] = $pager;
 			$_SERVER["ATTRIBUTES"][$result] = $models;
+		}elseif(!$params->check("reset") || isset($_POST[$params->get("reset")])){
+			$_POST["search"] = array();
+			unset($_POST[$params->get("reset")]);
 		}
 	}
 }
