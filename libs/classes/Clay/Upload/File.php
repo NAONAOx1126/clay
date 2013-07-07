@@ -93,8 +93,9 @@ class Clay_Upload_File{
 	/**
 	 * ファイルの設定を復元する。
 	 */
-	public function load($filename){
-		$this->file = fopen($filename, "r");
+	public function load($code){
+		$this->code = $code;
+		$this->file = fopen($this->getFileName(), "r");
 		$this->line = 0;
 	}
 	
