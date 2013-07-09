@@ -91,7 +91,7 @@ abstract class Clay_Template{
 		header("P3P: CP='UNI CUR OUR'");
 		header("Expires: Thu, 01 Dec 1994 16:00:00 GMT");
 		header("Last-Modified: ". gmdate("D, d M Y H:i:s"). " GMT");
-		if($_SERVER['HTTPS']=='on'){
+		if(array_key_exists("HTTPS", $_SERVER) && $_SERVER['HTTPS']=='on'){
 			header("Cache-Control: must-revalidate");
 			header("Cache-Control: post-check=0, pre-check=0", false);
 		}else{
