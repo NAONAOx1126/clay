@@ -91,9 +91,14 @@ abstract class Clay_Template{
 		header("P3P: CP='UNI CUR OUR'");
 		header("Expires: Thu, 01 Dec 1994 16:00:00 GMT");
 		header("Last-Modified: ". gmdate("D, d M Y H:i:s"). " GMT");
-		header("Cache-Control: no-cache, must-revalidate");
-		header("Cache-Control: post-check=0, pre-check=0", false);
-		header("Pragma: no-cache");
+		if($_SERVER['HTTPS']=='on'){
+			header("Cache-Control: must-revalidate");
+			header("Cache-Control: post-check=0, pre-check=0", false);
+		}else{
+			header("Cache-Control: no-cache, must-revalidate");
+			header("Cache-Control: post-check=0, pre-check=0", false);
+			header("Pragma: no-cache");
+		}
 	
 		// display template
 		Clay_Logger::writeDebug("Template Dir : ".var_export($this->template_dir, true));
