@@ -87,7 +87,7 @@ class Clay_Upload_File{
 			$this->line = 0;
 			return $filename;
 		}else{
-			throw new InvalidException(array("アップロードファイルが正しくありません。"));
+			throw new Clay_Exception_Invalid(array("アップロードファイルが正しくありません。"));
 		}
 		return "";
 	}
