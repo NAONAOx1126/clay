@@ -105,7 +105,7 @@ abstract class Clay_Template{
 		Clay_Logger::writeDebug("Template Name : ".$template);
 		if($_SERVER["CLIENT_DEVICE"]->isFuturePhone()){
 			// モバイルの時は出力するHTMLをデータとして取得
-			$content = parent::fetch ($template, $cache_id, $compile_id, $parent, false);
+			$content = $this->core->fetch ($template, $cache_id, $compile_id, $parent, false);
 			// カタカナを半角にする。
 			$content = mb_convert_kana($content, "k");
 			
