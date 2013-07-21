@@ -34,10 +34,10 @@ class Clay_Bootstrap_Parameter{
 			if($_SERVER["CLIENT_DEVICE"]->isFuturePhone()){
 				if(is_array($value)){
 					foreach($value as $k => $v){
-						$_GET[$name][$k] = mb_convert_encoding($v, "UTF-8", "Shift_JIS");
+						$_GET[mb_convert_encoding($name, "UTF-8", "Shift_JIS")][mb_convert_encoding($k, "UTF-8", "Shift_JIS")] = mb_convert_encoding($v, "UTF-8", "Shift_JIS");
 					}
 				}else{
-					$_GET[$name] = mb_convert_encoding($value, "UTF-8", "Shift_JIS");
+					$_GET[mb_convert_encoding($name, "UTF-8", "Shift_JIS")] = mb_convert_encoding($value, "UTF-8", "Shift_JIS");
 				}
 			}else{
 				$_GET[$name] = $value;
