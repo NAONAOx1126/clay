@@ -60,7 +60,7 @@ class Clay_Image_Resize extends Clay_Image_Base{
 	function filter($image, $info){
 		if($this->width > 0 || $this->height > 0){
 			// 変形後の幅と高さを計算する。
-			$this->calculateSize();
+			$this->calculateSize($info);
 			
 			// 透過処理済みの新しい画像オブジェクトを生成
 			$newImage = $this->transparent($image, $info);
