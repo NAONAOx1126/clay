@@ -31,7 +31,17 @@ class Clay_Bootstrap_Parameter{
 	public static function start(){
 		// HTTPのパラメータを統合する。（POST優先）
 		foreach($_POST as $name => $value){
-			$_GET[$name] = $value;
+			if($_SERVER["CLIENT_DEVICE"]->isFuturePhone()){
+				if(is_array($value)){
+					foreach($value as $k => $v){
+						$_GET[$name][$k] = mb_convert_encoding($v, "UTF-8", "Shift_JIS");
+					}
+				}else{
+					$_GET[$name] = mb_convert_encoding($value, "UTF-8", "Shift_JIS");
+				}
+			}else{
+				$_GET[$name] = $value;
+			}
 		}
 		
 		// input-imageによって渡されたパラメータを展開
