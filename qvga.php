@@ -42,13 +42,10 @@ $image240 = $_SERVER["DOCUMENT_ROOT"]."_contents/".$_SERVER["SERVER_NAME"]."/qvg
 
 // display template
 $image = $image480;
-if(Net_UserAgent_Mobile::isMobile()){
-	// モバイルユーザーエージェントのインスタンスを取得
-	$agent = Net_UserAgent_Mobile::singleton();
-	
+if($_SERVER["CLIENT_DEVICE"]->isFuturePhone()){
 	// モバイルの画面サイズを取得する。
-	$display = $agent->makeDisplay();
-	if($display->getWidth() < 480){
+	$width = $_SERVER["CLIENT_DEVICE"]->getScreenWidth();
+	if($width < 480){
 		// QVGA画像用のフォルダを作成する。
 		$path = pathinfo($image240);
 		$pathParts = explode("/", $path["dirname"]);
