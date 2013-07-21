@@ -34,11 +34,11 @@ if(substr($_SERVER["DOCUMENT_ROOT"], -1) != "/"){
 }
 
 // VGAのファイルパスの設定を取得
-$image480 = $_SERVER["DOCUMENT_ROOT"]."contents/".$_SERVER["SERVER_NAME"]."/mobile/".$_GET["image"];
+$image480 = $_SERVER["DOCUMENT_ROOT"]."_contents/".$_SERVER["SERVER_NAME"]."/mobile/".$_GET["image"];
 
 // QVGAのファイルパスの設定を取得
 $info = getimagesize($image480);
-$image240 = $_SERVER["DOCUMENT_ROOT"]."contents/".$_SERVER["SERVER_NAME"]."/qvga/".$_GET["image"];
+$image240 = $_SERVER["DOCUMENT_ROOT"]."_contents/".$_SERVER["SERVER_NAME"]."/qvga/".$_GET["image"];
 
 // display template
 $image = $image480;
