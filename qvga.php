@@ -67,7 +67,9 @@ if($_SERVER["CLIENT_DEVICE"]->isFuturePhone()){
 		}
 		
 		// 画像を縮小する。
-		resize_image($image480, $image240, ceil($info[0] / 2), ceil($info[1] / 2));
+		$converter = new Clay_Image_Converter($image480);
+		$converter->addFilter(new Clay_Image_Resize(ceil($info[0] / 2), ceil($info[1] / 2)));
+		$converter->save($image240);
 		
 		// アクセスする端末に応じた画像を出力する。
 		$image = $image240;
