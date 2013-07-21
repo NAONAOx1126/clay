@@ -18,7 +18,7 @@ RewriteCond %{HTTP_USER_AGENT} "L-mode" [NC,OR]
 RewriteCond %{HTTP_USER_AGENT} "UP.Browser" [NC]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^([0-9A-Za-z/._-]+)\.(jpe?g|gif|png)$ _bin/qvga.php?image=$1.$2 [L]
+RewriteRule ^([0-9A-Za-z/._-]+)\.(jpe?g|gif|png)$ qvga.php?image=$1.$2 [L]
 
 # 携帯の場合はコンテンツ系のファイルを携帯の方に設定
 RewriteCond %{HTTP_USER_AGENT} "DoCoMo" [NC,OR]
