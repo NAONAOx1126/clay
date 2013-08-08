@@ -39,6 +39,8 @@ abstract class Clay_Plugin_Module_Download extends Clay_Plugin_Module{
 			$loader = new Clay_Plugin($type);
 			$loader->LoadSetting();
 
+			$_POST["page"] = 1;
+			
 			// カテゴリが選択された場合、カテゴリの商品IDのリストを使う
 			$conditions = array();
 			if(is_array($_POST["search"])){
