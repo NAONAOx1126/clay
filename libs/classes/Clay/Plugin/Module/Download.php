@@ -69,7 +69,7 @@ abstract class Clay_Plugin_Module_Download extends Clay_Plugin_Module{
 			if($this->groupBy){
 				$model->setGroupBy($this->groupBy);
 			}
-			$result = $model->findAllBy($conditions, $sortOrder, $sortReverse);
+			$result = $model->getAllBy($conditions, $sortOrder, $sortReverse);
 
 			$titles = explode(",", $params->get("titles"));
 			$columns = explode(",", $params->get("columns"));
