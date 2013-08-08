@@ -39,20 +39,6 @@ abstract class Clay_Plugin_Module_Download extends Clay_Plugin_Module{
 			$loader = new Clay_Plugin($type);
 			$loader->LoadSetting();
 
-			// ページャの初期化
-			$pagerMode = $params->get("_pager_mode", Clay_Pager::PAGE_SLIDE);
-			$pagerDisplay = $params->get("_pager_dispmode", Clay_Pager::DISPLAY_ATTR);
-			if($params->check("_pager_per_page_key")){
-				$pagerCount = $_POST[$params->get("_pager_per_page_key")];
-			}else{
-				$pagerCount = $params->get("_pager_per_page", 20);
-			}
-			if($params->check("_pager_displays_key")){
-				$pagerNumbers = $_POST[$params->get("_pager_displays_key")];
-			}else{
-				$pagerNumbers = $params->get("_pager_displays", 3);
-			}
-
 			// カテゴリが選択された場合、カテゴリの商品IDのリストを使う
 			$conditions = array();
 			if(is_array($_POST["search"])){
@@ -79,28 +65,21 @@ abstract class Clay_Plugin_Module_Download extends Clay_Plugin_Module{
 			
 			$model = $loader->LoadModel($name);
 				
-			$pager = new Clay_Pager($pagerMode, $pagerDisplay, $pagerCount, $pagerNumbers);
-			$pager->importTemplates($params);
-			
 			// 顧客データを検索する。
-			if(!empty($this->countColumn)){
-				$pager->setDataSize($model->countBy($conditions, $this->countColumn));
-			}else{
-				$pager->setDataSize($model->countBy($conditions));
-			}
 			if($this->groupBy){
 				$model->setGroupBy($this->groupBy);
 			}
-			$model->limit($pager->getPageSize(), $pager->getCurrentFirstOffset());
+			$model->limit(200, ($_POST["page"] - 1) * 200);
 			$models = $model->findAllBy($conditions, $sortOrder, $sortReverse);
 			
-			$_SERVER["ATTRIBUTES"][$result."_pager"] = $pager;
 			$_SERVER["ATTRIBUTES"][$result] = $models;
-					
+			
 			// ヘッダを送信
 			header("Content-Type: application/csv");
 			header("Content-Disposition: attachment; filename=\"".$params->get("prefix", "csvfile").date("YmdHis").".csv\"");
 			
+			ob_end_clean();
+					
 			$titles = explode(",", $params->get("titles"));
 			$columns = explode(",", $params->get("columns"));
 			
@@ -118,22 +97,13 @@ abstract class Clay_Plugin_Module_Download extends Clay_Plugin_Module{
 				}
 				$_POST["page"] ++;
 			
-				$pager = new Clay_Pager($pagerMode, $pagerDisplay, $pagerCount, $pagerNumbers);
-				$pager->importTemplates($params);
-				
 				// 顧客データを検索する。
-				if(!empty($this->countColumn)){
-					$pager->setDataSize($model->countBy($conditions, $this->countColumn));
-				}else{
-					$pager->setDataSize($model->countBy($conditions));
-				}
 				if($this->groupBy){
 					$model->setGroupBy($this->groupBy);
 				}
-				$model->limit($pager->getPageSize(), $pager->getCurrentFirstOffset());
+				$model->limit(200, ($_POST["page"] - 1) * 200);
 				$models = $model->findAllBy($conditions, $sortOrder, $sortReverse);
 				
-				$_SERVER["ATTRIBUTES"][$result."_pager"] = $pager;
 				$_SERVER["ATTRIBUTES"][$result] = $models;
 			}
 			exit;
