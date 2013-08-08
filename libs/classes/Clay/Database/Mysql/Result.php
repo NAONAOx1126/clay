@@ -36,8 +36,7 @@ class Clay_Database_Mysql_Result{
 	
 	public function fetch(){
 		if($this->resource != null){
-			$result = mysqli_fetch_assoc($this->resource);
-			return $result;
+			return mysqli_fetch_assoc($this->resource);
 		}
 		return NULL;
 	}

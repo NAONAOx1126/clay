@@ -74,26 +74,23 @@ abstract class Clay_Plugin_Module_Download extends Clay_Plugin_Module{
 			$titles = explode(",", $params->get("titles"));
 			$columns = explode(",", $params->get("columns"));
 
+			// ヘッダを送信
+			header("Content-Type: application/csv");
+			header("Content-Disposition: attachment; filename=\"".$params->get("prefix", "csvfile").date("YmdHis").".csv\"");
+			
+			ob_end_clean();
+
 			// CSVヘッダを出力
 			echo mb_convert_encoding("\"".implode("\",\"", $titles)."\"\r\n", "Shift_JIS", "UTF-8");
 				
 			while($data = $result->fetch()){
-				// ヘッダを送信
-				header("Content-Type: application/csv");
-				header("Content-Disposition: attachment; filename=\"".$params->get("prefix", "csvfile").date("YmdHis").".csv\"");
-				
-				ob_end_clean();
 				
 				// データが０件以上の場合は繰り返し
-				while(count($_SERVER["ATTRIBUTES"][$result]) > 0){
-					foreach($_SERVER["ATTRIBUTES"][$result] as $data){
-						foreach($columns as $index => $column){
-							if($index > 0) echo ",";
-							eval('echo "\"".mb_convert_encoding($data["'.$column.'"], "Shift_JIS", "UTF-8")."\"";');
-						}
-						echo "\r\n";
-					}
+				foreach($columns as $index => $column){
+					if($index > 0) echo ",";
+					eval('echo "\"".mb_convert_encoding($data["'.$column.'"], "Shift_JIS", "UTF-8")."\"";');
 				}
+				echo "\r\n";
 			}
 			exit;
 		}
