@@ -83,7 +83,7 @@ abstract class Clay_Plugin_Module_Download extends Clay_Plugin_Module{
 			// CSVヘッダを出力
 			echo mb_convert_encoding("\"".implode("\",\"", $titles)."\"\r\n", "Shift_JIS", "UTF-8");
 				
-			while($data = $result->fetch()){
+			while($data = $result->next()){
 				
 				// データが０件以上の場合は繰り返し
 				foreach($columns as $index => $column){
