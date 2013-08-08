@@ -38,8 +38,6 @@ abstract class Clay_Plugin_Module_Download extends Clay_Plugin_Module{
 		if(!$params->check("search") || isset($_POST[$params->get("search")])){
 			$loader = new Clay_Plugin($type);
 			$loader->LoadSetting();
-
-			$_POST["page"] = 1;
 			
 			// カテゴリが選択された場合、カテゴリの商品IDのリストを使う
 			$conditions = array();
@@ -71,42 +69,31 @@ abstract class Clay_Plugin_Module_Download extends Clay_Plugin_Module{
 			if($this->groupBy){
 				$model->setGroupBy($this->groupBy);
 			}
-			$model->limit(200, ($_POST["page"] - 1) * 200);
-			$models = $model->findAllBy($conditions, $sortOrder, $sortReverse);
-			
-			$_SERVER["ATTRIBUTES"][$result] = $models;
-			
-			// ヘッダを送信
-			header("Content-Type: application/csv");
-			header("Content-Disposition: attachment; filename=\"".$params->get("prefix", "csvfile").date("YmdHis").".csv\"");
-			
-			ob_end_clean();
-					
+			$result = $model->findAllBy($conditions, $sortOrder, $sortReverse);
+
 			$titles = explode(",", $params->get("titles"));
 			$columns = explode(",", $params->get("columns"));
-			
+
 			// CSVヘッダを出力
-			echo "\"".implode("\",\"", $titles)."\"\r\n";
-			
-			// データが０件以上の場合は繰り返し
-			while(count($_SERVER["ATTRIBUTES"][$result]) > 0){
-				foreach($_SERVER["ATTRIBUTES"][$result] as $data){
-					foreach($columns as $index => $column){
-						if($index > 0) echo ",";
-						eval('echo "\"".$data->'.$column.'."\""');
-					}
-					echo "\r\n";
-				}
-				$_POST["page"] ++;
-			
-				// 顧客データを検索する。
-				if($this->groupBy){
-					$model->setGroupBy($this->groupBy);
-				}
-				$model->limit(200, ($_POST["page"] - 1) * 200);
-				$models = $model->findAllBy($conditions, $sortOrder, $sortReverse);
+			echo mb_convert_encoding("\"".implode("\",\"", $titles)."\"\r\n", "Shift_JIS", "UTF-8");
 				
-				$_SERVER["ATTRIBUTES"][$result] = $models;
+			while($data = $result->fetch()){
+				// ヘッダを送信
+				header("Content-Type: application/csv");
+				header("Content-Disposition: attachment; filename=\"".$params->get("prefix", "csvfile").date("YmdHis").".csv\"");
+				
+				ob_end_clean();
+				
+				// データが０件以上の場合は繰り返し
+				while(count($_SERVER["ATTRIBUTES"][$result]) > 0){
+					foreach($_SERVER["ATTRIBUTES"][$result] as $data){
+						foreach($columns as $index => $column){
+							if($index > 0) echo ",";
+							eval('echo "\"".mb_convert_encoding($data["'.$column.'"], "Shift_JIS", "UTF-8")."\"";');
+						}
+						echo "\r\n";
+					}
+				}
 			}
 			exit;
 		}

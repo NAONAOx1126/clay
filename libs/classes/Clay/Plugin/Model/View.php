@@ -82,10 +82,7 @@ class Clay_Plugin_Model_View extends Clay_Plugin_Model{
 		// Viewの場合、モデルからデータの作成を行えないようにします。
 	}
 	
-	/**
-	 * レコードを特定のキーで検索する。
-	 */
-	public function findAllBy($values = array(), $order = "", $reverse = false){
+	public function getAllBy($values = array(), $order = "", $reverse = false){
 		$select = new Clay_Query_Select($this->access, $this->viewTable);
 		$select->addColumn($this->access->_W);
 		foreach($this->columnMap as $key => $value){
@@ -96,7 +93,7 @@ class Clay_Plugin_Model_View extends Clay_Plugin_Model{
 				$select = $this->appendWhere($select, $key, $value);
 			}
 		}
-
+		
 		if($this->groupBy != null){
 			$select->addGroupBy($this->groupBy);
 		}
@@ -127,12 +124,23 @@ class Clay_Plugin_Model_View extends Clay_Plugin_Model{
 			}
 		}
 		$select->setLimit($this->limit, $this->offset);
-		$result = $select->execute($this->limit, $this->offset);
+		$result = $select->fetch($this->limit, $this->offset);
+		
+		return $result;
+	}
+	
+	/**
+	 * レコードを特定のキーで検索する。
+	 */
+	public function findAllBy($values = array(), $order = "", $reverse = false){
+		$res = $this->getAllBy($values, $order, $reverse);
 		
 		$thisClass = get_class($this);
-		foreach($result as $i => $data){
+		$result = array();
+		foreach($res->all() as $i => $data){
 			$result[$i] = new $thisClass($data);
 		}
+		$res->close();
 		
 		return $result;
 	}
