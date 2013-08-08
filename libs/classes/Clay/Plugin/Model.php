@@ -226,6 +226,7 @@ class Clay_Plugin_Model{
 				$result[] = new $thisClass($data);
 			}
 		}
+		$sqlResult->close();
 		
 		return $result;
 	}
