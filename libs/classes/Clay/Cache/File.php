@@ -57,7 +57,6 @@ class Clay_Cache_File extends Clay_Cache_Base{
 			foreach($this->values as $key => $value){
 				fwrite($fp, '$this->values["'.$key.'"] = '.var_export($value, TRUE).";\r\n");
 			}
-			fwrite($fp, "?".">\r\n");
 			fclose($fp);
 			chmod($this->cacheRoot.DIRECTORY_SEPARATOR.$this->server.DIRECTORY_SEPARATOR.$this->file.".php", 0666);
 		}
