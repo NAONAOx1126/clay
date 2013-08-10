@@ -44,7 +44,7 @@ abstract class Clay_Plugin_Module_List extends Clay_Plugin_Module{
 			$conditions = array();
 			if(is_array($_POST["search"])){
 				foreach($_POST["search"] as $key => $value){
-					if(!empty($value)){
+					if(!$this->isEmpty($value)){
 						if($params->get("mode", "list") != "select" || !$params->check("select") || $key != substr($params->get("select"), 0, strpos($params->get("select"), "|"))){
 							$conditions[$key] = $value;
 						}

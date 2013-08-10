@@ -43,7 +43,7 @@ abstract class Clay_Plugin_Module_Download extends Clay_Plugin_Module{
 			$conditions = array();
 			if(is_array($_POST["search"])){
 				foreach($_POST["search"] as $key => $value){
-					if(!empty($value)){
+					if(!$this->isEmpty($value)){
 						$conditions[$key] = $value;
 					}
 				}
@@ -54,7 +54,7 @@ abstract class Clay_Plugin_Module_Download extends Clay_Plugin_Module{
 			$sortReverse = false;
 			if($params->check("sort_key")){
 				$sortOrder = $_POST[$params->get("sort_key")];
-				if(empty($sortOrder)){
+				if($this->isEmpty($sortOrder)){
 					$sortOrder = $defaultSortKey;
 					$sortReverse = true;
 				}elseif(preg_match("/^rev@/", $sortOrder) > 0){

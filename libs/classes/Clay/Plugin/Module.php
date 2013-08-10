@@ -42,6 +42,10 @@ abstract class Clay_Plugin_Module{
      */
 	abstract function execute($params);
 	
+	protected function isEmpty($value){
+		return (isset($value) && $value !== null && $value !== "");
+	}
+	
 	protected function encryptPassword($login_id, $plain_password){
 		return sha1($login_id.":".$plain_password);
 	}
