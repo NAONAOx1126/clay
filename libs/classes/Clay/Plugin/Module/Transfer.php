@@ -22,19 +22,19 @@
  */
  
 /**
- * 一覧ダウンロード用のモジュールクラスになります。
+ * 一覧作成し、外部サーバーへの転送用のモジュールクラスになります。
  *
  * @package Plugin
  * @author Naohisa Minagawa <info@clay-system.jp>
  */
-abstract class Clay_Plugin_Module_Download extends Clay_Plugin_Module{
+abstract class Clay_Plugin_Module_Transfer extends Clay_Plugin_Module{
 	private $groupBy = "";
 	
 	protected function setGroupBy($groupBy){
 		$this->groupBy = $groupBy;
 	}
 	
-	protected function executeImpl($params, $type, $name, $result, $defaultSortKey = "create_time"){
+	protected function executeImpl($params, $type, $name, $defaultSortKey = "create_time"){
 		if(!$params->check("search") || isset($_POST[$params->get("search")])){
 			$loader = new Clay_Plugin($type);
 			$loader->LoadSetting();
@@ -73,26 +73,50 @@ abstract class Clay_Plugin_Module_Download extends Clay_Plugin_Module{
 
 			$titles = explode(",", $params->get("titles"));
 			$columns = explode(",", $params->get("columns"));
-
-			// ヘッダを送信
-			header("Content-Type: application/csv");
-			header("Content-Disposition: attachment; filename=\"".$params->get("prefix", "csvfile").date("YmdHis").".csv\"");
 			
-			ob_end_clean();
-
-			// CSVヘッダを出力
-			echo mb_convert_encoding("\"".implode("\",\"", $titles)."\"\r\n", "Shift_JIS", "UTF-8");
+			$basename = uniqid($type."_".$name."_").".csv";
+			$filename = CLAY_ROOT.DIRECTORY_SEPARATOR."_uploads".DIRECTORY_SEPARATOR.$basename;
+			
+			if(($fp = fopen($filename, "w+")) !== FALSE){
+				// CSVヘッダを出力
+				fwrite($fp, mb_convert_encoding("\"".implode("\",\"", $titles)."\"\r\n", "Shift_JIS", "UTF-8"));
+				while($data = $result->next()){
 				
-			while($data = $result->next()){
-				
-				// データが０件以上の場合は繰り返し
-				foreach($columns as $index => $column){
-					if($index > 0) echo ",";
-					echo "\"".mb_convert_encoding($data[$column], "Shift_JIS", "UTF-8")."\"";
+					// データが０件以上の場合は繰り返し
+					foreach($columns as $index => $column){
+						if($index > 0) fwrite($fp, ",");
+						fwrite($fp, "\"".mb_convert_encoding($data[$column], "Shift_JIS", "UTF-8")."\"");
+					}
+					fwrite($fp, "\r\n");
 				}
-				echo "\r\n";
+				fclose($fp);
+				
+				// 作成したファイルを転送
+				$info = parse_url($params->get("url", ""));
+				$protocol = $info["scheme"];
+				$host = $info["host"];
+				$port = (!empty($info["port"])?$info["port"]:(($protocol == "https")?"443":"80"));
+				if(($fp = fsockopen($host, $port)) !== FALSE){
+					fputs($fp, "POST ".$info["path"]." HTTP/1.0\r\n");
+					fputs($fp, "Host: ".$host."\r\n");
+					fputs($fp, "User-Agent: CLAY-TRANSFER-CALLER\r\n");
+					$data = $params->get("data", "");
+					$data = str_replace("[[filename]]", $basename, $data);
+					$data = str_replace("[[filepath]]", $filename, $data);
+					$data = str_replace("[[filedata]]", file_get_contents($filename), $data);
+					fputs($fp, "Content-Type: application/x-www-form-urlencoded\r\n");
+					fputs($fp, "Content-Length: ".strlen($data)."\r\n");
+					fputs($fp, "\r\n");
+					fputs($fp, $data);
+					$response = "";
+					while(!feof($fp)){
+						$response .= fgets($fp, 4096);
+					}
+					fclose($fp);
+					$result = split("\r\n\r\n", $response, 2);
+					$_SERVER["ATTRIBUTES"]["TransferResult"] = $result[1];
+				}
 			}
-			exit;
 		}
 	}
 }
