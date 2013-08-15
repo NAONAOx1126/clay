@@ -113,7 +113,7 @@ abstract class Clay_Plugin_Module_Transfer extends Clay_Plugin_Module{
 						$response .= fgets($fp, 4096);
 					}
 					fclose($fp);
-					$result = split("\r\n\r\n", $response, 2);
+					$result = explode("\r\n\r\n", $response, 2);
 					$_SERVER["ATTRIBUTES"]["TransferResult"] = $result[1];
 				}
 			}

@@ -22,7 +22,7 @@ echo "while(!feof(\$fp)){\r\n";
 echo "\$response .= fgets(\$fp, 4096);\r\n";
 echo "}\r\n";
 echo "fclose(\$fp);\r\n";
-echo "\$result = split(\"\\r\\n\\r\\n\", \$response, 2);\r\n";
+echo "\$result = explode(\"\\r\\n\\r\\n\", \$response, 2);\r\n";
 echo "return \$result[1];\r\n";
 echo "}\r\n";
 echo "return null;\r\n";
