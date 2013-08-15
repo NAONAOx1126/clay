@@ -70,19 +70,23 @@ class Clay_Query_Select{
 	/** テーブル結合用の変数 */
 	private $tableValues;
 
-	/**
-	 * 
-	 * Enter description here ...
-	 * @var array
-	 */
+	/** 検索条件用の変数 */
 	private $whereValues;
 
+	/** グループ検索条件用の変数 */
 	private $havingValues;
 	
+	/** 検索抽出上限件数の変数 */
 	private $limit;
 	
+	/** 検索抽出開始位置の変数 */
 	private $offset;
 
+	/**
+	 * コンストラクタ
+	 * @param Clay_Plugin_Table $table メインテーブル用オブジェクト
+	 * @param string $from メインテーブルとは別にテーブル名を指定する場合のテーブル名
+	 */
 	public function __construct($table, $from = null){
 		$this->module = $table->getModuleName();
 		$this->distinct = false;
@@ -99,8 +103,15 @@ class Clay_Query_Select{
 		$this->tableValues = array();
 		$this->whereValues = array();
 		$this->havingValues = array();
+		if(isset($table->delete_flg)){
+			$this->wheres[] = $table->delete_flg." = 0";
+		}
 	}
 
+	/**
+	 * DISTINCT抽出を行うフラグを設定
+	 * @param boolean $distinct trueならDISTINCT検索する
+	 */
 	public function distinct($distinct = true){
 		$this->distinct = $distinct;
 	}

@@ -23,6 +23,7 @@
  */
 function smarty_function_start_session($params, $smarty, $template){
 	// セッションをスタートし、とりあえず成功のヘッダを送信する
+	session_cache_limiter('must-revalidate');
 	session_start();
 	header("HTTP/1.1 200 OK");
 	
