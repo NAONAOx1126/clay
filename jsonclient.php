@@ -3,7 +3,7 @@ echo "function jsonCall(\$package, \$class, \$params){\r\n";
 echo "\$protocol = \"http".(($_SERVER["HTTPS"] == "on")?"s":"")."\";\r\n";
 echo "\$host = \"".$_SERVER["SERVER_NAME"]."\";\r\n";
 echo "\$port = \"".$_SERVER["SERVER_PORT"]."\";\r\n";
-echo "if((\$fp = fsockopen(\$host, \$port)) !== FALSE){\r\n";
+echo "if((\$fp = fsockopen(\"".(($_SERVER["HTTPS"] == "on")?"ssl://":"")."\"\$host, \$port)) !== FALSE){\r\n";
 echo "fputs(\$fp, \"POST /jsonp.php HTTP/1.0\\r\\n\");\r\n";
 echo "fputs(\$fp, \"Host: \".\$host.\"\\r\\n\");\r\n";
 echo "fputs(\$fp, \"User-Agent: CLAY-JSON-CALLER\\r\\n\");\r\n";
