@@ -113,11 +113,20 @@ abstract class Clay_Plugin_Module_Transfer extends Clay_Plugin_Module{
 					$data = $params->get("data", "");
 					$data = str_replace("[[filename]]", $basename, $data);
 					$data = str_replace("[[filepath]]", $filename, $data);
-					$data = str_replace("[[filedata]]", file_get_contents($filename), $data);
-					fputs($fp, "Content-Type: application/x-www-form-urlencoded\r\n");
+					$filesize = filesize($filename);
+					$filecontents = file_get_contents($filename);
+					$boundary = "TRANSFER-".sha1(uniq_id());
+					fputs($fp, "Content-Type: multipart/form-data; boundary=".$boundary."\r\n");
+					fputs($fp, "--".$boundary."\r\n");
 					fputs($fp, "Content-Length: ".strlen($data)."\r\n");
 					fputs($fp, "\r\n");
-					fputs($fp, $data);
+					fputs($fp, urlencode($data));
+					fputs($fp, "--".$boundary."\r\n");
+					fputs($fp, "Content-Disposition: form-data; name=\"".$params->get("file_key", "FILE")."\"; filename=\"".$basename."\"\r\n");
+					fputs($fp, "Content-Length: ".$filesize."\r\n");
+					fputs($fp, "\r\n");
+					fputs($fp, $filecontents);
+					fputs($fp, "--".$boundary."--\r\n");
 					$response = "";
 					while(!feof($fp)){
 						$response .= fgets($fp, 4096);
