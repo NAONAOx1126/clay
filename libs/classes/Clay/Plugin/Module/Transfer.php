@@ -115,7 +115,7 @@ abstract class Clay_Plugin_Module_Transfer extends Clay_Plugin_Module{
 					$data = str_replace("[[filepath]]", $filename, $data);
 					$filesize = filesize($filename);
 					$filecontents = file_get_contents($filename);
-					$boundary = "TRANSFER-".sha1(uniq_id());
+					$boundary = "TRANSFER-".sha1(uniqid());
 					fputs($fp, "Content-Type: multipart/form-data; boundary=".$boundary."\r\n");
 					fputs($fp, "--".$boundary."\r\n");
 					fputs($fp, "Content-Length: ".strlen($data)."\r\n");
