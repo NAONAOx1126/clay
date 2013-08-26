@@ -112,8 +112,8 @@ abstract class Clay_Plugin_Module_Transfer extends Clay_Plugin_Module{
 					$postdata .= "Host: ".$host."\r\n";
 					$postdata .= "User-Agent: CLAY-TRANSFER-CALLER\r\n";
 					$data = $params->get("data", "");
-					$data = str_replace("[[filename]]", $basename, $data);
-					$data = str_replace("[[filepath]]", $filename, $data);
+					$data = str_replace("[[filename]]", urlencode($basename), $data);
+					$data = str_replace("[[filepath]]", urlencode($filename), $data);
 					$filesize = filesize($filename);
 					$filecontents = file_get_contents($filename);
 					$boundary = "TRANSFER-".sha1(uniqid());
@@ -121,7 +121,7 @@ abstract class Clay_Plugin_Module_Transfer extends Clay_Plugin_Module{
 					$postdata .= "\r\n--".$boundary."\r\n";
 					$postdata .= "Content-Length: ".strlen($data)."\r\n";
 					$postdata .= "\r\n";
-					$postdata .= urlencode($data);
+					$postdata .= $data;
 					$postdata .= "\r\n--".$boundary."\r\n";
 					$postdata .= "Content-Disposition: form-data; name=\"".$params->get("file_key", "FILE")."\"; filename=\"".$basename."\"\r\n";
 					$postdata .= "Content-Length: ".$filesize."\r\n";
