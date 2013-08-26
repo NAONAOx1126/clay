@@ -32,7 +32,12 @@ function smarty_function_end_session($params, $smarty, $template){
 	foreach($_SERVER as $name =>$value){
 		$_SERVER["TEMPLATE"]->assign($name, $value);
 	}
+	// 入力パラメータのアサイン処理
 	$_SERVER["TEMPLATE"]->assign("INPUT", $_POST);
+	// セッション名のアサイン処理
+	$_SERVER["TEMPLATE"]->assign("PHPSessionName", session_name());
+	// セッションIDのアサイン処理
+	$_SERVER["TEMPLATE"]->assign("PHPSessionId", session_id());
 	Clay_Logger::writeDebug("Page Session Ended.");
 }
 ?>
