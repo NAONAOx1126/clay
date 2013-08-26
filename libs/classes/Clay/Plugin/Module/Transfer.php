@@ -93,8 +93,9 @@ abstract class Clay_Plugin_Module_Transfer extends Clay_Plugin_Module{
 				
 				// 作成したファイルを転送
 				$info = parse_url($params->get("url", ""));
+				$info["chost"] = $info["host"];
 				if($info["scheme"] == "https"){
-					$info["host"] = "ssl://".$info["host"];
+					$info["chost"] = "ssl://".$info["host"];
 					if(empty($info["port"])){
 						$info["port"] = "443";
 					}
@@ -104,9 +105,10 @@ abstract class Clay_Plugin_Module_Transfer extends Clay_Plugin_Module{
 					}
 				}
 				$protocol = $info["scheme"];
+				$chost = $info["chost"];
 				$host = $info["host"];
 				$port = $info["port"];
-				if(($fp = fsockopen($host, $port)) !== FALSE){
+				if(($fp = fsockopen($chost, $port)) !== FALSE){
 					$postdata = "";
 					$postdata .= "POST ".$info["path"]." HTTP/1.0\r\n";
 					$postdata .= "Host: ".$host."\r\n";
