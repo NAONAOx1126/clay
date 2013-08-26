@@ -68,6 +68,12 @@ abstract class Clay_Template{
 			$halfHourSelect[sprintf("%02d", $i).":30"] = $i.":30";
 		}
 		$this->assign("HalfSelectionHour", $halfHourSelect);
+		
+		// セッション名のアサイン処理
+		$this->assign("PHPSessionName", session_name());
+
+		// セッションIDのアサイン処理
+		$this->assign("PHPSessionId", session_id());
 	}
 	
 	/**
