@@ -112,8 +112,8 @@ function smarty_prefilter_loadmodule($source, $smarty)
 					break;
 			}
 		}
-		$source = $definition."<!--{start_session}-->\r\n".$modules."<!--{end_session}-->\r\n".$redirect.$source."\r\n";
 	}
+	$source = $definition."<!--{start_session}-->\r\n".$modules."<!--{end_session}-->\r\n".$redirect.$source."\r\n";
 	return $source;
 }
 ?>
