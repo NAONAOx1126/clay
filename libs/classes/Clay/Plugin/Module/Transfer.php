@@ -119,10 +119,12 @@ abstract class Clay_Plugin_Module_Transfer extends Clay_Plugin_Module{
 					$boundary = "TRANSFER-".sha1(uniqid());
 					$postdata .= "Content-Type: multipart/form-data; boundary=".$boundary."\r\n";
 					$postdata .= "\r\n--".$boundary."\r\n";
+					$postdata .= "Content-Disposition: form-data; name=\"".$params->get("file_key", "FILE")."_input\"\r\n";
 					$postdata .= "Content-Length: ".strlen($data)."\r\n";
 					$postdata .= "\r\n";
-					$postdata .= $data;
+					$postdata .= $data."\r\n";
 					$postdata .= "\r\n--".$boundary."\r\n";
+					$postdata .= "Content-Type: text/csv\r\n";
 					$postdata .= "Content-Disposition: form-data; name=\"".$params->get("file_key", "FILE")."\"; filename=\"".$basename."\"\r\n";
 					$postdata .= "Content-Length: ".$filesize."\r\n";
 					$postdata .= "\r\n";
