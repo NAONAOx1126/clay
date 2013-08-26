@@ -126,7 +126,7 @@ abstract class Clay_Plugin_Module_Transfer extends Clay_Plugin_Module{
 					$postdata2 .= "\r\n--".$boundary."\r\n";
 					$postdata2 .= "Content-Type: text/csv\r\n";
 					$postdata2 .= "Content-Disposition: form-data; name=\"".$params->get("file_key", "FILE")."\"; filename=\"".$basename."\"\r\n";
-					$postdata2 .= "Content-Length: ".$filesize."\r\n";
+					$postdata2 .= "Content-Length: ".strlen($filecontents)."\r\n";
 					$postdata2 .= "\r\n";
 					$postdata2 .= $filecontents;
 					$postdata2 .= "\r\n--".$boundary."--";
