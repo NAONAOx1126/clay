@@ -70,6 +70,11 @@ abstract class Clay_Plugin_Module_Page extends Clay_Plugin_Module{
 				}
 			}
 			
+			// 追加の検索条件があれば設定
+			if($params->check("wkey") && $params->check("wvalue")){
+				$conditions[$params->check("wkey")] = $params->check("wvalue");
+			}
+				
 			// 並べ替え順序が指定されている場合に適用
 			$sortOrder = "";
 			$sortReverse = false;

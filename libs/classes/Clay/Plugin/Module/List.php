@@ -51,6 +51,11 @@ abstract class Clay_Plugin_Module_List extends Clay_Plugin_Module{
 					}
 				}
 			}
+
+			// 追加の検索条件があれば設定
+			if($params->check("wkey") && $params->check("wvalue")){
+				$conditions[$params->check("wkey")] = $params->check("wvalue");
+			}
 			
 			if(is_array($_SERVER["FILE_CSV_DOWNLOAD"]) && $_SERVER["FILE_CSV_DOWNLOAD"]["LIMIT"] > 0){
 				$model->limit($_SERVER["FILE_CSV_DOWNLOAD"]["LIMIT"], $_SERVER["FILE_CSV_DOWNLOAD"]["OFFSET"]);
