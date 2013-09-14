@@ -58,7 +58,23 @@ class Clay_Bootstrap_Parameter{
 				unset($_GET[$key."_y"]);
 			}
 		}
-		$_POST = $_GET;
+		$_POST = $_GET = Clay_Bootstrap_Parameter::removeMagicQuote($_GET);
+	}
+
+	// マジッククオートを解除する関数
+	protected static function removeMagicQuote($value){
+		if(get_magic_quotes_gpc() == "1"){
+			if(is_array($value)){
+				foreach($value as $i => $val){
+					$value[$i] = remove_magic_quote($val);
+				}
+			}else{
+				$value = str_replace("\\\"", "\"", $value);
+				$value = str_replace("\\\'", "\'", $value);
+				$value = str_replace("\\\\", "\\", $value);
+			}
+		}
+		return $value;
 	}
 }
  
