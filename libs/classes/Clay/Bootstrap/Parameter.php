@@ -66,7 +66,7 @@ class Clay_Bootstrap_Parameter{
 		if(get_magic_quotes_gpc() == "1"){
 			if(is_array($value)){
 				foreach($value as $i => $val){
-					$value[$i] = remove_magic_quote($val);
+					$value[$i] = Clay_Bootstrap_Parameter::removeMagicQuote($val);
 				}
 			}else{
 				$value = str_replace("\\\"", "\"", $value);

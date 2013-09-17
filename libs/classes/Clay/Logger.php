@@ -37,19 +37,39 @@ class Clay_Logger{
 	private static function writeMessage($prefix, $message, $exception = null){
 		try{
 			if(isset($_SERVER["CONFIGURE"]->site_code)){
+				if(!empty($_SERVER["CONFIGURE"]->site_code)){
+					$siteCode = $_SERVER["CONFIGURE"]->site_code;
+				}else{
+					$siteCode = "default";
+				}
 				// ログディレクトリが無い場合は自動的に作成
-				$logHome = CLAY_ROOT.DIRECTORY_SEPARATOR."_logs".DIRECTORY_SEPARATOR.$_SERVER["CONFIGURE"]->site_code;
+				$logHome = CLAY_ROOT.DIRECTORY_SEPARATOR."_logs".DIRECTORY_SEPARATOR;
 				if(!is_dir($logHome)){
 					mkdir($logHome);
 					@chmod($logHome, 0777);
 				}
+				// 現在のログファイルが10MB以上の場合ローテーションする。
+				if(file_exists($logHome.$siteCode.".log") && filesize($logHome.$siteCode.".log") > 1024 * 1024 * 10){
+					if(defined("MAX_LOG_HISTORY")){
+						$logHistorys = MAX_LOG_HISTORY;
+					}else{
+						$logHistorys = 10;
+					}
+					for($index = $logHistorys - 1; $index > 0; $index --){
+						if(file_exists($logHome.$siteCode."_".$index.".log")){
+							rename($logHome.$siteCode."_".$index.".log", $logHome.$siteCode."_".($index + 1).".log");
+						}
+					}
+					rename($logHome.$siteCode.".log", $logHome.$siteCode."_1.log");
+				}
+				
 				// ログファイルに記載
-				$logFile = $logHome."/".$prefix.date("Ymd").".log";
+				$logFile = $logHome.$siteCode.".log";
 				if(($fp = fopen($logFile, "a+")) !== FALSE){
-					fwrite($fp, "[".$_SERVER["SERVER_NAME"]."][".date("Y-m-d H:i:s")."]".$message."\r\n");
+					fwrite($fp, "[".$_SERVER["SERVER_NAME"]."][".date("Y-m-d H:i:s")."][".$prefix."]".$message."\r\n");
 					if($exception != null){
-						fwrite($fp, "[".$_SERVER["SERVER_NAME"]."][".date("Y-m-d H:i:s")."]".$exception->getMessage()."\r\n");
-						fwrite($fp, "[".$_SERVER["SERVER_NAME"]."][".date("Y-m-d H:i:s")."]".$exception->getTraceAsString());
+						fwrite($fp, "[".$_SERVER["SERVER_NAME"]."][".date("Y-m-d H:i:s")."][".$prefix."]".$exception->getMessage()."\r\n");
+						fwrite($fp, "[".$_SERVER["SERVER_NAME"]."][".date("Y-m-d H:i:s")."][".$prefix."]".$exception->getTraceAsString());
 					}
 					fclose($fp);
 					@chmod($logFile, 0666);
