@@ -71,16 +71,35 @@ class Clay_Refactor_Table{
 			fwrite($fp, " * limitations under the License.\r\n");
 			fwrite($fp, " *\r\n");
 			fwrite($fp, " * @author    Naohisa Minagawa <info@clay-system.jp>\r\n");
-			fwrite($fp, " * @copyright Copyright (c) 2010, Clay System\r\n");
+			fwrite($fp, " * @copyright Copyright (c) 2013, Clay System\r\n");
 			fwrite($fp, " * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache License, Version 2.0\r\n");
 			fwrite($fp, " * @since PHP 5.3\r\n");
 			fwrite($fp, " * @version   4.0.0\r\n");
 			fwrite($fp, " */\r\n");
+			fwrite($fp, "/**\r\n");
+			fwrite($fp, " * ".$table."テーブルの定義クラスです。\r\n");
+			fwrite($fp, " */\r\n");
 			$basename = strtoupper(substr($prefix, 0, 1)).strtolower(substr($prefix, 1));
 			fwrite($fp, "class ".$basename."_".$classname." extends Clay_Plugin_Table{\r\n");
-			fwrite($fp, "    function __construct(){\r\n");
+			fwrite($fp, "    /**\r\n");
+			fwrite($fp, "     * コンストラクタです。\r\n");
+			fwrite($fp, "     */\r\n");
+			fwrite($fp, "    public function __construct(){\r\n");
 			fwrite($fp, "        \$this->db = Clay_Database_Factory::getConnection(\"".$prefix."\");\r\n");
 			fwrite($fp, "        parent::__construct(\"".$table."\", \"".$prefix."\");\r\n");
+			fwrite($fp, "    }\r\n");
+			fwrite($fp, "    /**\r\n");
+			fwrite($fp, "     * テーブルを作成するためのスタティックメソッドです。。\r\n");
+			fwrite($fp, "     */\r\n");
+			$result = $this->connection->query("SHOW CREATE TABLE `".$table."`");
+			$ctable = $result->fetch();
+			foreach(array_keys($ctable) as $key){
+				$create_table = $ctable[$key];
+			}
+			$create_table = str_replace("CREATE TABLE", "CREATE TABLE IF NOT EXISTS", $create_table);
+			fwrite($fp, "    public static function install(){\r\n");
+			fwrite($fp, "        \$connection = Clay_Database_Factory::getConnection(\"".$prefix."\");\r\n");
+			fwrite($fp, "        \$connection->query(\"".$create_table."\");\r\n");
 			fwrite($fp, "    }\r\n");
 			fwrite($fp, "}\r\n");
 			fclose($fp);
