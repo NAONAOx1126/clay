@@ -1,7 +1,7 @@
 /.settings
-/cache/*
-/logs/*
-/cache_smarty/*
-/contents/*
-/install/*
+/_cache
+/_cache_smarty
+/_contents
+/_logs
+/_uploads
 .DS_Store
