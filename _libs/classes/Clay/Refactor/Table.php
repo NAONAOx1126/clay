@@ -33,14 +33,37 @@ class Clay_Refactor_Table{
 		list($prefix, $table_name) = explode("_", $table, 2);
 		
 		// プラグインベースディレクトリを作成
-		$filename = CLAY_PLUGINS_ROOT.DIRECTORY_SEPARATOR."clay_".$prefix.DIRECTORY_SEPARATOR;
-		if(!is_dir($filename)){
-			mkdir($filename);
+		$baseDir = CLAY_PLUGINS_ROOT.DIRECTORY_SEPARATOR."clay_".$prefix.DIRECTORY_SEPARATOR;
+		if(!is_dir($baseDir)){
+			mkdir($baseDir);
 		}
+        
+		// プラグインSQLディレクトリを作成
+		$sqlDir = $baseDir."sqls".DIRECTORY_SEPARATOR;
+		if(!is_dir($sqlDir)){
+		    mkdir($sqlDir);
+		}
+		
+		// SQLファイル名を生成
+		$sqlFilename = $sqlDir.$table_name.".sql";
+		
+		// SQLファイルを生成する。
+		if(($fp = fopen($sqlFilename, "w+")) !== FALSE){
+		    $result = $this->connection->query("SHOW CREATE TABLE `".$table."`");
+		    $ctable = $result->fetch();
+		    foreach(array_keys($ctable) as $key){
+		        $create_table = $ctable[$key];
+		    }
+		    $create_table = str_replace("CREATE TABLE", "CREATE TABLE IF NOT EXISTS", $create_table);
+		    $create_table = preg_replace("/ AUTO_INCREMENT=[0-9]+/", "", $create_table);
+		    fwrite($fp, $create_table);
+		    fclose($fp);
+		}
+		
 		// プラグインテーブルディレクトリを作成
-		$filename .= "tables".DIRECTORY_SEPARATOR;
-		if(!is_dir($filename)){
-			mkdir($filename);
+		$tableDir = $baseDir."tables".DIRECTORY_SEPARATOR;
+		if(!is_dir($tableDir)){
+			mkdir($tableDir);
 		}
 		
 		// テーブルクラスのファイル名を生成
@@ -50,10 +73,10 @@ class Clay_Refactor_Table{
 			$classname .= strtoupper(substr($name, 0, 1)).strtolower(substr($name, 1));
 		}
 		$classname .= "Table";
-		$filename .= $classname.".php";
+		$tableFilename = $tableDir.$classname.".php";
 		
 		// テーブルのクラスのファイルを開く
-		if(($fp = fopen($filename, "w+")) !== FALSE){
+		if(($fp = fopen($tableFilename, "w+")) !== FALSE){
 			fwrite($fp, "<?php\r\n");
 			fwrite($fp, "/**\r\n");
 			fwrite($fp, " * Copyright (C) 2012 Clay System All Rights Reserved.\r\n");
@@ -91,15 +114,9 @@ class Clay_Refactor_Table{
 			fwrite($fp, "    /**\r\n");
 			fwrite($fp, "     * テーブルを作成するためのスタティックメソッドです。。\r\n");
 			fwrite($fp, "     */\r\n");
-			$result = $this->connection->query("SHOW CREATE TABLE `".$table."`");
-			$ctable = $result->fetch();
-			foreach(array_keys($ctable) as $key){
-				$create_table = $ctable[$key];
-			}
-			$create_table = str_replace("CREATE TABLE", "CREATE TABLE IF NOT EXISTS", $create_table);
 			fwrite($fp, "    public static function install(){\r\n");
 			fwrite($fp, "        \$connection = Clay_Database_Factory::getConnection(\"".$prefix."\");\r\n");
-			fwrite($fp, "        \$connection->query(\"".$create_table."\");\r\n");
+			fwrite($fp, "        \$connection->query(file_get_contents(dirname(__FILE__).\"/../sqls/".$table_name.".sql\"));\r\n");
 			fwrite($fp, "    }\r\n");
 			fwrite($fp, "}\r\n");
 			fclose($fp);

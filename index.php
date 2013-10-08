@@ -35,7 +35,7 @@ ob_start("filterOutputBuffer");
 
 try{
 	// 共通のライブラリの呼び出し。
-	require(dirname(__FILE__)."/libs/require.php");
+	require(dirname(__FILE__)."/_libs/require.php");
 	
 	// テンプレートを読み込む
 	$TEMPLATE_ENGINE = $_SERVER["CONFIGURE"]->TEMPLATE_ENGINE;

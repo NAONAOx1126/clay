@@ -276,9 +276,5 @@ class Clay_Plugin_Table{
 		}
 		$connection->query($sql);
 	}
-	
-	public function install($connection){
-		throw new Clay_Exception_System("Can't install table".$this->_T);
-	}
 }
  
