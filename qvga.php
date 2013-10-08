@@ -26,7 +26,7 @@
  */
 
 // 共通のライブラリの呼び出し。
-require(dirname(__FILE__)."/libs/require.php");
+require(dirname(__FILE__)."/_libs/require.php");
 
 // ドキュメントルートの最後にスラッシュを追加
 if(substr($_SERVER["DOCUMENT_ROOT"], -1) != "/"){

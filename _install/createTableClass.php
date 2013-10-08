@@ -9,10 +9,10 @@ if($argc > 0){
 
 // 共通のライブラリの呼び出し。
 $_SERVER["CONFIGURE"]->SESSION_MANAGER = "";
-require_once(dirname(__FILE__)."/../libs/require.php");
+require_once(dirname(__FILE__)."/../_libs/require.php");
 
 // 自動生成対象のパッケージ名
-$packages = array("address", "admin");
+$packages = array("address", "admin", "error", "mail");
 
 ini_set("memory_limit", -1);
 

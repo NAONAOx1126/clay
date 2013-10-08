@@ -1,6 +1,0 @@
-DirectoryIndex index.php
-RewriteEngine off
-<Files ~ "\.(html?|xml)$">
-Order deny,allow
-Deny from all
-</Files>
